@@ -45,7 +45,7 @@ const DEFAULT_SERVICES: Service[] = [
     icon: Building2,
     title: "Negócio",
     description:
-      "Capital de giro e investimento para expandir a sua empresa em Angola.",
+      "Capital de giro e investimentopara expandir a sua empresa em Angola.",
   },
   {
     id: "seguro-vida",
