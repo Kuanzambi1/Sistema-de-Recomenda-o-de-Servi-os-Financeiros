@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="pt" suppressHydrationWarning>
       <body
-        className={`${sora.variable} ${dmSans.variable} font-sans antialiased`}
+        className={`${sora.variable} ${dmSans.variable} font-sans font-heading antialiased`}
         suppressHydrationWarning
       >
         <Providers>{children}</Providers>

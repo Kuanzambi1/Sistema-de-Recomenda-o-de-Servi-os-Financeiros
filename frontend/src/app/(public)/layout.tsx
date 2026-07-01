@@ -21,7 +21,7 @@ export default function LoginLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className={`bg-[#F9F9FF] flex flex-col justify-between gap-10 w-full min-h-screen overflow-x-hidden pt-10 font-sans antialiased`}>
+		<div className={`bg-accent flex flex-col justify-between gap-10 w-full min-h-screen overflow-x-hidden font-sans antialiased`}>
 			{children}
 			<Footer />
 		</div>

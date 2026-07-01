@@ -7,12 +7,12 @@ import clsx from "clsx";
 type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'strong' | 'em' | 'code' | 'small' | 'mark' | 'del' | 'ins' | 'sup' | 'sub' | 'p';
 
 const textVariantStyles: Record<TextVariant, string> = {
-  h1: 'text-4xl font-bold leading-tight text-[#00163C]',
-  h2: 'text-3xl font-bold leading-snug text-[#00163C]',
-  h3: 'text-2xl font-semibold leading-snug text-[#00163C]',
-  h4: 'text-xl font-semibold text-[#00163C]',
-  h5: 'text-lg font-semibold text-[#00163C]',
-  h6: 'text-base font-semibold text-[#00163C]',
+  h1: 'text-4xl font-bold leading-tight text-foreground',
+  h2: 'text-3xl font-bold leading-snug text-foreground',
+  h3: 'text-2xl font-semibold leading-snug text-foreground',
+  h4: 'text-xl font-semibold text-foreground',
+  h5: 'text-lg font-semibold text-foreground',
+  h6: 'text-base font-semibold text-foreground',
   span: 'text-base font-normal',
   strong: 'text-base font-bold',
   em: 'text-base italic',
