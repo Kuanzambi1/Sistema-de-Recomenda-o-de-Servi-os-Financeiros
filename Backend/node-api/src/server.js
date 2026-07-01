@@ -10,7 +10,7 @@ const { errorHandler }  = require('./middleware/errorHandler');
 const { pool }          = require('./config/database');
 
 const app  = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3333;
 
 // -----------------------------------------------
 // Segurança e parsing

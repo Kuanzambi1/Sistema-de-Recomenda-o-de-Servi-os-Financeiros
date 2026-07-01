@@ -1,16 +1,25 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Text from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { User, Mail, LockKeyhole, ArrowRight } from "lucide-react";
+import { User, Mail, LockKeyhole, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormValues, registerSchema } from "@/lib/schemas/auth.schema";
+import { authService } from "@/services/auth.service";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const setAuth = useAuthStore((s) => s.setAuth);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -19,8 +28,28 @@ export default function RegisterPage() {
     resolver: zodResolver(registerSchema),
   });
 
-  function onSubmit(data: RegisterFormValues) {
-    console.log("submit", data);
+  async function onSubmit(data: RegisterFormValues) {
+    setLoading(true);
+    setApiError(null);
+
+    try {
+      const response = await authService.register({
+        nome: data.nome,
+        email: data.email,
+        password: data.password,
+      });
+      setAuth(response.token, response.user);
+      localStorage.setItem("srf_token", response.token);
+      router.push("/onboarding");
+    } catch (err: unknown) {
+      const message =
+        err && typeof err === "object" && "response" in err
+          ? ((err as { response: { data: { message: string } } }).response?.data?.message ?? "Erro ao criar conta.")
+          : "Erro ao criar conta. Tente novamente.";
+      setApiError(message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -33,6 +62,12 @@ export default function RegisterPage() {
         </div>
 
         <div className="w-full max-w-[440px] bg-card rounded-xl shadow-lg p-8 flex flex-col items-center gap-6 border border-border">
+          {apiError && (
+            <div className="w-full p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium text-center">
+              {apiError}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <Label htmlFor="nome" className="text-muted-foreground font-medium">
@@ -125,9 +160,18 @@ export default function RegisterPage() {
               </Label>
             </div>
 
-            <Button type="submit" className="w-full h-12 font-bold shadow-md hover:opacity-90 transition-all">
-              Criar Conta
-              <ArrowRight className="w-4 h-4" />
+            <Button type="submit" disabled={loading} className="w-full h-12 font-bold shadow-md hover:opacity-90 transition-all">
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  A criar conta...
+                </>
+              ) : (
+                <>
+                  Criar Conta
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </Button>
           </form>
         </div>

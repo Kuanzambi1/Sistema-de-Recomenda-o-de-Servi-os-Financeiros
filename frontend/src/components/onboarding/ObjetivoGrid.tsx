@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ObjetivoFinanceiro } from "@/types";
-import { ServiceCard } from "@/components/shared/ServiceCard";
+import ServiceCard from "@/components/shared/ServiceCard";
 import {
   BriefcaseBusiness,
   Home,

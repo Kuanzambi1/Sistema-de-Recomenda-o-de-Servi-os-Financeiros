@@ -82,7 +82,7 @@ export interface PerfilFinanceiroPayload {
   tem_conta_bancaria: boolean;
   tem_historico_credito: boolean;
   score_credito?: number;
-  objectivo_financeiro: ObjetivoFinanceiro;
+  objectivos: string[];
 }
 
 // ─── Serviço Financeiro ───────────────────────────────────────────────────────

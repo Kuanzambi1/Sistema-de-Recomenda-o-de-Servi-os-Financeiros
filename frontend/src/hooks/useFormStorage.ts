@@ -1,12 +1,11 @@
 import { useCallback } from "react";
-import { PerfilFinanceiroFormValues } from "@/lib/schemas/perfil.schema";
 
 const STORAGE_KEY = "perfil-financeiro-form";
 
 interface StorageData {
-  step1?: Partial<PerfilFinanceiroFormValues>;
-  step2?: Partial<PerfilFinanceiroFormValues>;
-  step3?: Partial<PerfilFinanceiroFormValues>;
+  step1?: Record<string, unknown>;
+  step2?: Record<string, unknown>;
+  step3?: Record<string, unknown>;
   completed: boolean;
 }
 
@@ -25,7 +24,7 @@ export function useFormStorage() {
   }, []);
 
   const saveStepData = useCallback(
-    (stepNumber: 1 | 2 | 3, data: Partial<PerfilFinanceiroFormValues>) => {
+    (stepNumber: 1 | 2 | 3, data: Record<string, unknown>) => {
       if (typeof window === "undefined") return;
 
       try {
@@ -41,7 +40,7 @@ export function useFormStorage() {
   );
 
   const getStepData = useCallback(
-    (stepNumber: 1 | 2 | 3): Partial<PerfilFinanceiroFormValues> => {
+    (stepNumber: 1 | 2 | 3): Record<string, unknown> => {
       const data = getStoredData();
       const stepKey = `step${stepNumber}` as const;
       return data[stepKey] || {};
@@ -49,7 +48,7 @@ export function useFormStorage() {
     [getStoredData]
   );
 
-  const getAllData = useCallback((): PerfilFinanceiroFormValues | null => {
+  const getAllData = useCallback((): Record<string, unknown> | null => {
     const data = getStoredData();
     if (!data.step1 || !data.step2 || !data.step3) {
       return null;
@@ -59,7 +58,7 @@ export function useFormStorage() {
       ...data.step1,
       ...data.step2,
       ...data.step3,
-    } as PerfilFinanceiroFormValues;
+    };
   }, [getStoredData]);
 
   const clearData = useCallback(() => {
