@@ -15,8 +15,6 @@ export default function UtilizadorLayout({
   return (
     <AppShell
       navItems={utilizadorNavItems}
-      title="Recomendações"
-      subtitle="Olá, Utilizador"
     >
       {children}
     </AppShell>

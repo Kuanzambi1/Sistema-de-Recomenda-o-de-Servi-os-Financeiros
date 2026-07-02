@@ -33,7 +33,7 @@ export default function AppShell({ children, navItems, title, subtitle, classNam
             )}
           </div>
         </header>
-        <main className={cn("flex-1 p-8 bg-secondary", className)}>
+        <main className={cn("flex-1", className)}>
           {children}
         </main>
       </div>
