@@ -6,7 +6,7 @@ import { Stepper } from "@/components/ui/stepper";
 import StepEmployInfo from "@/components/onboarding/StepEmployInfo";
 import StepFinancialInfo from "@/components/onboarding/StepFinancialInfo";
 import StepObjectives from "@/components/onboarding/StepObjectives";
-import { useFormStorage } from "@/hooks/useFormStorage";
+import { useOnboardingStore } from "@/store/onboarding.store";
 import { perfilService } from "@/services/perfil.service";
 import { PerfilFinanceiroPayload } from "@/types";
 import { Brain, Cpu, Sparkles } from "lucide-react";
@@ -30,8 +30,12 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+<<<<<<< HEAD
   const [loadingMsg, setLoadingMsg] = useState(0);
   const { saveStepData, getStepData, clearData } = useFormStorage();
+=======
+  const { setStep, getStep, clear } = useOnboardingStore();
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
 
   useEffect(() => {
     setMounted(true);
@@ -47,25 +51,25 @@ export default function OnboardingPage() {
   }, [loading]);
 
   const handleStep1Next = (data: Record<string, unknown>) => {
-    saveStepData(1, data);
+    setStep(1, data);
     setCurrentStep(2);
     setError(null);
   };
 
   const handleStep2Next = (data: Record<string, unknown>) => {
-    saveStepData(2, data);
+    setStep(2, data);
     setCurrentStep(3);
     setError(null);
   };
 
   const handleStep3Submit = async (data: Record<string, unknown>) => {
-    saveStepData(3, data);
+    setStep(3, data);
     setLoading(true);
     setError(null);
 
     try {
-      const step1 = getStepData(1);
-      const step2 = getStepData(2);
+      const step1 = getStep(1);
+      const step2 = getStep(2);
       const step3 = data;
 
       const payload: PerfilFinanceiroPayload = {
@@ -80,6 +84,7 @@ export default function OnboardingPage() {
         objectivos: (step3.objectivos as string[]) ?? [],
       };
 
+<<<<<<< HEAD
       try {
         await perfilService.criar(payload);
       } catch (err: any) {
@@ -91,6 +96,10 @@ export default function OnboardingPage() {
       }
       
       clearData();
+=======
+      await perfilService.create(payload);
+      clear();
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
       router.replace("/recomendacoes");
     } catch (err: any) {
       console.error(err);
@@ -132,6 +141,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
+<<<<<<< HEAD
         <div className="glass-card rounded-2xl shadow-[0_0_40px_rgba(37,99,235,0.05)] p-8 md:p-[32px_32px_48px] relative overflow-hidden gradient-line-top">
           {/* Data stream effect */}
           <div className="absolute inset-0 animate-data-stream opacity-20 pointer-events-none" />
@@ -160,9 +170,26 @@ export default function OnboardingPage() {
                 defaultValues={getStepData(2)}
                 onBack={() => setCurrentStep(1)}
                 onNext={handleStep2Next}
+=======
+        <div className="bg-card rounded-xl shadow-lg p-8 md:p-[32px_32px_48px]">
+          {currentStep === 1 && (
+            <>
+              <div className="flex flex-col gap-1 mb-8">
+                <h1 className="font-heading text-[32px] font-semibold text-primary">
+                  Conte-nos sobre si
+                </h1>
+                <p className="text-muted-foreground text-base">
+                  Para criarmos recomendações personalizadas, precisamos entender o seu contexto actual.
+                </p>
+              </div>
+              <StepEmployInfo
+                defaultValues={getStep(1)}
+                onNext={handleStep1Next}
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
               />
             )}
 
+<<<<<<< HEAD
             {currentStep === 3 && (
               <StepObjectives
                 defaultValues={getStepData(3)}
@@ -171,6 +198,23 @@ export default function OnboardingPage() {
               />
             )}
           </div>
+=======
+          {currentStep === 2 && (
+            <StepFinancialInfo
+              defaultValues={getStep(2)}
+              onBack={() => setCurrentStep(1)}
+              onNext={handleStep2Next}
+            />
+          )}
+
+          {currentStep === 3 && (
+            <StepObjectives
+                defaultValues={getStep(3)}
+              onBack={() => setCurrentStep(2)}
+              onNext={handleStep3Submit}
+            />
+          )}
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
         </div>
       </div>
 

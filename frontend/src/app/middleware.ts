@@ -1,17 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Rotas públicas — não precisam de autenticação
-const PUBLIC_ROUTES = ["/login", "/register"];
+const PUBLIC_ROUTES = ["/login", "/register", "/visualization"];
+
+const ADMIN_ROUTES = [
+  "/admin/dashboard",
+  "/admin/utilizadores",
+  "/admin/provedores",
+  "/admin/servicos",
+  "/admin/feedbacks",
+  "/admin/definicoes",
+];
 
 // Mapeamento de prefixo de rota → tipo de utilizador permitido
 const PROTECTED_ROUTES: Record<string, string[]> = {
-  "/admin": ["admin"],
   "/servicos": ["provedor"],
   "/recomendacoes": ["utilizador"],
   "/onboarding": ["utilizador"],
   "/historico": ["utilizador"],
   "/perfil": ["utilizador"],
+  "/notificacoes": ["utilizador"],
+  "/provedores": ["utilizador"],
+  "/definicoes": ["utilizador"],
+  "/configuracoes": ["utilizador"],
 };
+
+function getHomeForTipo(tipo: string): string {
+  switch (tipo) {
+    case "admin":
+      return "/admin/dashboard";
+    case "provedor":
+      return "/servicos";
+    default:
+      return "/recomendacoes";
+  }
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -40,7 +63,17 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Verifica permissão por prefixo de rota
+    // Se é rota de admin, verifica tipo admin
+    if (ADMIN_ROUTES.some((route) => pathname.startsWith(route))) {
+      if (tipo !== "admin") {
+        return NextResponse.redirect(
+          new URL(getHomeForTipo(tipo), request.url)
+        );
+      }
+      return NextResponse.next();
+    }
+
+    // Verifica permissão por prefixo de rota (provedor/utilizador)
     for (const [prefix, allowedTipos] of Object.entries(PROTECTED_ROUTES)) {
       if (pathname.startsWith(prefix)) {
         if (!allowedTipos.includes(tipo)) {
@@ -59,17 +92,6 @@ export function middleware(request: NextRequest) {
     const response = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.delete("srf_auth");
     return response;
-  }
-}
-
-function getHomeForTipo(tipo: string): string {
-  switch (tipo) {
-    case "admin":
-      return "/admin/dashboard";
-    case "provedor":
-      return "/servicos";
-    default:
-      return "/recomendacoes";
   }
 }
 

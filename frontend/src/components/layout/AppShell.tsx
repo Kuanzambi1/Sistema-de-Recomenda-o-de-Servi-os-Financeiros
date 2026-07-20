@@ -1,5 +1,6 @@
 "use client"
 
+import { Bell } from "lucide-react"
 import Sidebar from "./Sidebar"
 import { cn } from "@/lib/utils"
 import { Bell, Search, Brain } from "lucide-react"
@@ -16,9 +17,11 @@ interface AppShellProps {
   navItems: NavItem[]
   title?: string
   subtitle?: string
+  variant?: "light" | "dark"
   className?: string
 }
 
+<<<<<<< HEAD
 export default function AppShell({ children, navItems, title, subtitle, className }: AppShellProps) {
   const pathname = usePathname()
   const user = useAuthStore((s) => s.user)
@@ -75,13 +78,56 @@ export default function AppShell({ children, navItems, title, subtitle, classNam
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center cursor-pointer shadow-[0_0_15px_rgba(37,99,235,0.2)] hover:shadow-[0_0_25px_rgba(37,99,235,0.4)] transition-all hover:scale-105 border border-white/10">
               <span className="text-white text-xs font-bold">{initials}</span>
             </div>
+=======
+export default function AppShell({ children, navItems, title, subtitle, variant = "light", className }: AppShellProps) {
+  return (
+    <div className={cn("flex min-h-screen", variant === "dark" ? "bg-[#f9f9ff]" : "bg-background")}>
+      <Sidebar items={navItems} variant={variant} />
+      <div className="flex flex-col flex-1 ml-64">
+        <header
+          className={cn(
+            "flex items-center justify-between h-16 px-8 border-b transition-colors",
+            variant === "dark"
+              ? "bg-[#f0f3ff] border-[#c4c6d0] shadow-sm"
+              : "bg-sidebar/90 backdrop-blur-md border-border"
+          )}
+        >
+          <div>
+            {title && (
+              <h1 className={cn(
+                "font-heading text-lg font-semibold",
+                variant === "dark" ? "text-[#00163c]" : "text-foreground"
+              )}>
+                {title}
+              </h1>
+            )}
+            {subtitle && (
+              <p className="text-sm text-muted-foreground">{subtitle}</p>
+            )}
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
           </div>
+          {variant === "dark" && (
+            <div className="flex items-center gap-4">
+              <Bell className="w-5 h-5 text-[#44474f]" />
+              <div className="w-px h-6 bg-[#c4c6d0]" />
+              <div className="w-9 h-9 rounded-full bg-[#00163c] flex items-center justify-center">
+                <span className="text-white text-sm font-bold">A</span>
+              </div>
+            </div>
+          )}
         </header>
 
         {/* Page content */}
         <main className={cn("flex-1 p-6 max-w-7xl mx-auto w-full", className)}>
           {children}
         </main>
+        {variant === "dark" && (
+          <footer className="flex items-center justify-center h-12 bg-white border-t border-[#c4c6d0]">
+            <p className="text-[#44474f] text-xs">
+              2026 SRF - Sistema de Recomendação Financeira. Todos os direitos reservados.
+            </p>
+          </footer>
+        )}
       </div>
     </div>
   )

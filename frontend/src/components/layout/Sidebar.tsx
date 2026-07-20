@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { HelpCircle, LogOut, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   LayoutDashboard, Star, Clock, Settings, Briefcase, PlusCircle,
@@ -12,17 +13,20 @@ import {
 import { useAuthStore } from "@/store/auth.store"
 import { useRouter } from "next/navigation"
 
-interface NavItem {
+export interface NavItem {
   label: string
   href: string
+  icon?: LucideIcon
 }
 
 interface SidebarProps {
   brand?: string
   items: NavItem[]
+  variant?: "light" | "dark"
   className?: string
 }
 
+<<<<<<< HEAD
 // Map labels to icons
 const ICON_MAP: Record<string, React.ElementType> = {
   "Recomendações": Star,
@@ -39,6 +43,9 @@ const ICON_MAP: Record<string, React.ElementType> = {
 }
 
 export default function Sidebar({ brand = "SRF", items, className }: SidebarProps) {
+=======
+export default function Sidebar({ brand = "SRF", items, variant = "light", className }: SidebarProps) {
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
   const pathname = usePathname()
   const router = useRouter()
   const user = useAuthStore((s) => s.user)
@@ -54,6 +61,7 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
   return (
     <aside
       className={cn(
+<<<<<<< HEAD
         "fixed left-0 top-0 h-full w-64 flex flex-col bg-[#0A0D14]/70 backdrop-blur-2xl border-r border-white/5 z-40",
         className
       )}
@@ -74,7 +82,42 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 px-3 mb-2 font-bold">
           Menu Principal
         </p>
+=======
+        "fixed left-0 top-0 h-full w-64 flex flex-col gap-8 border-r p-6 transition-colors",
+        variant === "dark"
+          ? "bg-[#00163c] border-[#ffffff1a]"
+          : "bg-sidebar border-sidebar-border",
+        className
+      )}
+    >
+      <div className="flex items-center gap-3 px-4">
+        <div
+          className={cn(
+            "w-10 h-10 rounded-xl flex items-center justify-center font-heading font-bold text-lg",
+            variant === "dark"
+              ? "bg-[#feae2c] text-[#6b4500]"
+              : "bg-primary text-primary-foreground"
+          )}
+        >
+          {variant === "dark" ? "A" : brand.charAt(0)}
+        </div>
+        <div>
+          <span className={cn(
+            "font-heading text-xl font-semibold",
+            variant === "dark" ? "text-white" : "text-primary"
+          )}>
+            {brand}
+          </span>
+          {variant === "dark" && (
+            <p className="text-[#ffffffb2] text-[10px] tracking-wide">Institutional Access</p>
+          )}
+        </div>
+      </div>
+
+      <nav className="flex flex-col gap-1 flex-1">
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
         {items.map((item) => {
+          const Icon = item.icon
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
           const Icon = ICON_MAP[item.label] ?? ChevronRight
           return (
@@ -82,6 +125,7 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
               key={item.href}
               href={item.href}
               className={cn(
+<<<<<<< HEAD
                 "group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 relative overflow-hidden",
                 isActive
                   ? "text-white bg-blue-500/10 border border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.05)]"
@@ -106,11 +150,26 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
               {isActive && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)] relative z-10" />
               )}
+=======
+                "flex items-center gap-4 px-4 py-3 rounded-lg text-sm tracking-wide transition-all cursor-pointer",
+                isActive
+                  ? variant === "dark"
+                    ? "bg-[#feae2c] text-[#6b4500] font-bold"
+                    : "bg-sidebar-active-bg text-foreground font-medium border-r-4 border-sidebar-active-border"
+                  : variant === "dark"
+                    ? "text-[#ffffffb2] hover:text-white hover:bg-white/5"
+                    : "text-sidebar-foreground hover:bg-muted"
+              )}
+            >
+              {Icon && <Icon className="w-[18px] h-[18px] shrink-0" />}
+              <span>{item.label}</span>
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
             </Link>
           )
         })}
       </nav>
 
+<<<<<<< HEAD
       {/* AI Status Badge */}
       <div className="px-4 py-3 border-t border-white/5 shrink-0">
         <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/[0.02] border border-white/5">
@@ -140,6 +199,26 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
           <LogOut className="w-4 h-4 text-muted-foreground/50 group-hover:text-red-400 transition-colors shrink-0" />
         </div>
       </div>
+=======
+      {variant === "dark" && (
+        <div className="border-t border-[#ffffff1a] pt-4 flex flex-col gap-1">
+          <Link
+            href="#"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-sm text-[#ffffffb2] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+          >
+            <HelpCircle className="w-[18px] h-[18px] shrink-0" />
+            Help Center
+          </Link>
+          <Link
+            href="/login"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-sm text-[#ffffffb2] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+          >
+            <LogOut className="w-[18px] h-[18px] shrink-0" />
+            Logout
+          </Link>
+        </div>
+      )}
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
     </aside>
   )
 }

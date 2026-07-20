@@ -36,6 +36,7 @@ export default function RegisterPage() {
         email: data.email,
         password: data.password,
       });
+<<<<<<< HEAD
 
       setAuth(res.token, res.utilizador);
 
@@ -44,6 +45,17 @@ export default function RegisterPage() {
       else router.push("/dashboard");
     } catch (err: any) {
       setError(err?.message ?? "Erro ao criar conta.");
+=======
+      setAuth(response.token, response.user);
+      router.push("/onboarding");
+    } catch (err: unknown) {
+      const message =
+        err && typeof err === "object" && "response" in err
+          ? ((err as { response: { data: { message: string } } }).response?.data?.message ?? "Erro ao criar conta.")
+          : "Erro ao criar conta. Tente novamente.";
+      setApiError(message);
+    } finally {
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
       setLoading(false);
     }
   }

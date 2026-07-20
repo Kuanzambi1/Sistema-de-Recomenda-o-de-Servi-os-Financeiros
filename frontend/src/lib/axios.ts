@@ -9,13 +9,17 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// ─── Request interceptor — injeta token em todos os pedidos ──────────────────
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("srf_token");
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      const raw = localStorage.getItem("srf_auth");
+      if (raw) {
+        try {
+          const { state } = JSON.parse(raw);
+          if (state?.token) {
+            config.headers.Authorization = `Bearer ${state.token}`;
+          }
+        } catch { /* ignore */ }
       }
     }
     return config;
@@ -23,17 +27,14 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ─── Response interceptor — trata erros globais ───────────────────────────────
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     const status = error.response?.status;
 
-    // Token expirado ou inválido — força logout
     if (status === 401) {
       if (typeof window !== "undefined") {
-        localStorage.removeItem("srf_token");
-        localStorage.removeItem("srf_user");
+        localStorage.removeItem("srf_auth");
         window.location.href = "/login";
       }
     }

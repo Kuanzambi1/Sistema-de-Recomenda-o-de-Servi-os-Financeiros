@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -110,10 +111,94 @@ export default function RecomendacaoDetalhePage({ params }: { params: Promise<{ 
                 <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Requisito Min.</span>
                 <span className="text-xl font-bold text-foreground">{Number(rec.rendimento_minimo).toLocaleString("pt-PT")} Kz</span>
               </div>
+=======
+"use client"
+
+import { useParams, useRouter } from "next/navigation"
+import { ArrowLeft, TrendingUp, ShieldCheck, Clock, Building2, CheckCircle } from "lucide-react"
+import { mockRecomendacoes } from "@/lib/mock-data"
+
+export default function RecomendacaoDetailPage() {
+  const { id } = useParams<{ id: string }>()
+  const router = useRouter()
+
+  const rec = mockRecomendacoes.find((r) => r.id === id)
+  if (!rec) {
+    return (
+      <div className="p-10 flex flex-col items-center justify-center py-20 text-[#44474f]">
+        <p className="text-lg font-medium">Recomendação não encontrada</p>
+        <p className="text-sm">Esta recomendação pode ter expirado ou sido removida.</p>
+      </div>
+    )
+  }
+
+  const s = rec.servico
+  const pct = rec.probabilidade_adequacao * 100
+  const probColor = pct >= 70 ? "bg-[#16a34a]" : pct >= 40 ? "bg-[#feae2c]" : "bg-[#ba1a1a]"
+  const probLabel = pct >= 70 ? "Excelente" : pct >= 40 ? "Boa" : "Razoável"
+
+  return (
+    <div className="p-10 flex flex-col gap-6 max-w-[976px]">
+      <button
+        type="button"
+        onClick={() => router.back()}
+        className="flex items-center gap-2 text-[#44474f] text-sm hover:text-[#00163c] transition-colors w-fit cursor-pointer"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Voltar
+      </button>
+
+      <div className="bg-white rounded-xl border border-[#c4c6d0] shadow-sm p-6 flex flex-col gap-6">
+        {/* Header */}
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <h1 className="font-heading text-[28px] font-bold text-[#00163c]">{s.nome}</h1>
+              <span className={`${s.tipo === "credito" ? "bg-[#0f2b5b] text-[#afc6ff]" : "bg-[#2b2b40] text-[#9392ab]"} text-xs font-bold tracking-[1px] rounded px-2 py-1`}>
+                {s.tipo === "credito" ? "CRÉDITO" : "SEGURO"}
+              </span>
+            </div>
+            <p className="text-[#44474f] text-base flex items-center gap-1">
+              <Building2 className="w-4 h-4" />
+              {s.provedor_nome}
+            </p>
+          </div>
+          {rec.posicao_ranking === 1 && (
+            <span className="bg-[#feae2c]/20 text-[#835500] text-xs font-bold rounded-full px-3 py-1">Melhor Opção</span>
+          )}
+        </div>
+
+        {/* Suitability */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-[#00163c]" />
+            <span className="text-sm text-[#44474f]">Adequação:</span>
+          </div>
+          <div className="w-48 h-2 rounded-full bg-[#dce2f3]">
+            <div className={`h-full rounded-full ${probColor}`} style={{ width: `${pct}%` }} />
+          </div>
+          <span className="text-sm font-bold text-[#00163c]">{pct}% — {probLabel}</span>
+        </div>
+
+        {/* Two-column detail */}
+        <div className="grid grid-cols-2 gap-6">
+          <div className="flex flex-col gap-4">
+            <h3 className="font-heading text-base font-bold text-[#00163c]">Explicação da IA</h3>
+            <p className="text-[#44474f] text-sm leading-relaxed">{rec.explicacao}</p>
+          </div>
+          <div className="flex flex-col gap-4">
+            <h3 className="font-heading text-base font-bold text-[#00163c]">Detalhes do Produto</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <DetailRow label="Taxa de Juro" value={`${s.taxa_juro_anual}%`} />
+              <DetailRow label="Prazo" value={`${s.prazo_minimo_meses} – ${s.prazo_maximo_meses} meses`} />
+              <DetailRow label="Montante" value={`${s.montante_minimo.toLocaleString()} – ${s.montante_maximo.toLocaleString()} Kz`} />
+              <DetailRow label="Tipo" value={s.tipo === "credito" ? "Crédito" : "Seguro"} />
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
             </div>
           </div>
         </div>
 
+<<<<<<< HEAD
         <div className="flex flex-col gap-6">
           <div className="rounded-2xl border border-border bg-card p-6 flex flex-col gap-4">
             <h3 className="font-bold text-foreground text-center">Decisão</h3>
@@ -150,4 +235,66 @@ export default function RecomendacaoDetalhePage({ params }: { params: Promise<{ 
       </div>
     </div>
   );
+=======
+        {/* Description */}
+        <div className="flex flex-col gap-2">
+          <h3 className="font-heading text-base font-bold text-[#00163c]">Descrição</h3>
+          <p className="text-[#44474f] text-sm leading-relaxed">{s.descricao}</p>
+        </div>
+
+        {/* Requirements */}
+        <div className="flex flex-col gap-3">
+          <h3 className="font-heading text-base font-bold text-[#00163c]">Requisitos de Elegibilidade</h3>
+          <div className="flex flex-col gap-2">
+            <ReqRow label="Rendimento mínimo" ok />
+            <ReqRow label="Conta bancária" ok />
+            <ReqRow label="Score de crédito mínimo" ok={false} />
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-3 pt-2 border-t border-[#c4c6d0]">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="border border-[#c4c6d0] text-[#00163c] text-sm rounded-lg px-6 py-3 hover:bg-[#f0f3ff] transition-colors cursor-pointer"
+          >
+            Fechar
+          </button>
+          <button
+            type="button"
+            className="bg-[#835500] text-white text-sm rounded-lg px-6 py-3 hover:bg-[#835500]/90 transition-colors cursor-pointer flex items-center gap-2"
+          >
+            <CheckCircle className="w-4 h-4" />
+            Tenho Interesse
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="bg-[#f9f9ff] rounded-lg p-3 border border-[#f0f3ff]">
+      <p className="text-[#747780] text-xs">{label}</p>
+      <p className="text-[#00163c] text-sm font-bold mt-0.5">{value}</p>
+    </div>
+  )
+}
+
+function ReqRow({ label, ok }: { label: string; ok: boolean }) {
+  return (
+    <div className="flex items-center gap-2">
+      {ok ? (
+        <CheckCircle className="w-4 h-4 text-[#16a34a]" />
+      ) : (
+        <div className="w-4 h-4 rounded-full border-2 border-[#ba1a1a] flex items-center justify-center">
+          <span className="text-[#ba1a1a] text-[10px] font-bold">!</span>
+        </div>
+      )}
+      <span className={`text-sm ${ok ? "text-[#16a34a]" : "text-[#ba1a1a]"}`}>{label}</span>
+    </div>
+  )
+>>>>>>> 8d6439d (refactor: rename (admin) to admin, add notificacoes/provedores/recomendacoes pages, remove localStorage)
 }
