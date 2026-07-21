@@ -1,29 +1,19 @@
 "use client"
 
-import { LayoutDashboard, Users, Building2, Briefcase, MessageSquare, Settings } from "lucide-react"
 import AppShell from "@/components/layout/AppShell"
 import type { NavItem } from "@/components/layout/Sidebar"
 
 const adminNavItems: NavItem[] = [
-  { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Utilizadores", href: "/admin/utilizadores", icon: Users },
-  { label: "Provedores", href: "/admin/provedores", icon: Building2 },
-  { label: "Serviços", href: "/admin/servicos", icon: Briefcase },
-  { label: "Feedbacks", href: "/admin/feedbacks", icon: MessageSquare },
-  { label: "Definições", href: "/admin/definicoes", icon: Settings },
+  { label: "Dashboard", href: "/admin/dashboard" },
+  { label: "Utilizadores", href: "/admin/utilizadores" },
+  { label: "Provedores", href: "/admin/provedores" },
+  { label: "Serviços", href: "/admin/servicos" },
+  { label: "Feedbacks", href: "/admin/feedbacks" },
 ]
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AppShell
-      navItems={adminNavItems}
-      title="Administração"
-      variant="dark"
-    >
+    <AppShell navItems={adminNavItems} variant="dark">
       {children}
     </AppShell>
   )

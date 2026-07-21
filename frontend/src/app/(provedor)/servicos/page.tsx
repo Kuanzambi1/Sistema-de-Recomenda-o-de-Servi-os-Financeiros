@@ -16,9 +16,9 @@ export default function MeusServicosPage() {
   useEffect(() => {
     (async () => {
       try {
-        const data = await servicosService.listar({ provedor_id: user?.id });
-        setServicos(data.servicos);
-        setPaginacao(data.paginacao);
+        const result = await servicosService.listar();
+        setServicos(result.data);
+        setPaginacao(result);
       } catch {
         // fallback
       } finally {
@@ -105,7 +105,9 @@ export default function MeusServicosPage() {
                     <td className="px-5 py-4 text-muted-foreground">{Number(svc.rendimento_minimo).toLocaleString("pt-PT")} Kz</td>
                     <td className="px-5 py-4 text-right">
                       <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-foreground"><Settings2 className="w-3.5 h-3.5" /></Button>
+                        <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-foreground" asChild>
+                          <Link href={`/servicos/${svc.id}/editar`}><Settings2 className="w-3.5 h-3.5" /></Link>
+                        </Button>
                         <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-foreground"><MoreHorizontal className="w-3.5 h-3.5" /></Button>
                       </div>
                     </td>
@@ -116,7 +118,7 @@ export default function MeusServicosPage() {
           </div>
           {paginacao && (
             <div className="px-5 py-3 border-t border-border bg-muted/10 text-xs text-muted-foreground">
-              {paginacao.total} serviços • Página {paginacao.pagina} de {paginacao.paginas}
+              {paginacao.total} serviços • Página {paginacao.page} de {Math.ceil(paginacao.total / paginacao.per_page)}
             </div>
           )}
         </div>

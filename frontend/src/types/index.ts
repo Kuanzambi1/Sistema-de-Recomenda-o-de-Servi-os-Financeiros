@@ -34,6 +34,7 @@ export interface AuthUser {
   email: string;
   tipo: UserTipo;
   ativo: boolean;
+  has_perfil_financeiro?: boolean;
   criado_em: string;
   atualizado_em: string;
 }
@@ -170,6 +171,120 @@ export interface ModeloPreditivo {
   amostras_treino: number;
   ativo: boolean;
   criado_em: string;
+}
+
+// ─── Query Params ─────────────────────────────────────────────────────────────
+
+export interface RecomendacoesQuery {
+  tipo?: "credito" | "seguro"
+  ordenar?: "adequacao" | "taxa" | "montante"
+  page?: number
+  limit?: number
+}
+
+export interface HistoricoQuery {
+  tipo?: "credito" | "seguro"
+  status?: "aceites" | "nao_aceites" | "todos"
+  data_inicio?: string
+  data_fim?: string
+  page?: number
+  limit?: number
+}
+
+export interface ServicosQuery {
+  search?: string
+  tipo?: "credito" | "seguro"
+  ativo?: boolean
+  page?: number
+  limit?: number
+}
+
+export interface UtilizadoresQuery {
+  search?: string
+  tipo?: string
+  ativo?: boolean
+  page?: number
+  limit?: number
+}
+
+export interface FeedbacksQuery {
+  data_inicio?: string
+  data_fim?: string
+  rating?: number
+  util?: boolean
+  page?: number
+  limit?: number
+}
+
+// ─── Admin Types ───────────────────────────────────────────────────────────────
+
+export interface DashboardResponse {
+  stats: {
+    total_utilizadores: number
+    total_provedores: number
+    servicos_ativos: number
+    recomendacoes_geradas: number
+  }
+  modelo_ml: {
+    versao: string
+    ativo: boolean
+    acuracia: number
+    precisao: number
+    recall: number
+    f1_score: number
+    auc_roc: number
+    amostras_treino: number
+    historico: HistoricoMetrica[]
+  }
+  recentes: {
+    utilizadores: UtilizadorRecente[]
+    recomendacoes: RecomendacaoRecente[]
+  }
+}
+
+export interface HistoricoMetrica {
+  versao: string
+  data: string
+  acuracia: number
+  precisao: number
+  recall: number
+  f1_score: number
+}
+
+export interface UtilizadorRecente {
+  id: string
+  nome: string
+  email: string
+  tipo: string
+  ativo: boolean
+  created_at: string
+}
+
+export interface RecomendacaoRecente {
+  id: string
+  user_nome: string
+  servico_nome: string
+  probabilidade_adequacao: number
+  created_at: string
+}
+
+export interface Utilizador {
+  id: string
+  nome_completo: string
+  email: string
+  tipo: "utilizador" | "provedor" | "admin"
+  ativo: boolean
+  created_at: string
+  perfil_financeiro?: PerfilFinanceiro | null
+}
+
+export interface Provedor {
+  id: string
+  nome_empresa: string
+  email: string
+  ativo: boolean
+  total_servicos: number
+  created_at: string
 }
 
 // ─── API Response wrappers ────────────────────────────────────────────────────

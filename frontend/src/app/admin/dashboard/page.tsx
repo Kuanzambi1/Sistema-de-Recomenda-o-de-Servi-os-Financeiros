@@ -1,10 +1,24 @@
 "use client";
 
+import { useState } from "react"
+import AdminTable from "@/components/shared/AdminTable"
+import type { AdminColumn } from "@/components/shared/AdminTable"
+import PageHeader from "@/components/shared/PageHeader"
 import {
   TrendingUp,
   Download,
   MoreHorizontal,
-} from "lucide-react";
+} from "lucide-react"
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts"
 
 const kpiData = [
   {
@@ -37,51 +51,34 @@ const kpiData = [
   },
 ];
 
-const days = ["SEG", "TER", "QUA", "QUI", "SEX", "SAB", "DOM"] as const;
-const chartData: Record<string, { consultas: number; conversoes: number }> = {
-  SEG: { consultas: 140, conversoes: 100 },
-  TER: { consultas: 110, conversoes: 80 },
-  QUA: { consultas: 160, conversoes: 50 },
-  QUI: { consultas: 90, conversoes: 130 },
-  SEX: { consultas: 130, conversoes: 110 },
-  SAB: { consultas: 70, conversoes: 40 },
-  DOM: { consultas: 50, conversoes: 30 },
-};
-
-const maxBarHeight = 160;
-
-const tableData = [
-  {
-    initials: "B",
-    bgColor: "bg-[#0f2b5b1a]",
-    textColor: "text-[#00163c]",
-    name: "BAI - Banco Angolano de Investimentos",
-    location: "Sede: Luanda",
-    date: "12 Mai, 2024",
-    services: "14 Serviços",
-    status: { label: "Activo", color: "text-[#15803d]", bg: "bg-[#dcfce7]" },
-  },
-  {
-    initials: "S",
-    bgColor: "bg-[#feae2c1a]",
-    textColor: "text-[#835500]",
-    name: "Standard Bank Angola",
-    location: "Sede: Talatona",
-    date: "08 Mai, 2024",
-    services: "09 Serviços",
-    status: { label: "Activo", color: "text-[#15803d]", bg: "bg-[#dcfce7]" },
-  },
-  {
-    initials: "B",
-    bgColor: "bg-[#2b2b401a]",
-    textColor: "text-[#16162a]",
-    name: "BFA - Banco de Fomento Angola",
-    location: "Sede: Belas",
-    date: "05 Mai, 2024",
-    services: "22 Serviços",
-    status: { label: "Pendente", color: "text-[#b45309]", bg: "bg-[#fef3c7]" },
-  },
+const chartData = [
+  { day: "SEG", consultas: 140, conversoes: 100 },
+  { day: "TER", consultas: 110, conversoes: 80 },
+  { day: "QUA", consultas: 160, conversoes: 50 },
+  { day: "QUI", consultas: 90, conversoes: 130 },
+  { day: "SEX", consultas: 130, conversoes: 110 },
+  { day: "SAB", consultas: 70, conversoes: 40 },
+  { day: "DOM", consultas: 50, conversoes: 30 },
 ];
+
+// Inline tableData defined inside component scope above
+
+interface InstituicaoRow {
+  initials: string
+  bgColor: string
+  textColor: string
+  name: string
+  location: string
+  date: string
+  services: string
+  status: { label: string; color: string; bg: string }
+}
+
+const tableData: InstituicaoRow[] = [
+  { initials: "B", bgColor: "bg-[#0f2b5b1a]", textColor: "text-[#00163c]", name: "BAI - Banco Angolano de Investimentos", location: "Sede: Luanda", date: "12 Mai, 2024", services: "14 Serviços", status: { label: "Activo", color: "text-[#15803d]", bg: "bg-[#dcfce7]" } },
+  { initials: "S", bgColor: "bg-[#feae2c1a]", textColor: "text-[#835500]", name: "Standard Bank Angola", location: "Sede: Talatona", date: "08 Mai, 2024", services: "09 Serviços", status: { label: "Activo", color: "text-[#15803d]", bg: "bg-[#dcfce7]" } },
+  { initials: "B", bgColor: "bg-[#2b2b401a]", textColor: "text-[#16162a]", name: "BFA - Banco de Fomento Angola", location: "Sede: Belas", date: "05 Mai, 2024", services: "22 Serviços", status: { label: "Pendente", color: "text-[#b45309]", bg: "bg-[#fef3c7]" } },
+]
 
 export default function AdminDashboardPage() {
   const handleExportCSV = () => {
@@ -100,13 +97,7 @@ export default function AdminDashboardPage() {
   }
 
   const handleViewAllInstitutions = () => {
-    // TODO: redirecionar para /provedores
-    console.log("Ver todas as instituições")
-  }
-
-  const handleRowAction = (name: string) => {
-    // TODO: abrir menu de ações (editar/desativar/ver detalhes)
-    console.log("Ações para:", name)
+    window.location.href = "/admin/provedores"
   }
 
   const handleKPIClick = (label: string) => {
@@ -116,35 +107,30 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="p-8 flex flex-col gap-6">
-      {/* Welcome Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-heading text-[32px] font-semibold text-[#00163c] tracking-tight">
-            Dashboard Geral
-          </h1>
-          <p className="text-[#44474f] text-base mt-1">
-            Bem-vindo de volta. Aqui está o estado atual da plataforma SRF Angola.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handleFilterPeriod}
-            className="flex items-center gap-1 bg-[#dce2f3] hover:bg-[#dce2f3]/80 text-[#00163c] text-base rounded-lg px-4 py-2 transition-colors cursor-pointer"
-          >
-            <TrendingUp className="w-[13.5px] h-[15px]" />
-            Últimos 30 dias
-          </button>
-          <button
-            type="button"
-            onClick={handleExportCSV}
-            className="flex items-center gap-1 bg-[#835500] hover:bg-[#835500]/90 text-white text-base rounded-lg px-4 py-2 shadow-sm transition-colors cursor-pointer"
-          >
-            <Download className="w-3 h-3" />
-            Exportar CSV
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        title="Dashboard Geral"
+        description="Bem-vindo de volta. Aqui está o estado atual da plataforma SRF Angola."
+        actions={
+          <>
+            <button
+              type="button"
+              onClick={handleFilterPeriod}
+              className="flex items-center gap-1 bg-[#dce2f3] hover:bg-[#dce2f3]/80 text-[#00163c] text-base rounded-lg px-4 py-2 transition-colors cursor-pointer"
+            >
+              <TrendingUp className="w-[13.5px] h-[15px]" />
+              Últimos 30 dias
+            </button>
+            <button
+              type="button"
+              onClick={handleExportCSV}
+              className="flex items-center gap-1 bg-[#835500] hover:bg-[#835500]/90 text-white text-base rounded-lg px-4 py-2 shadow-sm transition-colors cursor-pointer"
+            >
+              <Download className="w-3 h-3" />
+              Exportar CSV
+            </button>
+          </>
+        }
+      />
 
       {/* KPI Grid */}
       <div className="grid grid-cols-4 gap-4">
@@ -196,29 +182,38 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           </div>
-          <div className="flex items-end justify-between gap-2.5 px-2.5 h-64">
-            {days.map((day) => {
-              const data = chartData[day];
-              const consultasHeight = (data.consultas / maxBarHeight) * 180;
-              const conversoesHeight = (data.conversoes / maxBarHeight) * 180;
-              return (
-                <div key={day} className="flex flex-col items-center gap-2 flex-1 group">
-                  <div className="flex flex-col-reverse items-center gap-1.5 w-full" style={{ height: 200 }}>
-                    <div
-                      className="w-full rounded bg-[#835500] transition-all group-hover:opacity-80 cursor-pointer"
-                      style={{ height: `${conversoesHeight}px` }}
-                      title={`Conversões: ${data.conversoes}`}
-                    />
-                    <div
-                      className="w-full rounded bg-[#00163c] transition-all group-hover:opacity-80 cursor-pointer"
-                      style={{ height: `${consultasHeight}px` }}
-                      title={`Consultas: ${data.consultas}`}
-                    />
-                  </div>
-                  <span className="text-[#44474f] text-xs">{day}</span>
-                </div>
-              );
-            })}
+          <div className="h-[280px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} barSize={32}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#c4c6d080" vertical={false} />
+                <XAxis
+                  dataKey="day"
+                  tick={{ fontSize: 12, fill: "#44474f" }}
+                  axisLine={{ stroke: "#c4c6d080" }}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 12, fill: "#44474f" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "8px",
+                    border: "1px solid #c4c6d0",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                    fontSize: "13px",
+                  }}
+                />
+                <Legend
+                  iconType="circle"
+                  iconSize={8}
+                  wrapperStyle={{ fontSize: "12px", color: "#44474f" }}
+                />
+                <Bar dataKey="consultas" name="Consultas" fill="#00163c" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="conversoes" name="Conversões" fill="#835500" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
@@ -263,7 +258,6 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Recent Institutions Table */}
       <div className="bg-white rounded-xl border border-[#c4c6d04d] shadow-sm overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#c4c6d04d]">
           <h3 className="font-heading text-base font-bold text-[#00163c]">
@@ -277,75 +271,70 @@ export default function AdminDashboardPage() {
             Ver todas
           </button>
         </div>
-        <table className="w-full">
-          <thead>
-            <tr className="bg-[#f0f3ff80]">
-              <th className="text-left text-[#44474f] text-xs font-bold tracking-[0.8px] px-6 py-5">
-                INSTITUIÇÃO
-              </th>
-              <th className="text-left text-[#44474f] text-xs font-bold tracking-[0.8px] px-6 py-5">
-                DATA DE ADESÃO
-              </th>
-              <th className="text-left text-[#44474f] text-xs font-bold tracking-[0.8px] px-6 py-5">
-                SERVIÇOS ACTIVOS
-              </th>
-              <th className="text-left text-[#44474f] text-xs font-bold tracking-[0.8px] px-6 py-5">
-                ESTADO
-              </th>
-              <th className="text-left text-[#44474f] text-xs font-bold tracking-[0.8px] px-6 py-5">
-                AÇÕES
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableData.map((row, i) => (
-              <tr
-                key={i}
-                className={i > 0 ? "border-t border-[#c4c6d04d]" : ""}
-              >
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`w-10 h-10 rounded-full ${row.bgColor} flex items-center justify-center shrink-0`}
-                    >
-                      <span className={`${row.textColor} text-base font-bold`}>
-                        {row.initials}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-[#151c27] text-base font-bold leading-tight whitespace-pre-line">
-                        {row.name}
-                      </p>
-                      <p className="text-[#44474f] text-sm">{row.location}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-[#151c27] text-base">{row.date}</td>
-                <td className="px-6 py-4 text-[#151c27] text-base">{row.services}</td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`${row.status.bg} ${row.status.color} text-xs font-bold rounded-full px-2 py-1`}
-                  >
-                    {row.status.label}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <button
-                    type="button"
-                    onClick={() => handleRowAction(row.name)}
-                    className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#f0f3ff] transition-colors cursor-pointer"
-                    title="Mais ações"
-                  >
-                    <MoreHorizontal className="w-4 h-4 text-[#44474f]" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <InstituicoesTable />
       </div>
     </div>
   );
+}
+
+const handleRowAction = (name: string) => {
+  console.log("Ações para:", name)
+}
+
+const instituicoesColumns: AdminColumn<InstituicaoRow>[] = [
+  {
+    key: "instituicao",
+    header: "INSTITUIÇÃO",
+    render: (row) => (
+      <div className="flex items-center gap-4">
+        <div className={`w-10 h-10 rounded-full ${row.bgColor} flex items-center justify-center shrink-0`}>
+          <span className={`${row.textColor} text-base font-bold`}>{row.initials}</span>
+        </div>
+        <div>
+          <p className="text-[#151c27] text-base font-bold leading-tight">{row.name}</p>
+          <p className="text-[#44474f] text-sm">{row.location}</p>
+        </div>
+      </div>
+    ),
+  },
+  { key: "data", header: "DATA DE ADESÃO", render: (row) => <span className="text-[#151c27] text-base">{row.date}</span> },
+  { key: "servicos", header: "SERVIÇOS ACTIVOS", render: (row) => <span className="text-[#151c27] text-base">{row.services}</span> },
+  {
+    key: "estado",
+    header: "ESTADO",
+    render: (row) => (
+      <span className={`${row.status.bg} ${row.status.color} text-xs font-bold rounded-full px-2 py-1`}>
+        {row.status.label}
+      </span>
+    ),
+  },
+  {
+    key: "acoes",
+    header: "AÇÕES",
+    headerClassName: "text-right",
+    className: "text-right",
+    render: (row) => (
+      <button type="button" onClick={() => handleRowAction(row.name)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#f0f3ff] transition-colors cursor-pointer" title="Mais ações">
+        <MoreHorizontal className="w-4 h-4 text-[#44474f]" />
+      </button>
+    ),
+  },
+]
+
+function InstituicoesTable() {
+  const [page, setPage] = useState(1)
+  return (
+    <AdminTable
+      columns={instituicoesColumns}
+      data={tableData}
+      keyExtractor={(r) => r.name}
+      total={tableData.length}
+      page={page}
+      perPage={5}
+      onPageChange={setPage}
+      emptyMessage="Nenhuma instituição encontrada."
+    />
+  )
 }
 
 function HealthRow({

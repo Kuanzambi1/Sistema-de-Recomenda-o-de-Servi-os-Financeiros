@@ -1,17 +1,10 @@
-"use client"
-
-import { Sparkles, Clock, User, Bell, Settings, Building2, List } from "lucide-react"
 import AppShell from "@/components/layout/AppShell"
-import type { NavItem } from "@/components/layout/Sidebar"
 
-const utilizadorNavItems: NavItem[] = [
-  { label: "Recomendações", href: "/recomendacoes", icon: Sparkles },
-  { label: "Todas as Recomendações", href: "/recomendacoes/listar", icon: List },
-  { label: "Histórico", href: "/historico", icon: Clock },
-  { label: "Provedores", href: "/provedores", icon: Building2 },
-  { label: "Notificações", href: "/notificacoes", icon: Bell },
-  { label: "O Meu Perfil", href: "/perfil", icon: User },
-  { label: "Definições", href: "/configuracoes", icon: Settings },
+const utilizadorNavItems = [
+  { label: "Recomendações", href: "/recomendacoes" },
+  { label: "Histórico", href: "/historico" },
+  { label: "Perfil", href: "/perfil" },
+  { label: "Onboarding", href: "/onboarding" },
 ]
 
 export default function UtilizadorLayout({
@@ -22,6 +15,7 @@ export default function UtilizadorLayout({
   return (
     <AppShell
       navItems={utilizadorNavItems}
+      hideHeader
     >
       {children}
     </AppShell>
