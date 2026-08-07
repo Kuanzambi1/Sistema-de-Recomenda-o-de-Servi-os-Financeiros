@@ -8,53 +8,46 @@ import {
   Building,
   Briefcase,
   Heart,
-  HeartPulse,
-  Car,
+  PiggyBank,
   ArrowRight,
   ArrowLeft,
 } from "lucide-react";
 
 const OBJECTIVOS = [
   {
-    value: "credito_pessoal",
+    value: "credito",
     icon: Landmark,
-    title: "Crédito Pessoal",
-    desc: "Empréstimo para uso pessoal",
+    title: "Crédito",
+    desc: "Crédito pessoal, habitação e microcrédito",
   },
   {
-    value: "habitacao",
-    icon: Building,
-    title: "Habitação",
-    desc: "Financiamento para casa própria",
+    value: "poupanca",
+    icon: PiggyBank,
+    title: "Poupança",
+    desc: "Guardar e rentabilizar dinheiro",
   },
   {
-    value: "negocio",
+    value: "investimento",
     icon: Briefcase,
-    title: "Negócio",
-    desc: "Capital para empreender",
+    title: "Investimento",
+    desc: "Fazer o dinheiro crescer",
   },
   {
-    value: "seguro_vida",
+    value: "seguro",
     icon: Heart,
-    title: "Seguro de Vida",
-    desc: "Proteção para a sua família",
+    title: "Seguro",
+    desc: "Proteção para si e sua família",
   },
   {
-    value: "saude",
-    icon: HeartPulse,
-    title: "Saúde",
-    desc: "Cobertura de saúde privada",
-  },
-  {
-    value: "automovel",
-    icon: Car,
-    title: "Automóvel",
-    desc: "Crédito para veículo",
+    value: "todos",
+    icon: Building,
+    title: "Todos",
+    desc: "Quero ver todas as opções",
   },
 ];
 
 const step3FormSchema = z.object({
-  objectivos: z.array(z.string()).min(1, "Seleccione pelo menos um objectivo."),
+  objectivo_financeiro: z.string().min(1, "Seleccione um objectivo financeiro."),
 });
 
 type Step3Data = z.infer<typeof step3FormSchema>;
@@ -70,25 +63,16 @@ export default function StepObjectives({ defaultValues, onNext, onBack }: StepOb
     register,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors },
   } = useForm<Step3Data>({
     resolver: zodResolver(step3FormSchema),
     defaultValues: {
-      objectivos: [],
+      objectivo_financeiro: "",
       ...((defaultValues ?? {}) as Partial<Step3Data>),
     },
   });
 
-  const selected = watch("objectivos") ?? [];
-
-  const toggleObjectivo = (value: string) => {
-    if (selected.includes(value)) {
-      setValue("objectivos", selected.filter((v: string) => v !== value), { shouldValidate: true });
-    } else {
-      setValue("objectivos", [...selected, value], { shouldValidate: true });
-    }
-  };
+  const selected = watch("objectivo_financeiro") ?? "";
 
   return (
     <form
@@ -100,25 +84,31 @@ export default function StepObjectives({ defaultValues, onNext, onBack }: StepOb
           O que está à procura?
         </h1>
         <p className="text-muted-foreground text-base">
-          Selecione os serviços financeiros que mais lhe interessam
+          Selecione o objectivo financeiro principal
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-3xl">
         {OBJECTIVOS.map((obj) => {
           const Icon = obj.icon;
-          const isSelected = selected.includes(obj.value);
+          const isSelected = selected === obj.value;
           return (
-            <button
-              type="button"
+            <label
               key={obj.value}
-              onClick={() => toggleObjectivo(obj.value)}
-              className={`relative flex flex-col gap-4 p-6 rounded-xl bg-card cursor-pointer text-left transition-all ${
-                isSelected ? "border-2 border-primary shadow-md" : "border border-[#c4c6d0] hover:shadow-sm"
+              className={`relative flex flex-col gap-4 p-6 rounded-xl cursor-pointer text-left transition-all ${
+                isSelected
+                  ? "border-2 border-primary bg-primary/5 shadow-md shadow-primary/5"
+                  : "border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.04] hover:shadow-sm"
               }`}
             >
+              <input
+                type="radio"
+                {...register("objectivo_financeiro")}
+                value={obj.value}
+                className="sr-only"
+              />
               <div className="absolute top-4 right-4 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all"
-                style={{ borderColor: isSelected ? "#00163c" : "#c4c6d0" }}
+                style={{ borderColor: isSelected ? "var(--primary)" : "rgba(255,255,255,0.15)" }}
               >
                 {isSelected && <div className="w-3 h-3 rounded-full bg-primary" />}
               </div>
@@ -129,13 +119,13 @@ export default function StepObjectives({ defaultValues, onNext, onBack }: StepOb
                 <p className="font-heading text-lg text-primary">{obj.title}</p>
                 <p className="text-muted-foreground text-sm">{obj.desc}</p>
               </div>
-            </button>
+            </label>
           );
         })}
       </div>
 
-      {errors.objectivos && (
-        <span className="text-destructive text-xs">{errors.objectivos.message}</span>
+      {errors.objectivo_financeiro && (
+        <span className="text-destructive text-xs">{errors.objectivo_financeiro.message}</span>
       )}
 
       <div className="flex justify-between items-center pt-8 border-t border-[#c4c6d0] w-full">

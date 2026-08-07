@@ -10,12 +10,10 @@ import { LoginFormValues, loginSchema } from "@/lib/schemas/auth.schema";
 import Link from "next/link";
 import { useState } from "react";
 import { authService } from "@/services/auth.service";
-import { useAuthStore } from "@/store/auth.store";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,11 +30,7 @@ export default function LoginPage() {
     setError(null);
     try {
       const res = await authService.login(data);
-      setAuth(res.token, res.utilizador);
-
-      if (res.utilizador.tipo === "utilizador") router.push("/recomendacoes");
-      else if (res.utilizador.tipo === "provedor") router.push("/servicos");
-      else router.push("/dashboard");
+      login(res.token, res.user);
     } catch (err: any) {
       setError(err?.message ?? "Erro ao iniciar sessão.");
       setLoading(false);
@@ -94,9 +88,9 @@ export default function LoginPage() {
             {/* Feature pills */}
             <div className="flex flex-col gap-3">
               {[
-                { icon: Cpu, text: "Análise em tempo real", color: "text-blue-400" },
-                { icon: ShieldCheck, text: "Dados 100% encriptados", color: "text-emerald-400" },
-                { icon: Activity, text: "Precisão de 94.2%", color: "text-violet-400" },
+                { icon: Cpu, text: "Acurácia do modelo: 75.0%", color: "text-blue-400" },
+                { icon: Activity, text: "Precisão das recomendações: 72.2%", color: "text-violet-400" },
+                { icon: ShieldCheck, text: "AUC-ROC: 84.0%", color: "text-emerald-400" },
               ].map((f, i) => (
                 <div key={i} className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/5 text-sm">
                   <f.icon className={`w-4 h-4 ${f.color} shrink-0`} />

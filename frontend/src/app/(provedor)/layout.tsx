@@ -2,9 +2,8 @@ import AppShell from "@/components/layout/AppShell"
 
 const provedorNavItems = [
   { label: "Serviços", href: "/servicos" },
-  { label: "Estatísticas", href: "/servicos/estatisticas" },
-  { label: "Clientes", href: "/servicos/clientes" },
-  { label: "Perfil", href: "/servicos/perfil" },
+  { label: "Estatísticas", href: "/analitica" },
+  { label: "Perfil", href: "/definicoes" },
 ]
 
 export default function ProvedorLayout({

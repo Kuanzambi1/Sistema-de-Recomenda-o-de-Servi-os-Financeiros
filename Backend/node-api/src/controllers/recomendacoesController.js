@@ -227,24 +227,51 @@ function calcularHeuristica(perfil, servicos) {
 // Geração de explicação textual (XAI simples)
 // -----------------------------------------------
 function gerarExplicacao(perfil, servico, prob) {
-  const pct   = (prob * 100).toFixed(1);
-  const cap   = parseFloat(perfil.capacidade_endividamento).toLocaleString('pt-AO');
-  const rend  = parseFloat(perfil.rendimento_mensal).toLocaleString('pt-AO');
-  const razoes = [];
+  const pct = (prob * 100).toFixed(1);
 
-  if (perfil.tem_historico_credito) razoes.push('histórico de crédito positivo');
-  if (perfil.tem_conta_bancaria)    razoes.push('conta bancária activa');
-  if ((perfil.score_credito || 0) > 600) razoes.push(`score de crédito de ${perfil.score_credito}`);
-  if (parseFloat(perfil.rendimento_mensal) > parseFloat(servico.rendimento_minimo) * 1.5)
-    razoes.push(`rendimento mensal (${rend} Kz) acima do mínimo exigido`);
+  const rend     = parseFloat(perfil.rendimento_mensal);
+  const despesas = parseFloat(perfil.despesas_mensais);
+  const cap      = parseFloat(perfil.capacidade_endividamento);
+  const score    = perfil.score_credito || 0;
+  const conta    = perfil.tem_conta_bancaria;
+  const hist     = perfil.tem_historico_credito;
+  const dep      = perfil.dependentes || 0;
+  const rMin     = parseFloat(servico.rendimento_minimo) || 0;
+  const taxa     = servico.taxa_juro_anual != null && !Number.isNaN(parseFloat(servico.taxa_juro_anual))
+    ? parseFloat(servico.taxa_juro_anual)
+    : null;
 
-  const baseRazao = razoes.length
-    ? `Com base no seu ${razoes.join(', ')}, `
-    : 'Com base no seu perfil financeiro, ';
+  const fmtKz     = (v) => `${(v || 0).toLocaleString('pt-AO')} Kz`;
+  const racioRend = rMin > 0 ? rend / rMin : null;
 
-  return `${baseRazao}este serviço tem ${pct}% de adequação ao seu perfil. `
-       + `A sua capacidade de endividamento estimada é de ${cap} Kz/mês, `
-       + `compatível com este produto.`;
+  // 1. Perfil real do utilizador em questão
+  let texto = `Analisámos o seu perfil (rendimento de ${fmtKz(rend)}/mês, despesas de ${fmtKz(despesas)}/mês`;
+  if (dep > 0) texto += `, ${dep} dependente${dep > 1 ? 's' : ''}`;
+  texto += `) e o seu score de crédito`;
+  texto += score > 0 ? ` de ${score} pontos` : ' ainda não registado';
+  if (hist) texto += ', com histórico de crédito';
+  if (conta) texto += ', com conta bancária activa';
+  texto += '.';
+
+  // 2. Rácio rendimento vs mínimo exigido do serviço
+  if (racioRend != null) {
+    if (racioRend >= 1) {
+      texto += ` O seu rendimento supera em ${racioRend.toFixed(1)}x o mínimo exigido de ${fmtKz(rMin)}/mês deste serviço.`;
+    } else {
+      texto += ` O seu rendimento (${fmtKz(rend)}) é inferior ao mínimo exigido de ${fmtKz(rMin)}/mês, devendo analisar este serviço com cautela.`;
+    }
+  }
+
+  // 3. Características específicas do serviço
+  texto += ` Este serviço (${servico.tipo.replace(/_/g, ' ')})`;
+  if (taxa != null && taxa > 0) texto += ` apresenta uma taxa de juro de ${taxa.toFixed(1)}% a.a.`;
+  if (servico.prazo_maximo_meses) texto += ` e um prazo até ${servico.prazo_maximo_meses} meses`;
+  texto += '.';
+
+  // 4. Conclusão com a capacidade real de endividamento
+  texto += ` Com a sua capacidade de endividamento estimada de ${fmtKz(cap)}/mês, a adequação obtida é de ${pct}% ao seu perfil.`;
+
+  return texto;
 }
 
 module.exports = { gerar, listar, obter, registarDecisao };

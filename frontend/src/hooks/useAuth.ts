@@ -20,11 +20,20 @@ export function useAuth() {
 
   // ─── Guarda token e user após login ────────────────────────────────────────
   const login = useCallback(
-    (token: string, user: AuthUser) => {
+    (token: string, user: AuthUser, redirectTo?: string) => {
       setAuth(token, user);
       // Também guarda no localStorage para o interceptor Axios
       localStorage.setItem("srf_token", token);
-      redirectByTipo(user.tipo, router, user);
+      
+      // Cria cookie para o middleware SSR do Next.js
+      const authData = JSON.stringify({ state: { user, isAuthenticated: true } });
+      document.cookie = `srf_auth=${encodeURIComponent(authData)}; path=/; max-age=604800; SameSite=Lax`;
+      
+      if (redirectTo) {
+        router.replace(redirectTo);
+      } else {
+        redirectByTipo(user.tipo, router, user);
+      }
     },
     [setAuth, router]
   );
@@ -34,6 +43,10 @@ export function useAuth() {
     clearAuth();
     localStorage.removeItem("srf_token");
     localStorage.removeItem("srf_user");
+    
+    // Remove cookie
+    document.cookie = "srf_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    
     router.replace("/login");
   }, [clearAuth, router]);
 
@@ -56,7 +69,7 @@ export function redirectByTipo(
   user?: AuthUser
 ) {
   switch (tipo) {
-    case "admin":
+    case "administrador":
       router.replace("/admin/dashboard");
       break;
     case "provedor":

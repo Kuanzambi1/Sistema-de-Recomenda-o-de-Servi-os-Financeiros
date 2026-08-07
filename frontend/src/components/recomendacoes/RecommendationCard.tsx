@@ -15,18 +15,19 @@ import {
   Heart,
   HeartPulse,
   Car,
+  TrendingUp,
   Loader2,
 } from "lucide-react";
 
 const TIPO_ICONS: Record<string, typeof Building2> = {
-  credito: Landmark,
   credito_pessoal: Landmark,
   credito_habitacao: Building2,
-  credito_negocio: Briefcase,
-  seguro: HeartPulse,
+  microcredito: Briefcase,
   seguro_vida: Heart,
   seguro_saude: HeartPulse,
   seguro_automovel: Car,
+  conta_poupanca: Landmark,
+  investimento: TrendingUp,
 };
 
 interface RecommendationCardProps {
@@ -44,7 +45,7 @@ export default function RecommendationCard({ recomendacao, isBest, onVerDetalhes
   const progressPercent = Math.min(probabilidade_adequacao * 100, 100);
   const formattedScore = (probabilidade_adequacao * 100).toFixed(0);
 
-  const isCredito = servico.tipo === "credito";
+  const isCredito = ["credito_pessoal", "credito_habitacao", "microcredito"].includes(servico.tipo);
 
   const handleInteresse = async () => {
     setLoading(true);
@@ -100,7 +101,7 @@ export default function RecommendationCard({ recomendacao, isBest, onVerDetalhes
             }`}
           >
             <IconComponent className="w-3 h-3" />
-            {servico.tipo === "credito" ? "CRÉDITO" : "SEGURO"}
+            {isCredito ? "CRÉDITO" : "SEGURO"}
           </span>
           {servico.provedor_nome && (
             <span className="text-xs text-muted-foreground">{servico.provedor_nome}</span>

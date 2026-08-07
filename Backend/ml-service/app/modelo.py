@@ -37,16 +37,16 @@ def _engenharia_features(df: pd.DataFrame) -> pd.DataFrame:
     # Numéricas normalizadas
     feats['rendimento_mensal']      = df['rendimento_mensal'].astype(float)
     feats['despesas_mensais']       = df['despesas_mensais'].astype(float)
-    feats['capacidade_endividamento'] = df.get(
-        'capacidade_endividamento',
-        (df['rendimento_mensal'] - df['despesas_mensais']) * 0.30
-    ).astype(float).clip(lower=0)
+    feats['capacidade_endividamento'] = pd.to_numeric(
+        df.get('capacidade_endividamento', (df['rendimento_mensal'] - df['despesas_mensais']) * 0.30),
+        errors='coerce'
+    ).fillna(0).clip(lower=0)
     feats['dependentes']            = df['dependentes'].astype(int)
     feats['score_credito']          = df['score_credito'].fillna(0).astype(float)
-    feats['taxa_juro_anual']        = df.get('taxa_juro_anual', 0).fillna(0).astype(float)
-    feats['prazo_max_meses']        = df.get('prazo_maximo_meses', df.get('prazo_max_meses', 0)).fillna(0).astype(float)
-    feats['montante_max']           = df.get('montante_maximo', df.get('montante_max', 0)).fillna(0).astype(float)
-    feats['rendimento_min_servico'] = df.get('rendimento_minimo', df.get('rendimento_min', 0)).fillna(0).astype(float)
+    feats['taxa_juro_anual']        = pd.to_numeric(df.get('taxa_juro_anual', pd.Series(0, index=df.index)), errors='coerce').fillna(0)
+    feats['prazo_max_meses']        = pd.to_numeric(df.get('prazo_maximo_meses', df.get('prazo_max_meses', pd.Series(0, index=df.index))), errors='coerce').fillna(0)
+    feats['montante_max']           = pd.to_numeric(df.get('montante_maximo', df.get('montante_max', pd.Series(0, index=df.index))), errors='coerce').fillna(0)
+    feats['rendimento_min_servico'] = pd.to_numeric(df.get('rendimento_minimo', df.get('rendimento_min', df.get('rendimento_min_servico', pd.Series(0, index=df.index)))), errors='coerce').fillna(0)
 
     # Rácio rendimento/mínimo exigido
     feats['racio_rendimento'] = np.where(
@@ -69,12 +69,12 @@ def _engenharia_features(df: pd.DataFrame) -> pd.DataFrame:
     # Encoding ordinal — nível educação
     feats['nivel_educacao_enc'] = pd.Categorical(
         df['nivel_educacao'], categories=NIVEIS_EDU, ordered=True
-    ).codes.clip(lower=0)
+    ).codes.clip(0)
 
     # Encoding ordinal — situação emprego
     feats['situacao_emprego_enc'] = pd.Categorical(
         df['situacao_emprego'], categories=SITUACOES, ordered=True
-    ).codes.clip(lower=0)
+    ).codes.clip(0)
 
     # One-hot — objetivo financeiro
     for obj in OBJETIVOS:
@@ -82,7 +82,11 @@ def _engenharia_features(df: pd.DataFrame) -> pd.DataFrame:
     feats['obj_todos_flag'] = (df['objetivo_financeiro'] == 'todos').astype(int)
 
     # One-hot — tipo de serviço
-    tipo_col = df.get('tipo_servico', df.get('tipo', 'credito_pessoal'))
+    tipo_col_raw = df.get('tipo_servico', df.get('tipo', 'credito_pessoal'))
+    if isinstance(tipo_col_raw, pd.Series):
+        tipo_col = tipo_col_raw
+    else:
+        tipo_col = pd.Series([tipo_col_raw] * len(df))
     for tp in TIPOS_SERV:
         feats[f'tipo_{tp}'] = (tipo_col == tp).astype(int)
 
@@ -111,7 +115,7 @@ class ModeloRecomendacao:
                 self.versao = f.read().strip()
             print(f'[ML] Modelo carregado: {self.versao}')
         else:
-            print('[ML] Nenhum modelo guardado — a criar modelo base...')
+            print('[ML] Nenhum modelo guardado - a criar modelo base...')
             self._criar_modelo_base()
 
     def _guardar_modelo(self, versao: str):
@@ -204,7 +208,7 @@ class ModeloRecomendacao:
         }
 
         self._guardar_modelo(versao)
-        print(f'[ML] Modelo treinado {versao} → AUC-ROC: {metricas["auc_roc"]}')
+        print(f'[ML] Modelo treinado {versao} -> AUC-ROC: {metricas["auc_roc"]}')
         return metricas
 
     def treinar(self, dados_treino: list) -> dict:

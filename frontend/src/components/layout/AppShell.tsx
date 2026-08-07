@@ -2,7 +2,7 @@
 
 import Sidebar from "./Sidebar"
 import { cn } from "@/lib/utils"
-import { Bell, Search, Brain } from "lucide-react"
+import { Bell, Search } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useAuthStore } from "@/store/auth.store"
 
@@ -48,11 +48,6 @@ export default function AppShell({ children, navItems, title, subtitle, classNam
               <span className="text-muted-foreground text-sm font-medium">SRF</span>
               <span className="text-muted-foreground/40 text-sm">/</span>
               <span className="text-sm font-bold text-white">{pageTitle}</span>
-            </div>
-            {/* AI Active badge */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20">
-              <Brain className="w-3 h-3 text-blue-400" />
-              <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">IA Ativa</span>
             </div>
           </div>
 

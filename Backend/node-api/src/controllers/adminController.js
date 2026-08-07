@@ -122,4 +122,34 @@ const listarUtilizadores = async (req, res, next) => {
   }
 };
 
-module.exports = { metricas, retreinarModelo, historicoModelos, listarUtilizadores };
+// POST /api/admin/utilizadores
+const criarUtilizador = async (req, res, next) => {
+  try {
+    const { nome, email, tipo } = req.body;
+    
+    const existe = await query('SELECT id FROM utilizadores WHERE email = $1', [email]);
+    if (existe.rows.length) {
+      return res.status(409).json({ erro: 'Email já registado.' });
+    }
+
+    // Default password for admin created users
+    const bcrypt = require('bcryptjs');
+    const password_hash = await bcrypt.hash('GeraD0rAuto!2026', 12);
+
+    const { rows: [utilizador] } = await query(
+      `INSERT INTO utilizadores (nome, email, password_hash, tipo)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, nome, email, tipo, criado_em`,
+      [nome, email.toLowerCase(), password_hash, tipo]
+    );
+
+    res.status(201).json({
+      mensagem: 'Utilizador criado com sucesso.',
+      utilizador,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { metricas, retreinarModelo, historicoModelos, listarUtilizadores, criarUtilizador };

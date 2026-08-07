@@ -5,12 +5,13 @@ const PUBLIC_ROUTES = ["/login", "/register"];
 
 // Mapeamento de prefixo de rota → tipo de utilizador permitido
 const PROTECTED_ROUTES: Record<string, string[]> = {
-  "/admin": ["admin"],
-  "/servicos": ["provedor"],
+  "/admin": ["administrador"],
+  "/servicos": ["provedor", "administrador"],
+  "/analitica": ["provedor"],
   "/recomendacoes": ["utilizador"],
   "/onboarding": ["utilizador"],
   "/historico": ["utilizador"],
-  "/perfil": ["utilizador"],
+  "/definicoes": ["utilizador", "provedor", "administrador"],
 };
 
 export function middleware(request: NextRequest) {
@@ -33,7 +34,8 @@ export function middleware(request: NextRequest) {
   }
 
   try {
-    const auth = JSON.parse(authCookie.value);
+    const cookieValue = decodeURIComponent(authCookie.value);
+    const auth = JSON.parse(cookieValue);
     const tipo: string = auth?.state?.user?.tipo;
 
     if (!tipo || !auth?.state?.isAuthenticated) {
@@ -64,7 +66,7 @@ export function middleware(request: NextRequest) {
 
 function getHomeForTipo(tipo: string): string {
   switch (tipo) {
-    case "admin":
+    case "administrador":
       return "/admin/dashboard";
     case "provedor":
       return "/servicos";

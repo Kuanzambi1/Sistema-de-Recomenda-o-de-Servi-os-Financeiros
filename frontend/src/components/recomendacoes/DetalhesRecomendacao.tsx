@@ -98,7 +98,7 @@ export default function DetalhesRecomendacao({
   const [interessado, setInteressado] = useState(false);
 
   const perfil = mockPerfilFinanceiro;
-  const isCredito = servico.tipo === "credito";
+  const isCredito = ["credito_pessoal", "credito_habitacao", "microcredito"].includes(servico.tipo);
   const progressPercent = Math.min(probabilidade_adequacao * 100, 100);
   const formattedScore = (probabilidade_adequacao * 100).toFixed(0);
   const scoreLabel = formatScoreLabel(probabilidade_adequacao);

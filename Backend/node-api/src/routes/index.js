@@ -132,6 +132,13 @@ router.get('/admin/modelo/historico',
 router.get('/admin/utilizadores',
   autenticar, autorizar('administrador'), adminCtrl.listarUtilizadores);
 
+router.post('/admin/utilizadores',
+  autenticar, autorizar('administrador'),
+  body('nome').trim().notEmpty().withMessage('Nome é obrigatório.'),
+  body('email').isEmail().withMessage('Email inválido.'),
+  body('tipo').isIn(['utilizador', 'provedor', 'administrador']).withMessage('Tipo inválido.'),
+  validar, adminCtrl.criarUtilizador);
+
 router.get('/admin/feedbacks/estatisticas',
   autenticar, autorizar('administrador'), fbCtrl.estatisticas);
 

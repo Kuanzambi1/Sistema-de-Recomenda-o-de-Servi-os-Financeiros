@@ -4,13 +4,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, ArrowRight, BriefcaseBusiness, Monitor, Building2, GraduationCap, Minus, Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, BriefcaseBusiness, Monitor, Building2, GraduationCap } from "lucide-react";
 
 const step1FormSchema = z.object({
   situacao_emprego: z.enum(["empregado", "desempregado", "autonomo", "estudante", "reformado"], {
     error: "Seleccione a situação de emprego.",
   }),
-  nivel_educacao: z.enum(["primario", "secundario", "licenciatura", "mestrado", "doutoramento"], {
+  nivel_educacao: z.enum(["primaria", "secundaria", "licenciatura", "mestrado", "doutoramento"], {
     error: "Seleccione o nível de educação.",
   }),
   dependentes: z.number().int().min(0).max(20),
@@ -28,8 +28,8 @@ const SITUACAO_OPTIONS = [
 ];
 
 const EDUCACAO_OPTIONS = [
-  { value: "primario", label: "Ensino Primário" },
-  { value: "secundario", label: "Ensino Médio" },
+  { value: "primaria", label: "Ensino Primário" },
+  { value: "secundaria", label: "Ensino Médio" },
   { value: "licenciatura", label: "Licenciatura" },
   { value: "mestrado", label: "Mestrado" },
   { value: "doutoramento", label: "Doutoramento" },
@@ -41,6 +41,14 @@ interface StepEmployInfoProps {
 }
 
 export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfoProps) {
+  const sanitizedDefaultValues = { ...defaultValues };
+  if (sanitizedDefaultValues.nivel_educacao === "primario") {
+    sanitizedDefaultValues.nivel_educacao = "primaria";
+  }
+  if (sanitizedDefaultValues.nivel_educacao === "secundario") {
+    sanitizedDefaultValues.nivel_educacao = "secundaria";
+  }
+
   const {
     register,
     handleSubmit,
@@ -55,7 +63,7 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
       dependentes: 0,
       tem_conta_bancaria: false,
       tem_historico_credito: false,
-      ...((defaultValues ?? {}) as Partial<Step1Data>),
+      ...((sanitizedDefaultValues ?? {}) as Partial<Step1Data>),
     },
   });
 
@@ -78,18 +86,28 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
                 key={opt.value}
                 className={`flex items-start gap-4 p-4 rounded-lg border cursor-pointer transition-all ${
                   isSelected
-                    ? "bg-[#f0f3ff] border-[#c4c6d0] shadow-md"
+                    ? "bg-primary border-primary shadow-md"
                     : "bg-card border-[#c4c6d0] hover:shadow-sm"
                 }`}
                 style={{ height: 82 }}
               >
                 <input type="radio" className="hidden" {...register("situacao_emprego")} value={opt.value} />
-                <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5 text-[#7c94ca]" />
+                <div
+                  className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 ${
+                    isSelected ? "bg-white/20" : "bg-primary"
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${isSelected ? "text-white" : "text-[#7c94ca]"}`} />
                 </div>
                 <div>
-                  <p className="text-foreground font-bold text-base">{opt.title}</p>
-                  <p className="text-muted-foreground text-base">{opt.desc}</p>
+                  <p
+                    className={`font-bold text-base ${isSelected ? "text-white" : "text-foreground"}`}
+                  >
+                    {opt.title}
+                  </p>
+                  <p className={`text-base ${isSelected ? "text-white/90" : "text-muted-foreground"}`}>
+                    {opt.desc}
+                  </p>
                 </div>
               </label>
             );
@@ -109,7 +127,7 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
               className={`px-4 py-2 rounded-full border cursor-pointer transition-all text-sm font-medium ${
                 educacao === opt.value
                   ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-transparent text-[#151c27] border-[#c4c6d0] hover:border-primary/50"
+                  : "bg-transparent text-white border-[#c4c6d0] hover:border-primary/50"
               }`}
             >
               <input type="radio" className="hidden" {...register("nivel_educacao")} value={opt.value} />
@@ -125,24 +143,21 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
       <div className="flex flex-wrap gap-6">
         <div className="flex flex-col gap-2">
           <span className="text-primary text-sm font-medium tracking-[0.7px]">Número de Dependentes</span>
-          <div className="flex items-center gap-4 rounded-lg bg-[#f0f3ff] border border-[#c4c6d0] p-1 w-[200px]">
-            <button
-              type="button"
-              className="w-10 h-10 rounded flex items-center justify-center bg-[#f9f9ff] text-primary"
-              onClick={() => setValue("dependentes", Math.max(0, (dependentes || 0) - 1), { shouldValidate: true })}
-            >
-              <Minus className="w-[14px] h-[2px]" />
-            </button>
-            <span className="flex-1 text-center text-base font-bold text-[#151c27]">
-              {String(dependentes || 0).padStart(2, "0")}
-            </span>
-            <button
-              type="button"
-              className="w-10 h-10 rounded flex items-center justify-center bg-[#f9f9ff] text-primary"
-              onClick={() => setValue("dependentes", (dependentes || 0) + 1, { shouldValidate: true })}
-            >
-              <Plus className="w-[14px] h-[14px]" />
-            </button>
+          <div className="flex flex-wrap gap-2">
+            {[0, 1, 2, 3, 4, 5].map((n) => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => setValue("dependentes", n, { shouldValidate: true })}
+                className={`w-12 h-12 rounded-full border cursor-pointer transition-all text-base font-bold ${
+                  dependentes === n
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-transparent text-white border-[#c4c6d0] hover:border-primary/50"
+                }`}
+              >
+                {n}
+              </button>
+            ))}
           </div>
           {errors.dependentes && (
             <span className="text-destructive text-xs">{errors.dependentes.message}</span>

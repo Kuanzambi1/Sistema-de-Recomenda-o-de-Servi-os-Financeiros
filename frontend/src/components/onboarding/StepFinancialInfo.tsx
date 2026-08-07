@@ -46,11 +46,11 @@ export default function StepFinancialInfo({ defaultValues, onNext, onBack }: Ste
 
   return (
     <form onSubmit={handleSubmit((data) => onNext(data as unknown as Record<string, unknown>))} className="flex flex-col gap-8">
-      <div className="flex items-start gap-3 p-4 rounded-lg bg-[#ffddb44d] border border-[#feae2c]">
-        <AlertTriangle className="w-5 h-5 text-[#6b4500] shrink-0 mt-0.5" />
+      <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
+        <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
         <div className="flex flex-col gap-0.5">
-          <p className="text-[#291800] font-bold text-sm">Confidencialidade de Dados</p>
-          <p className="text-[#633f00] text-sm">
+          <p className="text-amber-400 font-bold text-sm">Confidencialidade de Dados</p>
+          <p className="text-muted-foreground text-sm">
             Suas informações financeiras são criptografadas e utilizadas exclusivamente para
             gerar recomendações personalizadas em conformidade com as leis de proteção
             de dados de Angola.
@@ -64,7 +64,7 @@ export default function StepFinancialInfo({ defaultValues, onNext, onBack }: Ste
           <div className="relative">
             <Input
               type="number"
-              className="bg-[#f9f9ff] border-[#c4c6d0] rounded-lg pt-[18px] pb-[17px] pl-8"
+              className="bg-white/5 border-white/10 text-white rounded-lg pt-[18px] pb-[17px] pl-8 placeholder:text-muted-foreground/30 focus-visible:border-primary"
               {...register("rendimento", { valueAsNumber: true })}
               placeholder="0"
             />
@@ -82,7 +82,7 @@ export default function StepFinancialInfo({ defaultValues, onNext, onBack }: Ste
           <div className="relative">
             <Input
               type="number"
-              className="bg-[#f9f9ff] border-[#c4c6d0] rounded-lg pt-[18px] pb-[17px] pl-8"
+              className="bg-white/5 border-white/10 text-white rounded-lg pt-[18px] pb-[17px] pl-8 placeholder:text-muted-foreground/30 focus-visible:border-primary"
               {...register("despesas", { valueAsNumber: true })}
               placeholder="0"
             />
@@ -113,7 +113,7 @@ export default function StepFinancialInfo({ defaultValues, onNext, onBack }: Ste
         <label className="text-muted-foreground text-sm">Score de Crédito (opcional)</label>
         <Input
           type="number"
-          className="bg-[#f9f9ff] border-[#c4c6d0] rounded-lg w-[240px]"
+          className="bg-white/5 border-white/10 text-white rounded-lg w-[240px] placeholder:text-muted-foreground/30 focus-visible:border-primary"
           {...register("score_credito")}
           placeholder="Ex: 650"
         />

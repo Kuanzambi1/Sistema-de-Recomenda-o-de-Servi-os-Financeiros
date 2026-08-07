@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import {
   LayoutDashboard, Star, Clock, Settings, Briefcase, PlusCircle,
   BarChart3, Users, ShieldAlert, FileSearch, LogOut, ChevronRight,
-  Building2, Brain, Bot
+  Building2, Brain
 } from "lucide-react"
 
 import { useAuthStore } from "@/store/auth.store"
@@ -32,10 +32,14 @@ const ICON_MAP: Record<string, React.ElementType> = {
   "Adicionar Serviço": PlusCircle,
   "Analítica e Performance": BarChart3,
   "Dashboard": LayoutDashboard,
+  "Utilizadores": Users,
+  "Serviços": Building2,
+  "Regras de Risco": ShieldAlert,
+  "Modelo IA": Brain,
+  "Auditoria": FileSearch,
   "Gestão de Utilizadores": Users,
   "Gestão de Serviços": Building2,
   "Modelos de Risco": ShieldAlert,
-  "Auditoria": FileSearch,
 }
 
 export default function Sidebar({ brand = "SRF", items, className }: SidebarProps) {
@@ -110,22 +114,6 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
           )
         })}
       </nav>
-
-      {/* AI Status Badge */}
-      <div className="px-4 py-3 border-t border-white/5 shrink-0">
-        <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/[0.02] border border-white/5">
-          <div className="w-7 h-7 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 animate-pulse-glow-sm">
-            <Brain className="w-3.5 h-3.5 text-blue-400" />
-          </div>
-          <div className="flex flex-col leading-none flex-1 min-w-0">
-            <span className="text-[11px] font-bold text-white">Motor de IA</span>
-            <span className="text-[9px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
-              Online — Ativo
-            </span>
-          </div>
-        </div>
-      </div>
 
       {/* User footer */}
       <div className="p-4 border-t border-white/5 shrink-0">

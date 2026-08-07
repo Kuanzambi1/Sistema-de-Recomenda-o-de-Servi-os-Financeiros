@@ -1,0 +1,123 @@
+@startuml
+|Utilizador|
+start
+: Solicita recomendações
+  (clica "Gerar Recomendações");
+
+|Backend (Node.js)|
+: Busca perfil financeiro
+  do utilizador na BD;
+
+if (Perfil existe?) then (não)
+  : Retorna erro:
+  "Crie o seu perfil
+   financeiro primeiro";
+  stop
+else (sim)
+endif
+
+: Filtra serviços elegíveis
+  (SQL com regras de negócio);
+
+: Regras de negócio aplicadas:
+  • rendimento >= rendimento_minimo
+  • score >= score_credito_minimo
+  • se requer conta → tem_conta = true
+  • serviço deve estar activo;
+
+if (Existem serviços elegíveis?) then (não)
+  : Retorna:
+  "Nenhum serviço
+   encontrado para o
+   seu perfil";
+  stop
+else (sim)
+endif
+
+|Backend (Node.js)|
+: Monta payload com perfil
+  + lista de serviços;
+
+: Tenta enviar para
+  ML Service (FastAPI);
+
+if (ML Service responde?) then (sim)
+  |ML Service (Python)|
+  : Para cada par
+    (perfil × serviço),
+    constrói 29 features;
+
+  : Features:
+    • rendimento, despesas,
+      score, dependentes
+    • taxa_juro, prazo, montante
+    • rácio rendimento/exigido
+    • rácio poupança
+    • conta bancária, hist. crédito
+    • nível educação (ordinal)
+    • situação emprego (ordinal)
+    • objetivo financeiro (one-hot)
+    • tipo de serviço (one-hot);
+
+  : Normaliza features
+    (StandardScaler);
+
+  : Logistic Regression:
+    z = w·x + b
+    prob = 1/(1+e⁻ᶻ);
+
+  : Retorna probabilidades
+    para cada serviço;
+
+  |Backend (Node.js)|
+else (não — timeout/erro)
+  : FALLBACK HEURÍSTICO
+    (calcula probabilidades
+    manualmente);
+
+  : Fórmula:
+    p = 0.5 (base)
+    + rácio rendimento
+    + tem_historico (0.10)
+    + tem_conta (0.05)
+    + score > 700 (0.15)
+    + score > 500 (0.08)
+    + bónus tipo serviço;
+endif
+
+: Ordena serviços por
+  probabilidade decrescente;
+
+: Limita ao top 10;
+
+: Apaga recomendações
+  anteriores não visualizadas;
+
+: Para cada um dos top 10:
+
+  : Gera explicação textual
+    (XAI — explicabilidade);
+
+  : Factores da explicação:
+    • histórico de crédito
+    • conta bancária
+    • score de crédito
+    • rendimento acima do mínimo
+    • capacidade de endividamento;
+
+  : Guarda na tabela
+    recomendacoes (BD);
+
+: Retorna lista ao utilizador;
+
+|Utilizador|
+: Visualiza recomendações
+  ordenadas com %
+  de adequação + explicação;
+
+: Pode aceitar, rejeitar
+  ou avaliar (feedback 1-5);
+
+stop
+
+@enduml

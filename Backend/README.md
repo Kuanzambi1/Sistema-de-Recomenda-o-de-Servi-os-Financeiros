@@ -49,7 +49,7 @@ backend/
 ```bash
 # Criar base de dados e utilizador no PostgreSQL
 psql -U postgres -c "CREATE USER srfs_user WITH PASSWORD 'srfs_password_segura';"
-psql -U postgres -c "CREATE DATABASE srfs_db OWNER srfs_user;"
+psql -U postgres -c "CREATE DATABASE financial_services OWNER srfs_user;"
 ```
 
 ### 2. API Node.js

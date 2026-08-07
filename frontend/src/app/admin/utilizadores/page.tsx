@@ -52,7 +52,7 @@ export default function GestaoUtilizadoresPage() {
           <p className="text-muted-foreground mt-1 text-sm">Todos os utilizadores registados na plataforma.</p>
         </div>
         <Button asChild className="gap-2 font-semibold">
-          <Link href="/utilizadores/novo"><UserPlus className="w-4 h-4" />Adicionar Novo</Link>
+          <Link href="/admin/utilizadores/novo"><UserPlus className="w-4 h-4" />Adicionar Novo</Link>
         </Button>
       </div>
 

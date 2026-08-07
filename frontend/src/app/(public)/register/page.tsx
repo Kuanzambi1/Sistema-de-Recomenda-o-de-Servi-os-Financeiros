@@ -9,13 +9,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormValues, registerSchema } from "@/lib/schemas/auth.schema";
 import Link from "next/link";
 import { authService } from "@/services/auth.service";
-import { useAuthStore } from "@/store/auth.store";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,11 +35,9 @@ export default function RegisterPage() {
         password: data.password,
       });
 
-      setAuth(res.token, res.utilizador);
-
-      if (res.utilizador.tipo === "utilizador") router.push("/onboarding");
-      else if (res.utilizador.tipo === "provedor") router.push("/servicos");
-      else router.push("/dashboard");
+      // Utilizadores novos vão para onboarding; outros seguem o padrão
+      const redirectTo = res.user.tipo === "utilizador" ? "/onboarding" : undefined;
+      login(res.token, res.user, redirectTo);
     } catch (err: any) {
       setError(err?.message ?? "Erro ao criar conta.");
       setLoading(false);

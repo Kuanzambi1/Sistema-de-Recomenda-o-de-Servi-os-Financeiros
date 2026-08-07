@@ -55,4 +55,4 @@ export const selectIsProvedor = (state: AuthState): boolean =>
   state.user?.tipo === "provedor";
 
 export const selectIsAdmin = (state: AuthState): boolean =>
-  state.user?.tipo === "admin";
+  state.user?.tipo === "administrador";

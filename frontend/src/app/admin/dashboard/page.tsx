@@ -161,15 +161,31 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  {/* Metrics grid */}
-                  <div className="grid grid-cols-2 gap-3 mt-4">
+                  {/* All metrics grid */}
+                  <div className="grid grid-cols-3 gap-3 mt-4">
+                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Precisão</p>
+                      <p className="text-xl font-bold text-foreground mt-1">{(modelo.precisao * 100).toFixed(1)}%</p>
+                    </div>
+                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Recall</p>
+                      <p className="text-xl font-bold text-foreground mt-1">{(modelo.recall * 100).toFixed(1)}%</p>
+                    </div>
                     <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">F1 Score</p>
                       <p className="text-xl font-bold text-foreground mt-1">{(modelo.f1_score * 100).toFixed(1)}%</p>
                     </div>
                     <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">AUC-ROC</p>
+                      <p className="text-xl font-bold text-foreground mt-1">{(modelo.auc_roc * 100).toFixed(1)}%</p>
+                    </div>
+                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Amostras</p>
                       <p className="text-xl font-bold text-foreground mt-1">{modelo.amostras_treino}</p>
+                    </div>
+                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Algoritmo</p>
+                      <p className="text-sm font-bold text-foreground mt-1 capitalize">{modelo.algoritmo?.replace(/_/g, ' ')}</p>
                     </div>
                   </div>
                 </>

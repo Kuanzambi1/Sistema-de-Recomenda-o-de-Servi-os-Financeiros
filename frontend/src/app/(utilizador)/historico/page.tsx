@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { CheckCircle2, Clock, XCircle, ChevronRight, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { recomendacoesService } from "@/services/recomendacoes.service";
 
 const statusMap: Record<string, { icon: React.ElementType; label: string; color: string; bg: string; dot: string }> = {
@@ -99,7 +100,7 @@ export default function HistoricoPage() {
                       <span className="absolute inset-0 rounded-full animate-ping opacity-30 bg-amber-400" />
                     )}
                   </div>
-                  <div className="flex-1 flex items-center justify-between p-5 rounded-xl bg-card border border-border hover:border-white/15 hover:bg-card/80 transition-all cursor-pointer group-hover:shadow-lg group-hover:shadow-black/20">
+                  <Link href={`/recomendacoes/${rec.id}`} className="flex-1 flex items-center justify-between p-5 rounded-xl bg-card border border-border hover:border-white/15 hover:bg-card/80 transition-all cursor-pointer group-hover:shadow-lg group-hover:shadow-black/20">
                     <div>
                       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">
                         {rec.nome_provedor}
@@ -121,7 +122,7 @@ export default function HistoricoPage() {
                       </span>
                       <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
                     </div>
-                  </div>
+                  </Link>
                 </div>
               );
             })}

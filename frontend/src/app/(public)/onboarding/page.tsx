@@ -68,16 +68,20 @@ export default function OnboardingPage() {
       const step2 = getStepData(2);
       const step3 = data;
 
+      let nivelEducacao = step1.nivel_educacao as string;
+      if (nivelEducacao === "primario") nivelEducacao = "primaria";
+      if (nivelEducacao === "secundario") nivelEducacao = "secundaria";
+
       const payload: PerfilFinanceiroPayload = {
         situacao_emprego: step1.situacao_emprego as PerfilFinanceiroPayload["situacao_emprego"],
-        nivel_educacao: step1.nivel_educacao as PerfilFinanceiroPayload["nivel_educacao"],
+        nivel_educacao: nivelEducacao as PerfilFinanceiroPayload["nivel_educacao"],
         dependentes: Number(step1.dependentes) || 0,
         tem_conta_bancaria: Boolean(step1.tem_conta_bancaria),
         tem_historico_credito: Boolean(step1.tem_historico_credito),
         rendimento_mensal: Number(step2.rendimento) || 0,
         despesas_mensais: Number(step2.despesas) || 0,
         score_credito: step2.score_credito ? Number(step2.score_credito) : undefined,
-        objectivos: (step3.objectivos as string[]) ?? [],
+        objetivo_financeiro: (step3.objectivo_financeiro as string) || "todos",
       };
 
       try {
@@ -94,7 +98,7 @@ export default function OnboardingPage() {
       router.replace("/recomendacoes");
     } catch (err: any) {
       console.error(err);
-      setError("Ocorreu um erro ao guardar o seu perfil. Tente novamente.");
+      setError(err?.message || "Ocorreu um erro ao guardar o seu perfil. Tente novamente.");
     } finally {
       setLoading(false);
     }

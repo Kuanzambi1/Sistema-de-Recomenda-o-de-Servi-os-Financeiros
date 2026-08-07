@@ -1,8 +1,16 @@
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
-export type UserTipo = "utilizador" | "provedor" | "admin";
+export type UserTipo = "utilizador" | "provedor" | "administrador";
 
-export type TipoServico = "credito" | "seguro";
+export type TipoServico =
+  | "credito_pessoal"
+  | "credito_habitacao"
+  | "microcredito"
+  | "seguro_vida"
+  | "seguro_saude"
+  | "seguro_automovel"
+  | "conta_poupanca"
+  | "investimento";
 
 export type SituacaoEmprego =
   | "empregado"
@@ -12,19 +20,18 @@ export type SituacaoEmprego =
   | "reformado";
 
 export type NivelEducacao =
-  | "primario"
-  | "secundario"
+  | "primaria"
+  | "secundaria"
   | "licenciatura"
   | "mestrado"
   | "doutoramento";
 
 export type ObjetivoFinanceiro =
-  | "credito_pessoal"
-  | "credito_habitacao"
-  | "credito_negocio"
-  | "seguro_vida"
-  | "seguro_saude"
-  | "seguro_automovel";
+  | "poupanca"
+  | "credito"
+  | "seguro"
+  | "investimento"
+  | "todos";
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
@@ -67,7 +74,7 @@ export interface PerfilFinanceiro {
   tem_conta_bancaria: boolean;
   tem_historico_credito: boolean;
   score_credito: number;
-  objectivo_financeiro: ObjetivoFinanceiro;
+  objetivo_financeiro: ObjetivoFinanceiro;
   capacidade_endividamento: number;
   criado_em: string;
   atualizado_em: string;
@@ -82,7 +89,7 @@ export interface PerfilFinanceiroPayload {
   tem_conta_bancaria: boolean;
   tem_historico_credito: boolean;
   score_credito?: number;
-  objectivos: string[];
+  objetivo_financeiro: string;
 }
 
 // ─── Serviço Financeiro ───────────────────────────────────────────────────────

@@ -127,58 +127,62 @@ export default function DefinicoesPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-4 mb-2">
-                    <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">Perfil Financeiro</h3>
-                    <Button asChild variant="outline" size="sm" className="h-8 text-xs bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20 hover:text-blue-300">
-                      <Link href="/onboarding">Refazer Assistente IA</Link>
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="rendimento" className="text-sm">Rendimento Mensal (Kz)</Label>
-                      <Input id="rendimento" type="number" {...register("rendimento_mensal")} className="bg-muted/50 border-border focus:border-primary/50" />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="despesas" className="text-sm">Despesas Mensais (Kz)</Label>
-                      <Input id="despesas" type="number" {...register("despesas_mensais")} className="bg-muted/50 border-border focus:border-primary/50" />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="emprego" className="text-sm">Situação de Emprego</Label>
-                      <select id="emprego" {...register("situacao_emprego")} className="h-10 rounded-lg border border-border bg-muted/50 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                        <option value="empregado">Empregado</option>
-                        <option value="autonomo">Autónomo</option>
-                        <option value="desempregado">Desempregado</option>
-                        <option value="reformado">Reformado</option>
-                        <option value="estudante">Estudante</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="dependentes" className="text-sm">Nº de Dependentes</Label>
-                      <Input id="dependentes" type="number" {...register("dependentes")} className="bg-muted/50 border-border focus:border-primary/50" />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="educacao" className="text-sm">Nível de Educação</Label>
-                      <select id="educacao" {...register("nivel_educacao")} className="h-10 rounded-lg border border-border bg-muted/50 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                        <option value="primario">Primário</option>
-                        <option value="secundario">Secundário</option>
-                        <option value="licenciatura">Licenciatura</option>
-                        <option value="mestrado">Mestrado</option>
-                        <option value="doutoramento">Doutoramento</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="score" className="text-sm">Score de Crédito (Opcional)</Label>
-                      <Input id="score" type="number" {...register("score_credito")} className="bg-muted/50 border-border focus:border-primary/50" />
-                    </div>
-                    <div className="flex items-center gap-3 h-10 mt-6 sm:mt-8">
-                      <input id="conta" type="checkbox" {...register("tem_conta_bancaria")} className="w-4 h-4 rounded border-border text-primary focus:ring-primary bg-muted/50" />
-                      <Label htmlFor="conta" className="text-sm">Tem conta bancária ativa?</Label>
-                    </div>
-                    <div className="flex items-center gap-3 h-10 mt-2 sm:mt-8">
-                      <input id="historico" type="checkbox" {...register("tem_historico_credito")} className="w-4 h-4 rounded border-border text-primary focus:ring-primary bg-muted/50" />
-                      <Label htmlFor="historico" className="text-sm">Tem histórico de crédito?</Label>
-                    </div>
-                  </div>
+                  {user?.tipo === "utilizador" && (
+                    <>
+                      <div className="flex items-center justify-between mt-4 mb-2">
+                        <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">Perfil Financeiro</h3>
+                        <Button asChild variant="outline" size="sm" className="h-8 text-xs bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20 hover:text-blue-300">
+                          <Link href="/onboarding">Refazer Assistente IA</Link>
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="rendimento" className="text-sm">Rendimento Mensal (Kz)</Label>
+                          <Input id="rendimento" type="number" {...register("rendimento_mensal")} className="bg-muted/50 border-border focus:border-primary/50" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="despesas" className="text-sm">Despesas Mensais (Kz)</Label>
+                          <Input id="despesas" type="number" {...register("despesas_mensais")} className="bg-muted/50 border-border focus:border-primary/50" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="emprego" className="text-sm">Situação de Emprego</Label>
+                          <select id="emprego" {...register("situacao_emprego")} className="h-10 rounded-lg border border-border bg-muted/50 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                            <option value="empregado">Empregado</option>
+                            <option value="autonomo">Autónomo</option>
+                            <option value="desempregado">Desempregado</option>
+                            <option value="reformado">Reformado</option>
+                            <option value="estudante">Estudante</option>
+                          </select>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="dependentes" className="text-sm">Nº de Dependentes</Label>
+                          <Input id="dependentes" type="number" {...register("dependentes")} className="bg-muted/50 border-border focus:border-primary/50" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="educacao" className="text-sm">Nível de Educação</Label>
+                          <select id="educacao" {...register("nivel_educacao")} className="h-10 rounded-lg border border-border bg-muted/50 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                            <option value="primaria">Primário</option>
+                            <option value="secundaria">Secundário</option>
+                            <option value="licenciatura">Licenciatura</option>
+                            <option value="mestrado">Mestrado</option>
+                            <option value="doutoramento">Doutoramento</option>
+                          </select>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="score" className="text-sm">Score de Crédito (Opcional)</Label>
+                          <Input id="score" type="number" {...register("score_credito")} className="bg-muted/50 border-border focus:border-primary/50" />
+                        </div>
+                        <div className="flex items-center gap-3 h-10 mt-6 sm:mt-8">
+                          <input id="conta" type="checkbox" {...register("tem_conta_bancaria")} className="w-4 h-4 rounded border-border text-primary focus:ring-primary bg-muted/50" />
+                          <Label htmlFor="conta" className="text-sm">Tem conta bancária ativa?</Label>
+                        </div>
+                        <div className="flex items-center gap-3 h-10 mt-2 sm:mt-8">
+                          <input id="historico" type="checkbox" {...register("tem_historico_credito")} className="w-4 h-4 rounded border-border text-primary focus:ring-primary bg-muted/50" />
+                          <Label htmlFor="historico" className="text-sm">Tem histórico de crédito?</Label>
+                        </div>
+                      </div>
+                    </>
+                  )}
 
                   <div className="flex justify-end pt-4 border-t border-border">
                     <Button type="submit" size="sm" className={`gap-2 font-semibold transition-all ${saved ? "bg-emerald-600 hover:bg-emerald-600" : ""}`}>

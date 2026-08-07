@@ -1,12 +1,11 @@
 import { z } from "zod";
 
 const OBJETIVO_FINANCEIRO_VALUES = [
-  "credito_pessoal",
-  "credito_habitacao",
-  "credito_negocio",
-  "seguro_vida",
-  "seguro_saude",
-  "seguro_automovel",
+  "poupanca",
+  "credito",
+  "seguro",
+  "investimento",
+  "todos",
 ] as const;
 
 const SITUACAO_EMPREGO_VALUES = [
@@ -18,8 +17,8 @@ const SITUACAO_EMPREGO_VALUES = [
 ] as const;
 
 const NIVEL_EDUCACAO_VALUES = [
-  "primario",
-  "secundario",
+  "primaria",
+  "secundaria",
   "licenciatura",
   "mestrado",
   "doutoramento",
@@ -96,11 +95,9 @@ export const step3Schema = z.object({
   despesas_mensais: z.undefined(),
   score_credito: z.undefined(),
 
-  objectivo_financeiro: z.array(
-    z.enum(OBJETIVO_FINANCEIRO_VALUES, {
-      error: "Objectivo financeiro inválido.",
-    })
-  ).min(1, "Seleccione pelo menos um objectivo financeiro."),
+  objectivo_financeiro: z.enum(OBJETIVO_FINANCEIRO_VALUES, {
+    error: "Seleccione um objectivo financeiro.",
+  }),
 });
 
 // Schema completo para validação final na submissão
@@ -145,11 +142,9 @@ export const perfilFinanceiroSchema = z
       .optional()
       .nullable(),
 
-    objectivo_financeiro: z.array(
-      z.enum(OBJETIVO_FINANCEIRO_VALUES, {
-        error: "Objectivo financeiro inválido.",
-      })
-    ).optional(),
+    objectivo_financeiro: z.enum(OBJETIVO_FINANCEIRO_VALUES, {
+      error: "Objectivo financeiro inválido.",
+    }).optional(),
   })
   .refine(
     (data) => {

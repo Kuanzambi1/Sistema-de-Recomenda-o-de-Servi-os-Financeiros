@@ -38,12 +38,13 @@ api.interceptors.response.use(
       }
     }
 
+    const data = error.response?.data as any;
     const apiError: ApiError = {
       message:
-        (error.response?.data as { message?: string })?.message ??
+        data?.message ??
+        data?.erro ??
         "Ocorreu um erro inesperado.",
-      errors: (error.response?.data as { errors?: Record<string, string[]> })
-        ?.errors,
+      errors: data?.errors ?? data?.campos,
       status: status ?? 500,
     };
     return Promise.reject(apiError);

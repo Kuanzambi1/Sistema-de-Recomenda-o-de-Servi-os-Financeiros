@@ -29,9 +29,14 @@ async function seed() {
     // Provedores (bancos)
     const provedorHash = await bcrypt.hash('Banco@2025!', 12);
     const bancos = [
-      { nome: 'Banco BIC Angola',    email: 'bic@srfs.ao'    },
-      { nome: 'Banco Millennium BCP', email: 'bcp@srfs.ao'   },
-      { nome: 'Standard Bank Angola', email: 'stb@srfs.ao'   },
+      { nome: 'Banco BIC Angola',                     email: 'bic@srfs.ao' },
+      { nome: 'Banco Millennium BCP',                  email: 'bcp@srfs.ao' },
+      { nome: 'Standard Bank Angola',                  email: 'stb@srfs.ao' },
+      { nome: 'BAI — Banco Angolano de Investimentos', email: 'bai@srfs.ao' },
+      { nome: 'BFA — Banco de Fomento Angola',         email: 'bfa@srfs.ao' },
+      { nome: 'Banco Sol',                             email: 'sol@srfs.ao' },
+      { nome: 'Banco Económico',                       email: 'eco@srfs.ao' },
+      { nome: 'BNI — Banco de Negócios Internacional', email: 'bni@srfs.ao' },
     ];
     const provedorIds = [];
     for (const b of bancos) {
@@ -66,31 +71,87 @@ async function seed() {
         [user.id, u.rendimento, u.despesas, u.dep, u.edu, u.emp, u.conta, u.hist, u.score]);
     }
 
-    // Serviços financeiros
+    // Serviços financeiros — foco em créditos
     const servicos = [
-      { pid: provedorIds[0], nome: 'Crédito Pessoal BIC Express',    tipo: 'credito_pessoal',    taxa: 18.5, pmin: 6,  pmax: 48,  mmin: 50000,  mmax: 5000000,  rmin: 60000,  score: 500, conta: true  },
-      { pid: provedorIds[0], nome: 'Microcrédito BIC Empreendedor',  tipo: 'microcredito',        taxa: 14.0, pmin: 3,  pmax: 24,  mmin: 10000,  mmax: 500000,   rmin: 0,      score: 0,   conta: false },
-      { pid: provedorIds[1], nome: 'Crédito Habitação Millennium',   tipo: 'credito_habitacao',   taxa: 12.0, pmin: 60, pmax: 360, mmin: 1000000,mmax: 50000000, rmin: 150000, score: 700, conta: true  },
-      { pid: provedorIds[1], nome: 'Conta Poupança Millennium Plus', tipo: 'conta_poupanca',      taxa: 8.5,  pmin: 12, pmax: 60,  mmin: 5000,   mmax: null,     rmin: 30000,  score: 0,   conta: true  },
-      { pid: provedorIds[2], nome: 'Seguro de Vida Standard Proteção',tipo: 'seguro_vida',        taxa: null, pmin: 12, pmax: 120, mmin: 2000,   mmax: null,     rmin: 40000,  score: 0,   conta: false },
-      { pid: provedorIds[2], nome: 'Seguro de Saúde Standard Família',tipo: 'seguro_saude',       taxa: null, pmin: 12, pmax: 12,  mmin: 5000,   mmax: null,     rmin: 80000,  score: 0,   conta: false },
-      { pid: provedorIds[0], nome: 'Crédito Pessoal BIC Médio',      tipo: 'credito_pessoal',    taxa: 22.0, pmin: 12, pmax: 36,  mmin: 100000, mmax: 2000000,  rmin: 80000,  score: 400, conta: true  },
+      // ── Banco BIC (0)
+      { pid: provedorIds[0], nome: 'Crédito Pessoal BIC Express',       tipo: 'credito_pessoal',   taxa: 18.5, pmin: 6,  pmax: 48,  mmin: 50000,   mmax: 5000000,  rmin: 60000,  score: 500, conta: true },
+      { pid: provedorIds[0], nome: 'Microcrédito BIC Empreendedor',     tipo: 'microcredito',      taxa: 14.0, pmin: 3,  pmax: 24,  mmin: 10000,   mmax: 500000,   rmin: 0,      score: 0,   conta: false },
+      { pid: provedorIds[0], nome: 'Crédito Pessoal BIC Médio',         tipo: 'credito_pessoal',   taxa: 22.0, pmin: 12, pmax: 36,  mmin: 100000,  mmax: 2000000,  rmin: 80000,  score: 400, conta: true },
+      { pid: provedorIds[0], nome: 'Crédito Habitação BIC Prime',       tipo: 'credito_habitacao', taxa: 11.5, pmin: 60, pmax: 360, mmin: 2000000, mmax: 80000000, rmin: 200000, score: 700, conta: true },
+      { pid: provedorIds[0], nome: 'Crédito Consolidado BIC',           tipo: 'credito_pessoal',   taxa: 19.0, pmin: 12, pmax: 60,  mmin: 150000,  mmax: 10000000, rmin: 100000, score: 550, conta: true },
+      { pid: provedorIds[0], nome: 'Crédito Funcionário Público BIC',   tipo: 'credito_pessoal',   taxa: 15.0, pmin: 6,  pmax: 48,  mmin: 80000,   mmax: 6000000,  rmin: 90000,  score: 350, conta: true },
+
+      // ── Millennium BCP (1)
+      { pid: provedorIds[1], nome: 'Crédito Habitação Millennium',      tipo: 'credito_habitacao', taxa: 12.0, pmin: 60, pmax: 360, mmin: 1000000, mmax: 50000000, rmin: 150000, score: 700, conta: true },
+      { pid: provedorIds[1], nome: 'Crédito Pessoal Millennium',        tipo: 'credito_pessoal',   taxa: 17.5, pmin: 6,  pmax: 48,  mmin: 50000,   mmax: 4000000,  rmin: 70000,  score: 450, conta: true },
+      { pid: provedorIds[1], nome: 'Microcrédito Millennium Empreender',tipo: 'microcredito',      taxa: 13.5, pmin: 3,  pmax: 24,  mmin: 20000,   mmax: 800000,   rmin: 30000,  score: 0,   conta: false },
+      { pid: provedorIds[1], nome: 'Crédito Pessoal Online Millennium', tipo: 'credito_pessoal',   taxa: 16.9, pmin: 3,  pmax: 36,  mmin: 40000,   mmax: 3000000,  rmin: 60000,  score: 400, conta: true },
+      { pid: provedorIds[1], nome: 'Crédito Habitação Millennium Jovem',tipo: 'credito_habitacao', taxa: 10.8, pmin: 60, pmax: 360, mmin: 1500000, mmax: 40000000, rmin: 180000, score: 650, conta: true },
+
+      // ── Standard Bank (2)
+      { pid: provedorIds[2], nome: 'Crédito Pessoal Standard',          tipo: 'credito_pessoal',   taxa: 18.0, pmin: 6,  pmax: 48,  mmin: 60000,   mmax: 5000000,  rmin: 80000,  score: 500, conta: true },
+      { pid: provedorIds[2], nome: 'Crédito Habitação Standard',        tipo: 'credito_habitacao', taxa: 12.5, pmin: 60, pmax: 300, mmin: 1500000, mmax: 60000000, rmin: 180000, score: 680, conta: true },
+      { pid: provedorIds[2], nome: 'Microcrédito Standard Empresarial', tipo: 'microcredito',      taxa: 15.0, pmin: 3,  pmax: 24,  mmin: 50000,   mmax: 2000000,  rmin: 50000,  score: 300, conta: false },
+
+      // ── BAI (3)
+      { pid: provedorIds[3], nome: 'Crédito Pessoal BAI',               tipo: 'credito_pessoal',   taxa: 14.9, pmin: 3,  pmax: 48,  mmin: 30000,   mmax: 3000000,  rmin: 60000,  score: 330, conta: true },
+      { pid: provedorIds[3], nome: 'Crédito Habitação BAI',             tipo: 'credito_habitacao', taxa: 11.0, pmin: 60, pmax: 360, mmin: 2000000, mmax: 70000000, rmin: 200000, score: 700, conta: true },
+      { pid: provedorIds[3], nome: 'Microcrédito BAI Mwana',            tipo: 'microcredito',      taxa: 12.5, pmin: 3,  pmax: 18,  mmin: 10000,   mmax: 300000,   rmin: 0,      score: 0,   conta: false },
+      { pid: provedorIds[3], nome: 'Crédito Pessoal BAI Salário',       tipo: 'credito_pessoal',   taxa: 13.9, pmin: 3,  pmax: 36,  mmin: 40000,   mmax: 2000000,  rmin: 55000,  score: 350, conta: true },
+
+      // ── BFA (4)
+      { pid: provedorIds[4], nome: 'Crédito Pessoal BFA',               tipo: 'credito_pessoal',   taxa: 16.5, pmin: 6,  pmax: 48,  mmin: 50000,   mmax: 4000000,  rmin: 75000,  score: 450, conta: true },
+      { pid: provedorIds[4], nome: 'Crédito Habitação BFA',             tipo: 'credito_habitacao', taxa: 11.8, pmin: 60, pmax: 360, mmin: 1500000, mmax: 50000000, rmin: 160000, score: 680, conta: true },
+      { pid: provedorIds[4], nome: 'Microcrédito BFA Negócio',          tipo: 'microcredito',      taxa: 14.5, pmin: 3,  pmax: 24,  mmin: 30000,   mmax: 1000000,  rmin: 35000,  score: 0,   conta: false },
+      { pid: provedorIds[4], nome: 'Crédito Pessoal BFA Prestígio',     tipo: 'credito_pessoal',   taxa: 15.5, pmin: 6,  pmax: 60,  mmin: 120000,  mmax: 8000000,  rmin: 120000, score: 600, conta: true },
+
+      // ── Banco Sol (5)
+      { pid: provedorIds[5], nome: 'Microcrédito Banco Sol',            tipo: 'microcredito',      taxa: 16.0, pmin: 3,  pmax: 24,  mmin: 5000,    mmax: 400000,   rmin: 25000,  score: 0,   conta: false },
+      { pid: provedorIds[5], nome: 'Crédito Pessoal Banco Sol',         tipo: 'credito_pessoal',   taxa: 19.5, pmin: 6,  pmax: 36,  mmin: 40000,   mmax: 2000000,  rmin: 60000,  score: 380, conta: true },
+      { pid: provedorIds[5], nome: 'Crédito Habitação Banco Sol',       tipo: 'credito_habitacao', taxa: 13.0, pmin: 60, pmax: 300, mmin: 1000000, mmax: 30000000, rmin: 140000, score: 650, conta: true },
+
+      // ── Banco Económico (6)
+      { pid: provedorIds[6], nome: 'Crédito Pessoal Económico',         tipo: 'credito_pessoal',   taxa: 20.0, pmin: 6,  pmax: 48,  mmin: 50000,   mmax: 5000000,  rmin: 80000,  score: 420, conta: true },
+      { pid: provedorIds[6], nome: 'Crédito Habitação Económico',       tipo: 'credito_habitacao', taxa: 12.2, pmin: 60, pmax: 360, mmin: 2000000, mmax: 60000000, rmin: 190000, score: 690, conta: true },
+      { pid: provedorIds[6], nome: 'Microcrédito Económico Start',      tipo: 'microcredito',      taxa: 15.5, pmin: 3,  pmax: 18,  mmin: 15000,   mmax: 500000,   rmin: 20000,  score: 0,   conta: false },
+
+      // ── BNI (7)
+      { pid: provedorIds[7], nome: 'Crédito Pessoal BNI',               tipo: 'credito_pessoal',   taxa: 17.8, pmin: 6,  pmax: 48,  mmin: 60000,   mmax: 4500000,  rmin: 75000,  score: 480, conta: true },
+      { pid: provedorIds[7], nome: 'Microcrédito BNI Crescer',          tipo: 'microcredito',      taxa: 14.2, pmin: 3,  pmax: 24,  mmin: 20000,   mmax: 700000,   rmin: 30000,  score: 0,   conta: false },
+      { pid: provedorIds[7], nome: 'Crédito Habitação BNI',             tipo: 'credito_habitacao', taxa: 11.9, pmin: 60, pmax: 360, mmin: 1800000, mmax: 55000000, rmin: 170000, score: 670, conta: true },
     ];
     for (const s of servicos) {
       await client.query(`
         INSERT INTO servicos_financeiros
           (provedor_id, nome, tipo, taxa_juro_anual, prazo_minimo_meses, prazo_maximo_meses,
            montante_minimo, montante_maximo, rendimento_minimo, score_credito_minimo, requer_conta_bancaria)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+        SELECT $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11
+        WHERE NOT EXISTS (
+          SELECT 1 FROM servicos_financeiros WHERE nome = $2 AND provedor_id = $1
+        )`,
         [s.pid, s.nome, s.tipo, s.taxa, s.pmin, s.pmax, s.mmin, s.mmax, s.rmin, s.score, s.conta]);
     }
 
-    // Modelo preditivo inicial
-    await client.query(`
-      INSERT INTO modelos_preditivos
-        (versao, algoritmo, acuracia, precisao, recall, f1_score, auc_roc, amostras_treino, ativo)
-      VALUES ('v1.0.0', 'regressao_logistica', 0.8120, 0.7940, 0.8300, 0.8116, 0.8450, 0, TRUE)
-      ON CONFLICT (versao) DO NOTHING`);
+    // Modelo preditivo — histórico de versões
+    const modelos = [
+      { versao: 'v1.0.0', algo: 'regressao_logistica',     ac: 0.7500, pr: 0.7222, rc: 0.7959, f1: 0.7573, auc: 0.8399, samples: 500, ativo: true,  data: '2026-01-15 10:00:00+00' },
+      { versao: 'v1.1.0', algo: 'regressao_logistica',     ac: 0.7340, pr: 0.7120, rc: 0.7560, f1: 0.7335, auc: 0.7780, samples: 250, ativo: false, data: '2026-02-20 14:30:00+00' },
+      { versao: 'v1.2.0', algo: 'regressao_logistica',     ac: 0.7810, pr: 0.7650, rc: 0.7970, f1: 0.7807, auc: 0.8210, samples: 480, ativo: false, data: '2026-04-10 09:15:00+00' },
+      { versao: 'v2.0.0', algo: 'regressao_logistica',     ac: 0.8120, pr: 0.7940, rc: 0.8300, f1: 0.8116, auc: 0.8450, samples: 750, ativo: false, data: '2026-05-28 16:45:00+00' },
+      { versao: 'v2.1.0', algo: 'regressao_logistica',     ac: 0.8460, pr: 0.8310, rc: 0.8610, f1: 0.8458, auc: 0.8790, samples: 1120, ativo: false, data: '2026-07-10 11:00:00+00' },
+    ];
+    for (const m of modelos) {
+      await client.query(`
+        INSERT INTO modelos_preditivos
+          (versao, algoritmo, acuracia, precisao, recall, f1_score, auc_roc, amostras_treino, ativo, criado_em)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+        ON CONFLICT (versao) DO UPDATE SET
+          acuracia = EXCLUDED.acuracia, precisao = EXCLUDED.precisao,
+          recall = EXCLUDED.recall, f1_score = EXCLUDED.f1_score,
+          auc_roc = EXCLUDED.auc_roc, amostras_treino = EXCLUDED.amostras_treino,
+          ativo = EXCLUDED.ativo, criado_em = EXCLUDED.criado_em`,
+        [m.versao, m.algo, m.ac, m.pr, m.rc, m.f1, m.auc, m.samples, m.ativo, m.data]);
+    }
 
     await client.query('COMMIT');
     console.log('✅  Dados de exemplo inseridos com sucesso.');

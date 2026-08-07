@@ -11,7 +11,7 @@ export const mockPerfilFinanceiro: PerfilFinanceiro = {
   tem_conta_bancaria: true,
   tem_historico_credito: true,
   score_credito: 450,
-  objectivo_financeiro: "credito_pessoal",
+  objetivo_financeiro: "credito",
   capacidade_endividamento: 120000,
   criado_em: "2025-06-01T10:00:00Z",
   atualizado_em: "2025-06-25T14:00:00Z",

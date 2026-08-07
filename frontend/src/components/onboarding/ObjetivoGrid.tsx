@@ -5,11 +5,10 @@ import { ObjetivoFinanceiro } from "@/types";
 import ServiceCard from "@/components/shared/ServiceCard";
 import {
   BriefcaseBusiness,
-  Home,
   Building2,
   Heart,
-  Pill,
-  Car,
+  PiggyBank,
+  TrendingUp,
   LucideIcon,
 } from "lucide-react";
 
@@ -20,45 +19,39 @@ interface ObjetivoGridProps {
 }
 
 const OBJETIVO_CONFIG: Record<ObjetivoFinanceiro, { icon: LucideIcon; title: string; description: string }> = {
-  credito_pessoal: {
+  credito: {
     icon: BriefcaseBusiness,
-    title: "Crédito Pessoal",
-    description: "Soluções flexíveis para os seus projetos imediatos ou imprevistos.",
+    title: "Crédito",
+    description: "Crédito pessoal, habitação, microcrédito e muito mais.",
   },
-  credito_habitacao: {
-    icon: Home,
-    title: "Crédito Habitação",
-    description: "Financiamento para compra, construção ou obras na sua casa própria.",
+  poupanca: {
+    icon: PiggyBank,
+    title: "Poupança",
+    description: "Contas poupança para guardar e rentabilizar o seu dinheiro.",
   },
-  credito_negocio: {
-    icon: Building2,
-    title: "Crédito Negócio",
-    description: "Capital de giro e investimento para expandir a sua empresa em Angola.",
-  },
-  seguro_vida: {
+  seguro: {
     icon: Heart,
-    title: "Seguro de Vida",
-    description: "Proteção e tranquilidade para o futuro da sua família e herdeiros.",
+    title: "Seguro",
+    description: "Seguros de vida, saúde e automóvel para sua proteção.",
   },
-  seguro_saude: {
-    icon: Pill,
-    title: "Seguro Saúde",
-    description: "Acesso às melhores redes médicas nacionais e internacionais.",
+  investimento: {
+    icon: TrendingUp,
+    title: "Investimento",
+    description: "Oportunidades de investimento para fazer o seu dinheiro crescer.",
   },
-  seguro_automovel: {
-    icon: Car,
-    title: "Seguro Automóvel",
-    description: "Proteção completa para o seu veículo em qualquer situação.",
+  todos: {
+    icon: Building2,
+    title: "Todos",
+    description: "Quero ver todas as opções disponíveis no mercado.",
   },
 };
 
 const OBJETIVO_IDS: ObjetivoFinanceiro[] = [
-  "credito_pessoal",
-  "credito_habitacao",
-  "credito_negocio",
-  "seguro_vida",
-  "seguro_saude",
-  "seguro_automovel",
+  "credito",
+  "poupanca",
+  "seguro",
+  "investimento",
+  "todos",
 ];
 
 function arraysEqual(a: ObjetivoFinanceiro[], b: ObjetivoFinanceiro[]) {

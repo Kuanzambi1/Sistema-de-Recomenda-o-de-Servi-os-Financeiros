@@ -1,0 +1,37 @@
+@startuml
+' Definição dos atores
+actor "Utilizador" as U
+actor "Provedor" as P
+actor "Administrador" as A
+
+' Casos de uso (com os IDs e nomes)
+usecase UC01 "Registar no Sistema" as UC01
+usecase UC02 "Iniciar Sessão" as UC02
+usecase UC03 "Gerir Perfil Financeiro" as UC03
+usecase UC04 "Visualizar Recomendações" as UC04
+usecase UC05 "Avaliar Recomendação" as UC05
+usecase UC06 "Gerir Serviços Financeiros" as UC06
+usecase UC07 "Visualizar Painel Administrativo" as UC07
+usecase UC08 "Gerir Utilizadores" as UC08
+
+' Relacionamentos entre atores e casos de uso
+U --> UC01
+U --> UC02
+U --> UC03
+U --> UC04
+U --> UC05
+
+P --> UC02
+P --> UC06
+
+A --> UC02
+A --> UC06
+A --> UC07
+A --> UC08
+
+' (Opcional) dependência de inclusão: UC03 é pré-requisito para UC04
+' mas não é um include obrigatório no fluxo, apenas uma pré-condição.
+' Para representar que UC04 depende de UC03, pode-se usar uma seta pontilhada com estereótipo <<precondition>>
+' ou simplesmente deixar como está.
+
+@enduml

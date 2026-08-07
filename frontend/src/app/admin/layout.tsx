@@ -3,9 +3,10 @@ import AppShell from "@/components/layout/AppShell"
 const adminNavItems = [
   { label: "Dashboard", href: "/admin/dashboard" },
   { label: "Utilizadores", href: "/admin/utilizadores" },
-  { label: "Provedores", href: "/admin/provedores" },
-  { label: "Serviços", href: "/admin/servicos" },
-  { label: "Relatórios", href: "/admin/relatorios" },
+  { label: "Serviços", href: "/admin/servicos-global" },
+  { label: "Regras de Risco", href: "/admin/regras-risco" },
+  { label: "Modelo IA", href: "/admin/modelo" },
+  { label: "Auditoria", href: "/admin/auditoria" },
 ]
 
 export default function AdminLayout({

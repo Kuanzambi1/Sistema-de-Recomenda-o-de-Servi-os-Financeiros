@@ -6,28 +6,45 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, User, Shield, CheckCircle2, Building } from "lucide-react";
+import { ArrowLeft, User, Shield, CheckCircle2, Building, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { adminService } from "@/services/admin.service";
 
 export default function NovoUtilizadorPage() {
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const { register, handleSubmit, watch } = useForm();
+  const router = useRouter();
   
   const userType = watch("userType");
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     if (step === 1) {
       setStep(2);
     } else {
-      console.log("Utilizador criado:", data);
-      // Aqui faria a chamada API para salvar
+      setLoading(true);
+      setError("");
+      try {
+        await adminService.criarUtilizador({
+          nome: data.name,
+          email: data.email,
+          tipo: data.userType,
+        });
+        router.push("/admin/utilizadores");
+      } catch (err: any) {
+        setError(err.response?.data?.erro || "Ocorreu um erro ao criar o utilizador.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   return (
     <div className="flex flex-col gap-6 p-6 max-w-4xl mx-auto w-full animate-in fade-in duration-500">
-      <Link href="/utilizadores" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors w-fit">
+      <Link href="/admin/utilizadores" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors w-fit">
         <ArrowLeft className="w-4 h-4" />
         <span className="text-sm font-medium">Voltar para Gestão</span>
       </Link>
@@ -63,9 +80,9 @@ export default function NovoUtilizadorPage() {
                         <span className="font-semibold text-foreground">Provedor de Serviço</span>
                         <span className="text-xs text-muted-foreground mt-1">Bancos, Seguradoras, etc.</span>
                       </label>
-                      <label className={`flex-1 flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all ${userType === 'admin' ? 'border-primary bg-primary/5' : 'border-border bg-background hover:bg-muted/50'}`}>
-                        <input type="radio" value="admin" {...register("userType")} className="sr-only" />
-                        <Shield className={`w-8 h-8 mb-2 ${userType === 'admin' ? 'text-primary' : 'text-muted-foreground'}`} />
+                      <label className={`flex-1 flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all ${userType === 'administrador' ? 'border-primary bg-primary/5' : 'border-border bg-background hover:bg-muted/50'}`}>
+                        <input type="radio" value="administrador" {...register("userType")} className="sr-only" />
+                        <Shield className={`w-8 h-8 mb-2 ${userType === 'administrador' ? 'text-primary' : 'text-muted-foreground'}`} />
                         <span className="font-semibold text-foreground">Administrador</span>
                         <span className="text-xs text-muted-foreground mt-1">Acesso ao painel admin.</span>
                       </label>
@@ -110,7 +127,7 @@ export default function NovoUtilizadorPage() {
                   </h3>
                   
                   <div className="p-4 bg-muted/30 border border-border/50 rounded-xl flex flex-col gap-4">
-                    {userType === 'admin' ? (
+                    {userType === 'administrador' ? (
                       <>
                         <label className="flex items-center gap-3">
                           <input type="checkbox" {...register("perm_users")} className="w-4 h-4 rounded text-primary focus:ring-primary border-input" defaultChecked />
@@ -161,12 +178,13 @@ export default function NovoUtilizadorPage() {
                   <p className="text-xs text-muted-foreground">Esta senha será enviada por e-mail e o usuário deverá trocá-la no primeiro acesso.</p>
                 </div>
 
+                {error && <div className="text-red-500 text-sm font-semibold">{error}</div>}
                 <div className="flex justify-between pt-4 border-t border-border/50">
-                  <Button type="button" variant="outline" onClick={() => setStep(1)}>
+                  <Button type="button" variant="outline" onClick={() => setStep(1)} disabled={loading}>
                     Voltar
                   </Button>
-                  <Button type="submit" className="font-bold shadow-md gap-2">
-                    <CheckCircle2 className="w-4 h-4" />
+                  <Button type="submit" className="font-bold shadow-md gap-2" disabled={loading}>
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                     Criar Conta
                   </Button>
                 </div>
