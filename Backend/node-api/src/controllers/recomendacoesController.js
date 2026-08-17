@@ -1,5 +1,6 @@
 const axios  = require('axios');
 const { query, withTransaction } = require('../config/database');
+const riscoStore = require('../config/riscoStore');
 
 const ML_URL = () => process.env.ML_SERVICE_URL || 'http://localhost:8000';
 
@@ -76,10 +77,15 @@ const gerar = async (req, res, next) => {
     }
 
     // 4. Ordenar e guardar recomendações
+    const regras = riscoStore.carregar().regras;
+    const maxRecs = regras.max_recomendacoes || 10;
+    const limiar = (regras.limiar_minimo_probabilidade_pct || 0) / 100;
+
     const ranked = servicos
       .map(s => ({ ...s, probabilidade: probabilidades[s.id] || 0 }))
+      .filter(s => s.probabilidade >= limiar)
       .sort((a, b) => b.probabilidade - a.probabilidade)
-      .slice(0, 10); // máx 10 recomendações (RN10)
+      .slice(0, maxRecs); // máx recomendações por sessão (RN09 / config)
 
     const recomendacoesGuardadas = await withTransaction(async (client) => {
       // Apagar recomendações anteriores não vistas
@@ -192,6 +198,12 @@ const registarDecisao = async (req, res, next) => {
 // Heurística de fallback quando ML está offline
 // -----------------------------------------------
 function calcularHeuristica(perfil, servicos) {
+  const w   = riscoStore.carregar().pesos;
+  const pct = (v) => (v || 0) / 100;
+
+  // Base fixa (50%) — ponto de partida, os pesos configuráveis são incrementos.
+  const BASE = 0.5;
+
   const prob = {};
   const rendimento = parseFloat(perfil.rendimento_mensal);
   const capacidade = parseFloat(perfil.capacidade_endividamento);
@@ -200,23 +212,23 @@ function calcularHeuristica(perfil, servicos) {
   const score      = perfil.score_credito || 0;
 
   for (const s of servicos) {
-    let p = 0.5;
+    let p = BASE;
 
-    // Rácio rendimento / mínimo exigido
+    // Rácio rendimento / mínimo exigido (ponderado pelo peso configurado)
     const rMin = parseFloat(s.rendimento_minimo) || 1;
-    p += Math.min((rendimento / rMin - 1) * 0.1, 0.2);
+    p += Math.min((rendimento / rMin - 1) * pct(w.rendimento), pct(w.rendimento));
 
-    // Histórico de crédito
-    if (temHist) p += 0.1;
-    if (temConta) p += 0.05;
+    // Histórico / conta
+    if (temHist)  p += pct(w.historico_credito);
+    if (temConta) p += pct(w.conta_bancaria);
 
     // Score de crédito
-    if (score > 700) p += 0.15;
-    else if (score > 500) p += 0.08;
+    if (score > 700)      p += pct(w.score_alto);
+    else if (score > 500) p += pct(w.score_medio);
 
     // Adequação ao tipo
-    if (s.tipo.startsWith('seguro') && !temHist) p += 0.05;
-    if (s.tipo === 'microcredito' && rendimento < 100000) p += 0.1;
+    if (s.tipo.startsWith('seguro') && !temHist) p += pct(w.seguro);
+    if (s.tipo === 'microcredito' && rendimento < 100000) p += pct(w.microcredito);
 
     prob[s.id] = Math.max(0.05, Math.min(p, 0.99));
   }

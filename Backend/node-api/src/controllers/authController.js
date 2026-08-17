@@ -107,6 +107,54 @@ const alterarPassword = async (req, res, next) => {
   }
 };
 
+// PUT /api/auth/perfil — actualizar os dados da própria conta
+const actualizarConta = async (req, res, next) => {
+  try {
+    const { nome, email } = req.body;
+
+    const campos = [];
+    const valores = [];
+    let idx = 1;
+
+    if (nome !== undefined) {
+      campos.push(`nome = $${idx++}`);
+      valores.push(String(nome).trim());
+    }
+
+    if (email !== undefined) {
+      const novoEmail = String(email).toLowerCase().trim();
+
+      // Garantir unicidade do email (excluindo o próprio utilizador)
+      const { rows } = await query(
+        'SELECT id FROM utilizadores WHERE email = $1 AND id <> $2',
+        [novoEmail, req.utilizador.id]
+      );
+      if (rows.length) {
+        return res.status(409).json({ erro: 'Email já registado por outro utilizador.' });
+      }
+
+      campos.push(`email = $${idx++}`);
+      valores.push(novoEmail);
+    }
+
+    if (!campos.length) {
+      return res.status(400).json({ erro: 'Nenhum campo para actualizar.' });
+    }
+
+    valores.push(req.utilizador.id);
+
+    const { rows: [utilizador] } = await query(
+      `UPDATE utilizadores SET ${campos.join(', ')} WHERE id = $${idx}
+       RETURNING id, nome, email, tipo, ativo, criado_em`,
+      valores
+    );
+
+    res.json({ mensagem: 'Dados actualizados.', utilizador });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const gerarToken = (utilizador) =>
   jwt.sign(
     { id: utilizador.id, email: utilizador.email, tipo: utilizador.tipo },
@@ -114,4 +162,4 @@ const gerarToken = (utilizador) =>
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 
-module.exports = { registar, login, obterPerfil, alterarPassword };
+module.exports = { registar, login, obterPerfil, alterarPassword, actualizarConta };

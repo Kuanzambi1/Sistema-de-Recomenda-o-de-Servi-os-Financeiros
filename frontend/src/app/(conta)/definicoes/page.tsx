@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { User, Bell, Lock, Shield, ChevronRight, Camera, Check, Loader2 } from "lucide-react";
+import { User, Bell, Lock, Shield, ChevronRight, Camera, Check, Loader2, AlertCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "@/store/auth.store";
+import { authService } from "@/services/auth.service";
 import { perfilService } from "@/services/perfil.service";
 import Link from "next/link";
 
@@ -20,7 +21,9 @@ const tabs = [
 export default function DefinicoesPage() {
   const [activeTab, setActiveTab] = useState("perfil");
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const user = useAuthStore((s) => s.user);
   const { register, handleSubmit, reset } = useForm();
 
@@ -50,21 +53,36 @@ export default function DefinicoesPage() {
   }, [user, reset]);
 
   const onSubmit = async (data: any) => {
+    setError(null);
+    setSaving(true);
     try {
-      await perfilService.atualizar({
-        rendimento_mensal: Number(data.rendimento_mensal),
-        despesas_mensais: Number(data.despesas_mensais),
-        situacao_emprego: data.situacao_emprego,
-        dependentes: Number(data.dependentes),
-        nivel_educacao: data.nivel_educacao,
-        tem_conta_bancaria: Boolean(data.tem_conta_bancaria),
-        tem_historico_credito: Boolean(data.tem_historico_credito),
-        score_credito: data.score_credito ? Number(data.score_credito) : undefined,
-      });
+      if (user && (data.name !== user.nome || data.email !== user.email)) {
+        const atualizado = await authService.atualizarConta({
+          nome: data.name,
+          email: data.email,
+        });
+        useAuthStore.getState().updateUser(atualizado);
+      }
+
+      if (user?.tipo === "utilizador") {
+        await perfilService.atualizar({
+          rendimento_mensal: Number(data.rendimento_mensal),
+          despesas_mensais: Number(data.despesas_mensais),
+          situacao_emprego: data.situacao_emprego,
+          dependentes: Number(data.dependentes),
+          nivel_educacao: data.nivel_educacao,
+          tem_conta_bancaria: Boolean(data.tem_conta_bancaria),
+          tem_historico_credito: Boolean(data.tem_historico_credito),
+          score_credito: data.score_credito ? Number(data.score_credito) : undefined,
+        });
+      }
+
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
-    } catch {
-      // handle error
+    } catch (err: any) {
+      setError(err?.response?.data?.erro ?? err?.message ?? "Ocorreu um erro ao guardar.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -119,11 +137,11 @@ export default function DefinicoesPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="name" className="text-sm">Nome</Label>
-                      <Input id="name" {...register("name")} disabled className="bg-muted/50 border-border" />
+                      <Input id="name" {...register("name")} className="bg-muted/50 border-border focus:border-primary/50" />
                     </div>
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="email" className="text-sm">E-mail</Label>
-                      <Input id="email" {...register("email")} disabled className="bg-muted/50 border-border" />
+                      <Input id="email" type="email" {...register("email")} className="bg-muted/50 border-border focus:border-primary/50" />
                     </div>
                   </div>
 
@@ -184,9 +202,16 @@ export default function DefinicoesPage() {
                     </>
                   )}
 
+                  {error && (
+                    <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      {error}
+                    </div>
+                  )}
+
                   <div className="flex justify-end pt-4 border-t border-border">
-                    <Button type="submit" size="sm" className={`gap-2 font-semibold transition-all ${saved ? "bg-emerald-600 hover:bg-emerald-600" : ""}`}>
-                      {saved ? <><Check className="w-4 h-4" /> Guardado!</> : "Guardar Alterações"}
+                    <Button type="submit" size="sm" disabled={saving} className={`gap-2 font-semibold transition-all ${saved ? "bg-emerald-600 hover:bg-emerald-600" : ""}`}>
+                      {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> A guardar…</> : saved ? <><Check className="w-4 h-4" /> Guardado!</> : "Guardar Alterações"}
                     </Button>
                   </div>
                 </form>
@@ -194,13 +219,81 @@ export default function DefinicoesPage() {
             </div>
           )}
 
-          {activeTab !== "perfil" && (
+          {activeTab === "seguranca" && (
+            <SegurancaTab />
+          )}
+
+          {(activeTab !== "perfil" && activeTab !== "seguranca") && (
             <div className="rounded-2xl border border-border bg-card p-6 flex flex-col items-center justify-center h-40 text-muted-foreground animate-in fade-in duration-200">
               <p className="text-sm">Esta secção está em construção.</p>
             </div>
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function SegurancaTab() {
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { register, handleSubmit, reset } = useForm();
+
+  const onSubmit = async (data: any) => {
+    if (data.password_nova !== data.password_confirmar) {
+      setError("As passwords não coincidem.");
+      return;
+    }
+
+    setError(null);
+    setSaving(true);
+    try {
+      await authService.alterarPassword(data.password_atual, data.password_nova);
+      reset();
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err: any) {
+      setError(err?.response?.data?.erro ?? err?.message ?? "Ocorreu um erro ao alterar a password.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="rounded-2xl border border-border bg-card p-6 animate-in fade-in duration-200">
+      <div className="mb-6 pb-6 border-b border-border">
+        <h3 className="font-bold text-lg text-foreground">Segurança</h3>
+        <p className="text-sm text-muted-foreground mt-1">Alterar a password da sua conta.</p>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 max-w-md">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="password_atual" className="text-sm">Password Actual</Label>
+          <Input id="password_atual" type="password" {...register("password_atual")} className="bg-muted/50 border-border focus:border-primary/50" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="password_nova" className="text-sm">Nova Password</Label>
+          <Input id="password_nova" type="password" placeholder="Mínimo 8 caracteres, com maiúscula e número" {...register("password_nova")} className="bg-muted/50 border-border focus:border-primary/50" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="password_confirmar" className="text-sm">Confirmar Nova Password</Label>
+          <Input id="password_confirmar" type="password" {...register("password_confirmar")} className="bg-muted/50 border-border focus:border-primary/50" />
+        </div>
+
+        {error && (
+          <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            {error}
+          </div>
+        )}
+
+        <div className="flex justify-end pt-4 border-t border-border">
+          <Button type="submit" size="sm" disabled={saving} className={`gap-2 font-semibold transition-all ${saved ? "bg-emerald-600 hover:bg-emerald-600" : ""}`}>
+            {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> A alterar…</> : saved ? <><Check className="w-4 h-4" /> Password alterada!</> : "Alterar Password"}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

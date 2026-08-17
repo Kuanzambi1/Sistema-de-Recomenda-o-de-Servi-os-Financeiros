@@ -30,7 +30,9 @@ export default function LoginPage() {
     setError(null);
     try {
       const res = await authService.login(data);
-      login(res.token, res.user);
+      const r = new URLSearchParams(window.location.search).get("redirect");
+      const redirectTo = r?.startsWith("/") && !r.startsWith("//") ? r : undefined;
+      login(res.token, res.user, redirectTo);
     } catch (err: any) {
       setError(err?.message ?? "Erro ao iniciar sessão.");
       setLoading(false);

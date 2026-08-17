@@ -14,7 +14,7 @@ const PROTECTED_ROUTES: Record<string, string[]> = {
   "/definicoes": ["utilizador", "provedor", "administrador"],
 };
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Deixa passar rotas públicas
@@ -78,7 +78,7 @@ function getHomeForTipo(tipo: string): string {
 export const config = {
   matcher: [
     /*
-     * Aplica middleware a todas as rotas excepto:
+     * Aplica proxy a todas as rotas excepto:
      * - _next/static
      * - _next/image
      * - favicon.ico

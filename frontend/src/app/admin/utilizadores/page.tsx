@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, UserPlus, MoreHorizontal, ShieldAlert, Filter, Loader2 } from "lucide-react";
+import { Search, UserPlus, MoreHorizontal, ShieldAlert, Filter, Loader2, Power, PowerOff, Settings2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { adminService } from "@/services/admin.service";
 
@@ -25,6 +25,8 @@ export default function GestaoUtilizadoresPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [tipoFilter, setTipoFilter] = useState<string | undefined>(undefined);
+  const [menu, setMenu] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [toggling, setToggling] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -43,6 +45,37 @@ export default function GestaoUtilizadoresPage() {
     u.nome?.toLowerCase().includes(search.toLowerCase()) ||
     u.email?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const abrirMenu = (e: React.MouseEvent, id: string) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setMenu(m => (m?.id === id ? null : { id, x: rect.right, y: rect.bottom + 4 }));
+  };
+
+  const alternarAtivo = async (user: any) => {
+    setToggling(user.id);
+    try {
+      const data = await adminService.alternarAtivo(user.id, !user.ativo);
+      setUsers(prev => prev.map(u => (u.id === user.id ? { ...u, ativo: data.utilizador?.ativo } : u)));
+    } catch {
+    } finally {
+      setToggling(null);
+      setMenu(null);
+    }
+  };
+
+  const eliminar = async (id: string, nome: string) => {
+    if (!window.confirm(`Tem a certeza que deseja eliminar "${nome}"? Esta acção não pode ser revertida.`)) {
+      setMenu(null);
+      return;
+    }
+    try {
+      await adminService.eliminarUtilizador(id);
+      setUsers(prev => prev.filter(u => u.id !== id));
+    } catch {
+    } finally {
+      setMenu(null);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8 p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -83,11 +116,12 @@ export default function GestaoUtilizadoresPage() {
                   <th className="px-5 py-3 font-medium">Tipo</th>
                   <th className="px-5 py-3 font-medium">Status</th>
                   <th className="px-5 py-3 font-medium">Registado em</th>
+                  <th className="px-5 py-3 font-medium text-right">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 && (
-                  <tr><td colSpan={4} className="px-5 py-8 text-center text-muted-foreground">Nenhum utilizador encontrado.</td></tr>
+                  <tr><td colSpan={5} className="px-5 py-8 text-center text-muted-foreground">Nenhum utilizador encontrado.</td></tr>
                 )}
                 {filtered.map((user, i) => {
                   const initials = user.nome?.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
@@ -120,6 +154,13 @@ export default function GestaoUtilizadoresPage() {
                       <td className="px-5 py-4 text-muted-foreground text-xs">
                         {new Date(user.criado_em).toLocaleDateString("pt-PT", { day: "numeric", month: "short", year: "numeric" })}
                       </td>
+                      <td className="px-5 py-4 text-right">
+                        <div className="flex items-center justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-foreground" title="Mais ações" onClick={(e) => abrirMenu(e, user.id)}>
+                            <MoreHorizontal className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </td>
                     </tr>
                   );
                 })}
@@ -132,6 +173,44 @@ export default function GestaoUtilizadoresPage() {
           {filtered.length} utilizadores
         </div>
       </div>
+
+      {menu && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setMenu(null)} />
+          <div className="fixed z-50 w-48 rounded-xl border border-border bg-card shadow-xl py-1.5" style={{ top: menu.y, right: window.innerWidth - menu.x }}>
+            <Link
+              href={`/admin/utilizadores/${menu.id}/editar`}
+              onClick={() => setMenu(null)}
+              className="flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors"
+            >
+              <Settings2 className="w-3.5 h-3.5 text-muted-foreground" /> Editar
+            </Link>
+            {(() => {
+              const target = users.find(u => u.id === menu.id);
+              if (!target) return null;
+              return (
+                <>
+                  <button
+                    onClick={() => alternarAtivo(target)}
+                    disabled={toggling === target.id}
+                    className="flex items-center gap-2 px-3 py-2 text-sm w-full text-left text-foreground hover:bg-muted transition-colors disabled:opacity-60"
+                  >
+                    {toggling === target.id ? <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" /> : target.ativo !== false ? <PowerOff className="w-3.5 h-3.5 text-destructive" /> : <Power className="w-3.5 h-3.5 text-emerald-400" />}
+                    {target.ativo !== false ? "Bloquear" : "Ativar"}
+                  </button>
+                  <div className="my-1 h-px bg-border" />
+                  <button
+                    onClick={() => eliminar(target.id, target.nome)}
+                    className="flex items-center gap-2 px-3 py-2 text-sm w-full text-left text-destructive hover:bg-destructive/10 transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" /> Eliminar
+                  </button>
+                </>
+              );
+            })()}
+          </div>
+        </>
+      )}
     </div>
   );
 }

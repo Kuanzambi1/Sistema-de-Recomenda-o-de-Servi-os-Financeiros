@@ -2,30 +2,67 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Settings2, Users, MoreHorizontal, Loader2, BarChart3, TrendingUp } from "lucide-react";
+import { Plus, Settings2, Users, MoreHorizontal, Loader2, BarChart3, TrendingUp, Power, PowerOff, Clock, ShieldBan } from "lucide-react";
 import Link from "next/link";
 import { servicosService } from "@/services/servicos.service";
 import { useAuthStore } from "@/store/auth.store";
+import { ServicoFinanceiro } from "@/types";
+
+const ESTADO_INFO: Record<string, { label: string; cls: string }> = {
+  pendente: { label: "Em Revisão", cls: "text-amber-400 bg-amber-400/10 border-amber-400/20" },
+  ativo: { label: "Ativo", cls: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20" },
+  pausado: { label: "Pausado", cls: "text-slate-400 bg-slate-400/10 border-slate-400/20" },
+  suspenso: { label: "Suspenso", cls: "text-red-400 bg-red-400/10 border-red-400/20" },
+};
 
 export default function MeusServicosPage() {
   const user = useAuthStore((s) => s.user);
-  const [servicos, setServicos] = useState<any[]>([]);
+  const [servicos, setServicos] = useState<ServicoFinanceiro[]>([]);
   const [loading, setLoading] = useState(true);
   const [paginacao, setPaginacao] = useState<any>(null);
+  const [menu, setMenu] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [toggling, setToggling] = useState<string | null>(null);
+
+  const recarregar = async () => {
+    try {
+      const data = await servicosService.listar({ provedor_id: user?.id });
+      setServicos(data.servicos);
+      setPaginacao(data.paginacao);
+    } catch {
+    }
+  };
 
   useEffect(() => {
     (async () => {
       try {
-        const data = await servicosService.listar({ provedor_id: user?.id });
-        setServicos(data.servicos);
-        setPaginacao(data.paginacao);
+        await recarregar();
       } catch {
-        // fallback
       } finally {
         setLoading(false);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
+
+  const abrirMenu = (e: React.MouseEvent, id: string) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setMenu(m => (m?.id === id ? null : { id, x: rect.right, y: rect.bottom + 4 }));
+  };
+
+  const alternarPausa = async (svc: ServicoFinanceiro) => {
+    setToggling(svc.id);
+    try {
+      await servicosService.actualizar(svc.id, { ativo: !(svc.ativo && svc.estado !== "pausado") });
+      await recarregar();
+    } catch {
+    } finally {
+      setToggling(null);
+      setMenu(null);
+    }
+  };
+
+  const podePausar = (svc: ServicoFinanceiro) => svc.estado === "ativo";
+  const podeRetomar = (svc: ServicoFinanceiro) => svc.estado === "pausado";
 
   const ativos = servicos.filter(s => s.ativo).length;
 
@@ -97,16 +134,28 @@ export default function MeusServicosPage() {
                     </td>
                     <td className="px-5 py-4 text-muted-foreground">{svc.tipo?.replace('_', ' ')}</td>
                     <td className="px-5 py-4">
-                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${svc.ativo ? "text-emerald-400 bg-emerald-400/10 border-emerald-400/20" : "text-muted-foreground bg-muted border-border"}`}>
-                        {svc.ativo ? "Ativo" : "Inativo"}
-                      </span>
+                      {(() => {
+                        const est = svc.estado === "pausado" || svc.estado === "suspenso" || svc.estado === "pendente"
+                          ? ESTADO_INFO[svc.estado]
+                          : ESTADO_INFO.ativo;
+                        return (
+                          <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border ${est?.cls ?? ESTADO_INFO.ativo.cls}`}>
+                            {svc.estado === "pendente" && <Clock className="w-3 h-3" />}
+                            {est?.label ?? "Ativo"}
+                          </span>
+                        );
+                      })()}
                     </td>
                     <td className="px-5 py-4 text-muted-foreground">{svc.taxa_juro_anual}%</td>
                     <td className="px-5 py-4 text-muted-foreground">{Number(svc.rendimento_minimo).toLocaleString("pt-PT")} Kz</td>
                     <td className="px-5 py-4 text-right">
                       <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-foreground"><Settings2 className="w-3.5 h-3.5" /></Button>
-                        <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-foreground"><MoreHorizontal className="w-3.5 h-3.5" /></Button>
+                        <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-foreground" asChild title="Editar">
+                          <Link href={`/servicos/${svc.id}/editar`}><Settings2 className="w-3.5 h-3.5" /></Link>
+                        </Button>
+                        <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-foreground" title="Mais ações" onClick={(e) => abrirMenu(e, svc.id)}>
+                          <MoreHorizontal className="w-3.5 h-3.5" />
+                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -120,6 +169,48 @@ export default function MeusServicosPage() {
             </div>
           )}
         </div>
+      )}
+
+      {menu && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setMenu(null)} />
+          <div className="fixed z-50 w-48 rounded-xl border border-border bg-card shadow-xl py-1.5" style={{ top: menu.y, right: window.innerWidth - menu.x }}>
+            <Link href={`/servicos/${menu.id}/editar`} onClick={() => setMenu(null)} className="flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors">
+              <Settings2 className="w-3.5 h-3.5 text-muted-foreground" /> Editar
+            </Link>
+            {(() => {
+              const svc = servicos.find(s => s.id === menu.id);
+              if (!svc) return null;
+              if (svc.estado === "pendente") {
+                return (
+                  <div className="flex items-center gap-2 px-3 py-2 text-sm text-amber-400/80">
+                    <Clock className="w-3.5 h-3.5" /> Aguarda aprovação
+                  </div>
+                );
+              }
+              if (svc.estado === "suspenso") {
+                return (
+                  <div className="flex items-center gap-2 px-3 py-2 text-sm text-red-400/80">
+                    <ShieldBan className="w-3.5 h-3.5" /> Suspenso pelo admin
+                  </div>
+                );
+              }
+              if (podePausar(svc) || podeRetomar(svc)) {
+                return (
+                  <button
+                    onClick={() => alternarPausa(svc)}
+                    disabled={toggling === svc.id}
+                    className="flex items-center gap-2 px-3 py-2 text-sm w-full text-left text-foreground hover:bg-muted transition-colors disabled:opacity-60"
+                  >
+                    {toggling === svc.id ? <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" /> : podePausar(svc) ? <PowerOff className="w-3.5 h-3.5 text-destructive" /> : <Power className="w-3.5 h-3.5 text-emerald-400" />}
+                    {podePausar(svc) ? "Pausar" : "Retomar"}
+                  </button>
+                );
+              }
+              return null;
+            })()}
+          </div>
+        </>
       )}
     </div>
   );

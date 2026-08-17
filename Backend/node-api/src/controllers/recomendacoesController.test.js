@@ -25,7 +25,10 @@ describe('recomendacoesController — lógica pura', () => {
       const fonte = require('fs').readFileSync(
         require.resolve('./recomendacoesController'), 'utf8'
       );
-      assert.ok(fonte.includes('.slice(0, 10)'), 'RN09: limite de 10 recomendações');
+      assert.ok(
+        fonte.includes('.slice(0, 10)') || fonte.includes('.slice(0, maxRecs)'),
+        'RN09: limite de 10 recomendações'
+      );
     });
 
     it('RN10 — deve ter fallback heurístico quando ML está offline', () => {

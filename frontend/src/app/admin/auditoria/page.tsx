@@ -1,158 +1,153 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Text from "@/components/ui/text";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, Download, History, Shield, User, FileText } from "lucide-react";
+import { Search, Loader2, Shield, History, FileText, AlertTriangle } from "lucide-react";
+import { adminService } from "@/services/admin.service";
 
-const auditLogs = [
-  {
-    id: "log-1029",
-    timestamp: "2026-07-02 08:32:15",
-    actor: "admin@srf.ao",
-    action: "ALTERACAO_REGRA_RISCO",
-    target: "Regra: Peso de Idade",
-    details: "Alterado de 10% para 15%",
-    severity: "Alta",
-    icon: Shield,
-    color: "text-amber-600 bg-amber-500/10 border-amber-500/20",
-  },
-  {
-    id: "log-1028",
-    timestamp: "2026-07-02 07:15:00",
-    actor: "Sistema",
-    action: "BACKUP_DIARIO",
-    target: "Base de Dados Primária",
-    details: "Backup concluído com sucesso (1.2GB)",
-    severity: "Baixa",
-    icon: History,
-    color: "text-blue-600 bg-blue-500/10 border-blue-500/20",
-  },
-  {
-    id: "log-1027",
-    timestamp: "2026-07-01 14:22:10",
-    actor: "admin_joao@srf.ao",
-    action: "SUSPENSAO_SERVICO",
-    target: "srv-004 (Cartão de Crédito Standard)",
-    details: "Motivo: Violação da política de juros.",
-    severity: "Critica",
-    icon: Shield,
-    color: "text-destructive bg-destructive/10 border-destructive/20",
-  },
-  {
-    id: "log-1026",
-    timestamp: "2026-07-01 09:45:33",
-    actor: "parcerias@banconacional.ao",
-    action: "CRIACAO_SERVICO",
-    target: "srv-005 (Empréstimo Pessoal)",
-    details: "Serviço submetido para revisão.",
-    severity: "Media",
-    icon: FileText,
-    color: "text-emerald-600 bg-emerald-500/10 border-emerald-500/20",
-  },
-  {
-    id: "log-1025",
-    timestamp: "2026-06-30 18:10:05",
-    actor: "admin@srf.ao",
-    action: "CRIACAO_USUARIO",
-    target: "usr-006 (Seguradora Proteção Total)",
-    details: "Conta provedor criada com permissões padrão.",
-    severity: "Media",
-    icon: User,
-    color: "text-emerald-600 bg-emerald-500/10 border-emerald-500/20",
-  }
-];
+const ICONOS: Record<string, any> = {
+  CRIACAO_UTILIZADOR: Shield,
+  CRIACAO_SERVICO: FileText,
+  ATUALIZACAO_SERVICO: FileText,
+  RECOMENDACAO_GERADA: History,
+  FEEDBACK_SUBMETIDO: Shield,
+  RETREINO_MODELO: AlertTriangle,
+};
+
+const SEVERIDADE: Record<string, string> = {
+  baixa: "text-blue-400 bg-blue-400/10 border-blue-400/20",
+  media: "text-amber-400 bg-amber-400/10 border-amber-400/20",
+  alta: "text-destructive bg-destructive/10 border-destructive/20",
+};
+
+interface Evento {
+  id: number;
+  timestamp: string;
+  ator: string;
+  acao: string;
+  alvo: string;
+  detalhes: string;
+  severidade: string;
+}
 
 export default function AuditoriaPage() {
+  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await adminService.listarAuditoria();
+        setEventos(data.eventos ?? []);
+      } catch (err: any) {
+        setError(err?.message ?? "Erro ao carregar os registos de auditoria.");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const filtered = eventos.filter(e =>
+    [e.ator, e.acao, e.alvo, e.detalhes].some(v => v?.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   return (
     <div className="flex flex-col gap-8 p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <Text as="h1" className="text-3xl font-bold tracking-tight text-foreground">
-            Registos de Auditoria
-          </Text>
-          <Text className="text-muted-foreground mt-1">
-            Log imutável de todas as ações administrativas, alterações de sistema e segurança.
-          </Text>
-        </div>
-        <Button variant="outline" className="gap-2 font-semibold shadow-sm bg-card border-border/50">
-          <Download className="w-4 h-4" />
-          Exportar Relatório (CSV)
-        </Button>
+      <div>
+        <Text as="h1" className="text-3xl font-bold tracking-tight text-foreground">
+          Registos de Auditoria
+        </Text>
+        <Text className="text-muted-foreground mt-1">
+          Atividade recente do sistema, derivada diretamente da base de dados (utilizadores, serviços, recomendações, feedbacks e re-treinos do modelo).
+        </Text>
       </div>
 
       <Card className="bg-card/40 backdrop-blur-sm border-border/50 overflow-hidden shadow-sm">
-        <div className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-center border-b border-border/50 bg-muted/20">
+        <div className="p-4 border-b border-border/50 bg-muted/20">
           <div className="relative w-full sm:w-96">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input 
-              placeholder="Pesquisar por ID, Ator ou Ação..." 
+            <Input
+              placeholder="Pesquisar por ator, evento ou detalhe..."
               className="pl-9 bg-background border-border/50"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="w-full sm:w-auto gap-2 bg-background border-border/50">
-            <Filter className="w-4 h-4" />
-            Filtrar por Severidade
-          </Button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="text-xs text-muted-foreground uppercase bg-muted/30 border-b border-border/50">
-              <tr>
-                <th className="px-6 py-4 font-medium">Timestamp / ID</th>
-                <th className="px-6 py-4 font-medium">Ator</th>
-                <th className="px-6 py-4 font-medium">Ação (Evento)</th>
-                <th className="px-6 py-4 font-medium">Alvo & Detalhes</th>
-                <th className="px-6 py-4 font-medium text-right">Severidade</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50">
-              {auditLogs.map((log) => {
-                const Icon = log.icon;
-                return (
-                  <tr key={log.id} className="hover:bg-accent/5 transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="font-semibold text-foreground whitespace-nowrap">{log.timestamp}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5 font-mono">{log.id}</div>
-                    </td>
-                    <td className="px-6 py-4 font-medium text-foreground">
-                      {log.actor}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 text-muted-foreground" />
-                        <span className="font-mono text-xs font-semibold bg-muted px-2 py-1 rounded">{log.action}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-foreground">{log.target}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5">{log.details}</div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <Badge variant="outline" className={`font-medium border ${log.color} uppercase text-[10px]`}>
-                        {log.severity}
-                      </Badge>
+        {error && (
+          <div className="flex items-center gap-2 p-4 border-b border-destructive/20 bg-destructive/10 text-sm text-destructive">
+            <AlertTriangle className="w-4 h-4 shrink-0" /> {error}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="text-xs text-muted-foreground uppercase bg-muted/30 border-b border-border/50">
+                <tr>
+                  <th className="px-6 py-4 font-medium">Timestamp / ID</th>
+                  <th className="px-6 py-4 font-medium">Ator</th>
+                  <th className="px-6 py-4 font-medium">Evento</th>
+                  <th className="px-6 py-4 font-medium">Alvo &amp; Detalhes</th>
+                  <th className="px-6 py-4 font-medium text-right">Severidade</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/50">
+                {filtered.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-10 text-center text-muted-foreground">
+                      Nenhum evento registado.
                     </td>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div className="p-4 border-t border-border/50 bg-muted/20 flex items-center justify-between text-sm text-muted-foreground">
-          <span>Mostrando 5 de 84.102 eventos</span>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled>Anterior</Button>
-            <Button variant="outline" size="sm">Próxima</Button>
+                )}
+                {filtered.map((log) => {
+                  const Icon = ICONOS[log.acao] ?? Shield;
+                  return (
+                    <tr key={log.id} className="hover:bg-accent/5 transition-colors group">
+                      <td className="px-6 py-4">
+                        <div className="font-semibold text-foreground whitespace-nowrap">
+                          {new Date(log.timestamp).toLocaleString("pt-PT")}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-0.5 font-mono">evt-{log.id}</div>
+                      </td>
+                      <td className="px-6 py-4 font-medium text-foreground">{log.ator}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <Icon className="w-4 h-4 text-muted-foreground" />
+                          <span className="font-mono text-xs font-semibold bg-muted px-2 py-1 rounded">
+                            {log.acao.replace(/_/g, " ")}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="font-medium text-foreground">{log.alvo}</div>
+                        <div className="text-xs text-muted-foreground mt-0.5">{log.detalhes}</div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Badge variant="outline" className={`font-medium border uppercase text-[10px] ${SEVERIDADE[log.severidade] ?? SEVERIDADE.baixa}`}>
+                          {log.severidade}
+                        </Badge>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
+        )}
+
+        <div className="p-4 border-t border-border/50 bg-muted/20 flex items-center justify-between text-sm text-muted-foreground">
+          <span>{filtered.length} evento(s)</span>
         </div>
       </Card>
     </div>

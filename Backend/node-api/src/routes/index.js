@@ -32,6 +32,13 @@ router.post('/auth/login',
 
 router.get('/auth/perfil', autenticar, authCtrl.obterPerfil);
 
+router.put('/auth/perfil',
+  autenticar,
+  body('nome').optional().trim().isLength({ min: 3 }).withMessage('Nome deve ter pelo menos 3 caracteres.'),
+  body('email').optional().isEmail().withMessage('Email inválido.'),
+  validar, authCtrl.actualizarConta
+);
+
 router.post('/auth/alterar-password',
   autenticar,
   body('password_atual').notEmpty(),
@@ -132,12 +139,55 @@ router.get('/admin/modelo/historico',
 router.get('/admin/utilizadores',
   autenticar, autorizar('administrador'), adminCtrl.listarUtilizadores);
 
+router.get('/admin/utilizadores/:id',
+  autenticar, autorizar('administrador'), adminCtrl.obterUtilizador);
+
+router.get('/admin/servicos',
+  autenticar, autorizar('administrador'),
+  query('estado').optional().isIn(['pendente', 'ativo', 'pausado', 'suspenso']),
+  query('tipo').optional().isIn([
+    'credito_pessoal','credito_habitacao','microcredito',
+    'seguro_vida','seguro_saude','seguro_automovel',
+    'conta_poupanca','investimento'
+  ]),
+  validar, adminCtrl.listarServicos);
+
+router.patch('/admin/servicos/:id/estado',
+  autenticar, autorizar('administrador'),
+  body('estado').isIn(['pendente', 'ativo', 'pausado', 'suspenso']).withMessage('Estado inválido.'),
+  validar, adminCtrl.aplicarEstadoServico);
+
+router.get('/admin/auditoria',
+  autenticar, autorizar('administrador'), adminCtrl.listarAuditoria);
+
+router.get('/admin/risco',
+  autenticar, autorizar('administrador'), adminCtrl.obterRisco);
+
+router.put('/admin/risco',
+  autenticar, autorizar('administrador'),
+  validar, adminCtrl.actualizarRisco);
+
 router.post('/admin/utilizadores',
   autenticar, autorizar('administrador'),
   body('nome').trim().notEmpty().withMessage('Nome é obrigatório.'),
   body('email').isEmail().withMessage('Email inválido.'),
   body('tipo').isIn(['utilizador', 'provedor', 'administrador']).withMessage('Tipo inválido.'),
   validar, adminCtrl.criarUtilizador);
+
+router.patch('/admin/utilizadores/:id/ativo',
+  autenticar, autorizar('administrador'),
+  body('ativo').isBoolean().withMessage('Campo ativo deve ser booleano.'),
+  validar, adminCtrl.alternarAtivo);
+
+router.put('/admin/utilizadores/:id',
+  autenticar, autorizar('administrador'),
+  body('nome').optional().trim().isLength({ min: 3 }).withMessage('Nome deve ter pelo menos 3 caracteres.'),
+  body('email').optional().isEmail().withMessage('Email inválido.'),
+  body('tipo').optional().isIn(['utilizador', 'provedor', 'administrador']).withMessage('Tipo inválido.'),
+  validar, adminCtrl.actualizarUtilizador);
+
+router.delete('/admin/utilizadores/:id',
+  autenticar, autorizar('administrador'), adminCtrl.eliminarUtilizador);
 
 router.get('/admin/feedbacks/estatisticas',
   autenticar, autorizar('administrador'), fbCtrl.estatisticas);

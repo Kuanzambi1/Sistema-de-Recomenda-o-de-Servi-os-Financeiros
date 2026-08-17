@@ -1,0 +1,15 @@
+{
+  "pesos": {
+    "rendimento": 22,
+    "historico_credito": 10,
+    "conta_bancaria": 5,
+    "score_alto": 15,
+    "score_medio": 8,
+    "seguro": 5,
+    "microcredito": 10
+  },
+  "regras": {
+    "max_recomendacoes": 10,
+    "limiar_minimo_probabilidade_pct": 5
+  }
+}

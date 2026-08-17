@@ -110,6 +110,7 @@ export interface ServicoFinanceiro {
   score_credito_minimo: number;
   requer_conta_bancaria: boolean;
   ativo: boolean;
+  estado?: "pendente" | "ativo" | "pausado" | "suspenso";
   criado_em: string;
   atualizado_em: string;
 }
@@ -126,6 +127,7 @@ export interface ServicoFinanceiroPayload {
   rendimento_minimo: number;
   score_credito_minimo: number;
   requer_conta_bancaria: boolean;
+  ativo?: boolean;
 }
 
 // ─── Recomendação ─────────────────────────────────────────────────────────────

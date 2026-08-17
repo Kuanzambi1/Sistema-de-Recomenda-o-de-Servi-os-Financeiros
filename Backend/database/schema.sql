@@ -68,9 +68,17 @@ CREATE TABLE IF NOT EXISTS servicos_financeiros (
     score_credito_minimo INTEGER       DEFAULT 0,
     requer_conta_bancaria BOOLEAN      NOT NULL DEFAULT FALSE,
     ativo                BOOLEAN       NOT NULL DEFAULT TRUE,
+    estado               VARCHAR(15)   NOT NULL DEFAULT 'ativo'
+                             CHECK (estado IN ('pendente','ativo','pausado','suspenso')),
     criado_em            TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
     atualizado_em        TIMESTAMPTZ   NOT NULL DEFAULT NOW()
 );
+
+-- Compatibilidade: assegura a coluna em bases já existentes (re-runnable)
+ALTER TABLE servicos_financeiros ADD COLUMN IF NOT EXISTS estado VARCHAR(15) NOT NULL DEFAULT 'ativo';
+ALTER TABLE servicos_financeiros DROP CONSTRAINT IF EXISTS servicos_financeiros_estado_check;
+ALTER TABLE servicos_financeiros ADD CONSTRAINT servicos_financeiros_estado_check
+    CHECK (estado IN ('pendente','ativo','pausado','suspenso'));
 
 -- -----------------------------------------------
 -- TABELA: recomendacoes
@@ -140,14 +148,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_utilizadores_updated ON utilizadores;
 CREATE TRIGGER trg_utilizadores_updated
     BEFORE UPDATE ON utilizadores
     FOR EACH ROW EXECUTE FUNCTION atualizar_timestamp();
 
+DROP TRIGGER IF EXISTS trg_perfis_updated ON perfis_financeiros;
 CREATE TRIGGER trg_perfis_updated
     BEFORE UPDATE ON perfis_financeiros
     FOR EACH ROW EXECUTE FUNCTION atualizar_timestamp();
 
+DROP TRIGGER IF EXISTS trg_servicos_updated ON servicos_financeiros;
 CREATE TRIGGER trg_servicos_updated
     BEFORE UPDATE ON servicos_financeiros
     FOR EACH ROW EXECUTE FUNCTION atualizar_timestamp();
