@@ -28,8 +28,8 @@ export default function ServiceCard({
       className={cn(
         "relative cursor-pointer transition-all duration-200 border-2",
         checked
-          ? "bg-[#f0f3ff] border-blue-500 shadow-md"
-          : "bg-white border-[#c4c6d0] hover:border-gray-300 hover:shadow-sm",
+          ? "bg-primary/5 border-primary shadow-md shadow-primary/10"
+          : "bg-card border-border hover:border-primary/40 hover:shadow-sm",
         className
       )}
       onClick={() => onCheckedChange(!checked)}
@@ -48,7 +48,7 @@ export default function ServiceCard({
           </div>
 
           <div className="shrink-0">
-            <div className="w-12 h-12 rounded-lg flex bg-[#0f2b5b] text-[#7c94ca] items-center justify-center">
+            <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${checked ? "bg-primary/15 text-primary" : "bg-muted text-primary/70"}`}>
               <Icon className="w-6 h-6" />
             </div>
           </div>
@@ -57,13 +57,13 @@ export default function ServiceCard({
             <h3
               className={cn(
                 "font-semibold text-lg mb-1 transition-colors",
-                checked ? "text-primary" : "text-[#1f2937]"
+                checked ? "text-primary" : "text-foreground"
               )}
             >
               {title}
             </h3>
 
-            <p className="text-sm text-[#6b7280]">
+            <p className="text-sm text-muted-foreground">
               {description}
             </p>
           </div>

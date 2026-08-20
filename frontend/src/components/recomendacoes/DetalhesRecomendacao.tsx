@@ -168,13 +168,13 @@ export default function DetalhesRecomendacao({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "#00163C66" }}
+      style={{ backgroundColor: "rgba(0, 22, 60, 0.55)" }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className="w-full max-w-[896px] bg-white rounded-xl shadow-[0_12px_28px_rgba(15,43,91,0.12)] max-h-[90vh] overflow-y-auto flex flex-col"
+        className="w-full max-w-[896px] bg-card rounded-xl border border-border shadow-2xl max-h-[90vh] overflow-y-auto flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ── Header ── */}
@@ -210,12 +210,12 @@ export default function DetalhesRecomendacao({
         {/* ── Suitability Bar ── */}
         <div className="px-6 pt-6 pb-2">
           <div className="flex items-end justify-between mb-2">
-            <span className="text-xs font-medium tracking-[0.7px] text-[#44474F] uppercase">
+            <span className="text-xs font-medium tracking-[0.7px] text-muted-foreground uppercase">
               Probabilidade de aprovação
             </span>
             <span
               className="font-heading text-2xl font-bold"
-              style={{ color: "#835500" }}
+              style={{ color: "var(--primary)" }}
             >
               {formattedScore}% — {scoreLabel}
             </span>
@@ -238,8 +238,8 @@ export default function DetalhesRecomendacao({
                 Análise SRF AI
               </h3>
             </div>
-            <div className="rounded-xl bg-[#F0F3FF] border border-[#C4C6D080] p-4">
-              <p className="text-base text-[#151C27] leading-relaxed">
+            <div className="rounded-xl bg-muted border border-border p-4">
+              <p className="text-base text-foreground leading-relaxed">
                 {explicacao}
               </p>
             </div>
@@ -282,22 +282,21 @@ export default function DetalhesRecomendacao({
                   key={v.id}
                   className={cn(
                     "flex items-center gap-4 px-4 py-[17px] rounded-lg border",
-                    v.status === "success" && "bg-white border-border",
-                    v.status === "warning" &&
-                      "bg-[#FEAE2C0D] border-[#83550033]",
+                    v.status === "success" && "bg-card border-border",
+                    v.status === "warning" && "bg-warning/10 border-warning/30",
                     v.status === "error" && "bg-destructive/5 border-destructive/20"
                   )}
                 >
                   {v.status === "success" && (
-                    <CircleCheck className="w-5 h-5 shrink-0 text-green-600" />
+                    <CircleCheck className="w-5 h-5 shrink-0 text-success" />
                   )}
                   {v.status === "warning" && (
-                    <CircleAlert className="w-5 h-5 shrink-0" style={{ color: "#835500" }} />
+                    <CircleAlert className="w-5 h-5 shrink-0 text-warning" />
                   )}
                   {v.status === "error" && (
                     <CircleAlert className="w-5 h-5 shrink-0 text-destructive" />
                   )}
-                  <span className="text-base text-[#151C27] leading-relaxed">
+                  <span className="text-base text-foreground leading-relaxed">
                     {v.text}
                   </span>
                 </div>

@@ -178,7 +178,7 @@ export default function NovoUtilizadorPage() {
                   <p className="text-xs text-muted-foreground">Esta senha será enviada por e-mail e o usuário deverá trocá-la no primeiro acesso.</p>
                 </div>
 
-                {error && <div className="text-red-500 text-sm font-semibold">{error}</div>}
+                {error && <div className="text-destructive text-sm font-semibold">{error}</div>}
                 <div className="flex justify-between pt-4 border-t border-border/50">
                   <Button type="button" variant="outline" onClick={() => setStep(1)} disabled={loading}>
                     Voltar

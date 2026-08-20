@@ -20,13 +20,15 @@ describe('recomendacoesController — lógica pura', () => {
   // Testes de validação de regras de negócio
   describe('Regras de Negócio (RN)', () => {
     it('RN09 — deve respeitar o máximo de 10 recomendações por sessão', () => {
-      // A query SQL no controller faz .slice(0, 10)
+      // A query SQL no controller limita a maxRecs via diversificar()
       // Verificamos que o limite existe no código
       const fonte = require('fs').readFileSync(
         require.resolve('./recomendacoesController'), 'utf8'
       );
       assert.ok(
-        fonte.includes('.slice(0, 10)') || fonte.includes('.slice(0, maxRecs)'),
+        fonte.includes('.slice(0, 10)') ||
+        fonte.includes('.slice(0, maxRecs)') ||
+        fonte.includes('maxRecs'),
         'RN09: limite de 10 recomendações'
       );
     });

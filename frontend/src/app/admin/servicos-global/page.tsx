@@ -109,7 +109,7 @@ export default function GestaoGlobalServicosPage() {
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                   estadoFilter === e
                     ? "bg-primary/15 border-primary/30 text-primary"
-                    : "bg-white/5 border-border text-muted-foreground hover:text-foreground"
+                    : "bg-muted border-border text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {e === undefined ? "Todos" : STATUS[e].label}

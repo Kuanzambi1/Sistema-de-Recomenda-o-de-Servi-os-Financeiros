@@ -3,9 +3,9 @@ import { ArrowRight, ShieldCheck, Sparkles, TrendingUp, Zap, BarChart3, CheckCir
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#0A0D14] flex flex-col font-sans overflow-x-hidden selection:bg-primary/30">
+    <div className="min-h-screen bg-background flex flex-col font-sans overflow-x-hidden selection:bg-primary/30">
       {/* Navbar */}
-      <header className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#0A0D14]/80 backdrop-blur-xl">
+      <header className="fixed top-0 w-full z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 group cursor-pointer">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] transition-all animate-pulse-glow-sm">
@@ -17,12 +17,12 @@ export default function LandingPage() {
             </span>
           </div>
           <div className="flex items-center gap-5">
-            <Link href="/login" className="text-sm font-semibold text-muted-foreground hover:text-white transition-colors">
+            <Link href="/login" className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
               Entrar
             </Link>
             <Link 
               href="/register" 
-              className="text-sm font-bold px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/5 text-white transition-all hover:scale-105 active:scale-95"
+              className="text-sm font-bold px-5 py-2.5 rounded-xl bg-foreground/10 hover:bg-foreground/15 border border-border text-foreground transition-all hover:scale-105 active:scale-95"
             >
               Criar Conta
             </Link>
@@ -49,7 +49,7 @@ export default function LandingPage() {
                 <Brain className="w-3.5 h-3.5" /> Motor de IA Preditiva
               </div>
               
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold font-heading tracking-tight leading-[1.1] mb-6 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 text-white">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold font-heading tracking-tight leading-[1.1] mb-6 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 text-foreground">
                 O match perfeito <br className="hidden sm:block"/>para o seu <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-violet-400">perfil financeiro.</span>
               </h1>
               
@@ -69,7 +69,7 @@ export default function LandingPage() {
                 <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground mt-4 sm:mt-0">
                   <div className="flex -space-x-2">
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className={`w-8 h-8 rounded-full border-2 border-[#0A0D14] flex items-center justify-center text-[10px] font-bold text-white bg-gradient-to-br ${i===1?'from-amber-400 to-orange-500':i===2?'from-emerald-400 to-teal-500':'from-pink-400 to-rose-500'}`}>
+                      <div key={i} className={`w-8 h-8 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-white bg-gradient-to-br ${i===1?'from-amber-400 to-orange-500':i===2?'from-emerald-400 to-teal-500':'from-pink-400 to-rose-500'}`}>
                         {i===1?'JD':i===2?'MA':'CS'}
                       </div>
                     ))}
@@ -84,12 +84,12 @@ export default function LandingPage() {
               {/* Central AI Brain Orb */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
                 <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-600/30 to-violet-600/30 flex items-center justify-center animate-pulse-glow border border-blue-500/20 backdrop-blur-sm">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-violet-500/20 flex items-center justify-center border border-white/10">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-violet-500/20 flex items-center justify-center border border-border">
                     <Brain className="w-10 h-10 text-blue-400" />
                   </div>
                 </div>
                 {/* Status Badge */}
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#161B22]/90 border border-emerald-500/30 backdrop-blur-sm">
+                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1 rounded-full bg-card/90 border border-emerald-500/30 backdrop-blur-sm">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
                   <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Online</span>
                 </div>
@@ -114,7 +114,7 @@ export default function LandingPage() {
               </div>
 
               {/* Outer orbit ring */}
-              <div className="absolute w-[400px] h-[400px] border border-white/[0.03] rounded-full" />
+              <div className="absolute w-[400px] h-[400px] border border-border/30 rounded-full" />
               <div className="absolute w-[340px] h-[340px] border border-blue-500/[0.06] rounded-full animate-[spin_60s_linear_infinite]" />
 
               {/* Floating Card 1 — High Match */}
@@ -125,10 +125,10 @@ export default function LandingPage() {
                   </div>
                   <span className="text-2xl font-bold text-emerald-400">98%</span>
                 </div>
-                <h3 className="font-bold text-white mb-1">Crédito Habitação</h3>
+                <h3 className="font-bold text-foreground mb-1">Crédito Habitação</h3>
                 <p className="text-xs text-muted-foreground">Banco Nacional Angola</p>
                 <div className="mt-4 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-1.5 flex-1 bg-muted rounded-full overflow-hidden">
                     <div className="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style={{width: "98%"}} />
                   </div>
                   <span className="text-[10px] text-emerald-400 font-bold uppercase flex items-center gap-1">
@@ -144,7 +144,7 @@ export default function LandingPage() {
                     <Cpu className="w-5 h-5 text-blue-400" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-foreground flex items-center gap-1.5">
                       Análise IA Concluída
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                     </h4>
@@ -154,11 +154,11 @@ export default function LandingPage() {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between text-xs font-medium">
                     <span className="text-muted-foreground flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-blue-400"/>Score de Crédito</span>
-                    <span className="text-white font-bold">Excelente (720)</span>
+                    <span className="text-foreground font-bold">Excelente (720)</span>
                   </div>
                   <div className="flex items-center justify-between text-xs font-medium">
                     <span className="text-muted-foreground flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5 text-emerald-400"/>Capacidade Máx.</span>
-                    <span className="text-white font-bold">450.000 Kz/mês</span>
+                    <span className="text-foreground font-bold">450.000 Kz/mês</span>
                   </div>
                 </div>
               </div>
@@ -170,7 +170,7 @@ export default function LandingPage() {
                     <Bot className="w-4 h-4 text-violet-400" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold text-white">Modelo v2.1</p>
+                    <p className="text-[11px] font-bold text-foreground">Modelo v2.1</p>
                     <p className="text-[9px] text-emerald-400 font-semibold">94.2% Acurácia</p>
                   </div>
                 </div>
@@ -180,9 +180,9 @@ export default function LandingPage() {
         </section>
 
         {/* Stats Band */}
-        <section className="border-y border-white/5 bg-[#161B22]/30 backdrop-blur-sm py-12 relative z-20">
+        <section className="border-y border-border bg-card/50 backdrop-blur-sm py-12 relative z-20">
           <div className="absolute inset-0 ai-grid-bg opacity-30 pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/5 relative z-10">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-border relative z-10">
             {[
               { value: "+50", label: "Instituições Financeiras", icon: "🏦" },
               { value: "1.2M+", label: "Recomendações Geradas", icon: "🤖" },
@@ -191,7 +191,7 @@ export default function LandingPage() {
             ].map((stat, i) => (
               <div key={i} className="flex flex-col items-center justify-center text-center px-4">
                 <span className="text-lg mb-2">{stat.icon}</span>
-                <h4 className="text-3xl font-bold text-white mb-1 font-heading">{stat.value}</h4>
+                <h4 className="text-3xl font-bold text-foreground mb-1 font-heading">{stat.value}</h4>
                 <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">{stat.label}</p>
               </div>
             ))}
@@ -206,7 +206,7 @@ export default function LandingPage() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
                 <Cpu className="w-3.5 h-3.5 text-blue-400" /> Como Funciona
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold font-heading mb-6 text-white">Inteligência a favor da sua carteira</h2>
+              <h2 className="text-4xl md:text-5xl font-bold font-heading mb-6 text-foreground">Inteligência a favor da sua carteira</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                 A plataforma faz a ponte perfeita entre quem precisa de serviços financeiros e quem os fornece, eliminando a burocracia e as rejeições inesperadas.
               </p>
@@ -258,10 +258,10 @@ export default function LandingPage() {
                       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110 duration-500 ${feature.bg}`}>
                         <Icon className="w-7 h-7" />
                       </div>
-                      <h3 className="text-xl font-bold mb-3 text-white">{feature.title}</h3>
+                      <h3 className="text-xl font-bold mb-3 text-foreground">{feature.title}</h3>
                       <p className="text-muted-foreground leading-relaxed text-sm">{feature.desc}</p>
                       
-                      <div className="absolute bottom-8 right-8 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
+                      <div className="absolute bottom-8 right-8 w-8 h-8 rounded-full border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
                         <ChevronRight className={`w-4 h-4 ${feature.color}`} />
                       </div>
                     </div>
@@ -281,7 +281,7 @@ export default function LandingPage() {
                 {/* Left: AI visualization */}
                 <div className="relative w-40 h-40 shrink-0">
                   <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600/20 to-violet-600/20 animate-pulse-glow" />
-                  <div className="absolute inset-4 rounded-full bg-[#0A0D14]/80 flex items-center justify-center border border-white/10">
+                  <div className="absolute inset-4 rounded-full bg-background/80 flex items-center justify-center border border-border">
                     <Brain className="w-14 h-14 text-blue-400" />
                   </div>
                   {/* Orbiting dots */}
@@ -300,7 +300,7 @@ export default function LandingPage() {
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-[11px] font-bold uppercase tracking-wider mb-4">
                     <Zap className="w-3 h-3" /> Tecnologia Proprietária
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-bold font-heading text-white mb-4">
+                  <h3 className="text-2xl md:text-3xl font-bold font-heading text-foreground mb-4">
                     Motor de Recomendação <span className="gradient-text">Inteligente</span>
                   </h3>
                   <p className="text-muted-foreground leading-relaxed mb-6">
@@ -308,7 +308,7 @@ export default function LandingPage() {
                   </p>
                   <div className="flex flex-wrap gap-3">
                     {["Machine Learning", "XAI — Explicabilidade", "Re-treino Automático", "Análise em Tempo Real"].map((tag) => (
-                      <span key={tag} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold text-muted-foreground">
+                      <span key={tag} className="px-3 py-1.5 rounded-lg bg-muted border border-border text-xs font-semibold text-muted-foreground">
                         {tag}
                       </span>
                     ))}
@@ -439,7 +439,7 @@ export default function LandingPage() {
                       <p className={`text-[11px] font-semibold uppercase tracking-wider mb-1 ${product.color}`}>
                         {product.provider}
                       </p>
-                      <h3 className="text-lg font-bold text-white mb-2 leading-snug">{product.name}</h3>
+                      <h3 className="text-lg font-bold text-foreground mb-2 leading-snug">{product.name}</h3>
                       
                       {/* Description */}
                       <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">
@@ -448,7 +448,7 @@ export default function LandingPage() {
 
                       {/* Compatibility bar */}
                       <div className="mb-4">
-                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
                           <div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500" style={{width: `${product.match}%`}} />
                         </div>
                       </div>
@@ -459,7 +459,7 @@ export default function LandingPage() {
                           {product.type}
                         </span>
                         {product.rate !== "—" && (
-                          <span className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-muted-foreground">
+                          <span className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-muted border border-border text-muted-foreground">
                             Taxa: {product.rate}
                           </span>
                         )}
@@ -482,15 +482,15 @@ export default function LandingPage() {
         {/* ═══════════════════════════════════════════════ */}
         {/*         TRUSTED PROVIDERS / PARTNERS           */}
         {/* ═══════════════════════════════════════════════ */}
-        <section className="py-20 px-6 border-y border-white/5 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#161B22]/30 via-transparent to-[#161B22]/30 pointer-events-none" />
+        <section className="py-20 px-6 border-y border-border relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-card/30 via-transparent to-card/30 pointer-events-none" />
           
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
                 <Building2 className="w-3.5 h-3.5 text-blue-400" /> Provedores Parceiros
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4 text-white">
+              <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4 text-foreground">
                 Instituições que confiam na nossa IA
               </h2>
               <p className="text-muted-foreground max-w-xl mx-auto">
@@ -510,11 +510,11 @@ export default function LandingPage() {
                 { name: "SOL", full: "Banco Sol", services: 4, color: "from-yellow-500/20 to-yellow-600/5" },
               ].map((provider, i) => (
                 <div key={i} className="group flex flex-col items-center gap-3 p-6 rounded-2xl glass-card transition-all duration-300 hover:-translate-y-1 hover:border-white/15 scan-line-effect">
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${provider.color} flex items-center justify-center border border-white/10 transition-transform group-hover:scale-110 duration-300`}>
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${provider.color} flex items-center justify-center border border-border transition-transform group-hover:scale-110 duration-300`}>
                     <span className="text-white font-bold text-lg font-heading">{provider.name}</span>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-bold text-white leading-snug">{provider.full}</p>
+                    <p className="text-sm font-bold text-foreground leading-snug">{provider.full}</p>
                     <p className="text-[11px] text-muted-foreground mt-1">
                       {provider.services} serviços ativos
                     </p>
@@ -604,15 +604,15 @@ export default function LandingPage() {
               ].map((testimonial, i) => (
                 <div key={i} className="group flex flex-col rounded-2xl glass-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/15 relative overflow-hidden">
                   {/* Subtle quote background */}
-                  <Quote className="absolute top-4 right-4 w-12 h-12 text-white/[0.03] group-hover:text-white/[0.06] transition-colors" />
+                  <Quote className="absolute top-4 right-4 w-12 h-12 text-foreground/[0.04] group-hover:text-foreground/[0.08] transition-colors" />
 
                   {/* Header: Avatar + Info */}
                   <div className="flex items-center gap-3 mb-4">
-                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${testimonial.color} flex items-center justify-center shrink-0 border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.3)]`}>
+                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${testimonial.color} flex items-center justify-center shrink-0 border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.2)]`}>
                       <span className="text-white text-sm font-bold">{testimonial.initials}</span>
                     </div>
                     <div className="flex flex-col leading-tight min-w-0">
-                      <span className="text-sm font-bold text-white truncate">{testimonial.name}</span>
+                      <span className="text-sm font-bold text-foreground truncate">{testimonial.name}</span>
                       <span className="text-[11px] text-muted-foreground truncate">{testimonial.role}</span>
                     </div>
                   </div>
@@ -622,7 +622,7 @@ export default function LandingPage() {
                     {Array.from({ length: 5 }).map((_, si) => (
                       <Star
                         key={si}
-                        className={`w-3.5 h-3.5 ${si < testimonial.stars ? 'text-amber-400 fill-amber-400' : 'text-white/10'}`}
+                        className={`w-3.5 h-3.5 ${si < testimonial.stars ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground/20'}`}
                       />
                     ))}
                   </div>
@@ -633,7 +633,7 @@ export default function LandingPage() {
                   </p>
 
                   {/* Product badge */}
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/5 w-fit">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/50 border border-border w-fit">
                     <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                     <span className="text-[10px] font-semibold text-muted-foreground">{testimonial.product}</span>
                   </div>
@@ -645,15 +645,15 @@ export default function LandingPage() {
 
         {/* Final CTA */}
         <section className="py-24 px-6">
-          <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden relative border border-white/10">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-[#161B22] to-violet-600/20" />
+          <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden relative border border-border">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-card to-violet-600/20" />
             <div className="absolute inset-0 ai-grid-bg opacity-40" />
             
             <div className="relative z-10 py-20 px-6 sm:px-16 text-center flex flex-col items-center">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600/20 to-violet-600/20 flex items-center justify-center mb-8 animate-pulse-glow border border-blue-500/20">
                 <Bot className="w-8 h-8 text-blue-400" />
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold font-heading mb-6 text-white max-w-2xl">
+              <h2 className="text-3xl md:text-5xl font-bold font-heading mb-6 text-foreground max-w-2xl">
                 Pronto para encontrar o crédito ideal?
               </h2>
               <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-10">
@@ -661,7 +661,7 @@ export default function LandingPage() {
               </p>
               <Link 
                 href="/register" 
-                className="group flex items-center justify-center gap-2 h-14 px-10 rounded-xl bg-white text-[#0A0D14] hover:bg-zinc-200 font-bold text-lg transition-all hover:scale-105 active:scale-95"
+                className="group flex items-center justify-center gap-2 h-14 px-10 rounded-xl bg-foreground text-background hover:bg-foreground/90 font-bold text-lg transition-all hover:scale-105 active:scale-95"
               >
                 Criar a Minha Conta
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -672,22 +672,22 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 bg-[#0A0D14] pt-16 pb-8 px-6">
+      <footer className="border-t border-border bg-background pt-16 pb-8 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600/20 to-violet-600/20 flex items-center justify-center border border-white/10">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600/20 to-violet-600/20 flex items-center justify-center border border-border">
               <span className="text-white font-bold text-sm font-heading">S</span>
             </div>
             <span className="font-heading font-bold text-lg text-muted-foreground">SRF System</span>
             <span className="px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-[9px] font-bold text-blue-400 uppercase tracking-wider">AI</span>
           </div>
           <div className="flex gap-8 text-sm font-medium text-muted-foreground">
-            <Link href="#" className="hover:text-white transition-colors">Termos de Uso</Link>
-            <Link href="#" className="hover:text-white transition-colors">Privacidade</Link>
-            <Link href="#" className="hover:text-white transition-colors">Contacto</Link>
+            <Link href="#" className="hover:text-foreground transition-colors">Termos de Uso</Link>
+            <Link href="#" className="hover:text-foreground transition-colors">Privacidade</Link>
+            <Link href="#" className="hover:text-foreground transition-colors">Contacto</Link>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-8 pt-8 border-t border-white/5 text-center md:text-left text-xs text-muted-foreground">
+        <div className="max-w-7xl mx-auto mt-8 pt-8 border-t border-border text-center md:text-left text-xs text-muted-foreground">
           © {new Date().getFullYear()} SRF — Sistema de Recomendação Financeira. Criado como Projeto de Tese.
         </div>
       </footer>

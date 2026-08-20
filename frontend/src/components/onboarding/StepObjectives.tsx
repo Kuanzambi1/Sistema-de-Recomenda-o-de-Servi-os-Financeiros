@@ -97,8 +97,8 @@ export default function StepObjectives({ defaultValues, onNext, onBack }: StepOb
               key={obj.value}
               className={`relative flex flex-col gap-4 p-6 rounded-xl cursor-pointer text-left transition-all ${
                 isSelected
-                  ? "border-2 border-primary bg-primary/5 shadow-md shadow-primary/5"
-                  : "border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.04] hover:shadow-sm"
+                  ? "border-2 border-primary bg-primary/5 shadow-md shadow-primary/10"
+                  : "border border-border hover:border-primary/40 bg-card hover:bg-primary/5 hover:shadow-sm"
               }`}
             >
               <input
@@ -108,15 +108,15 @@ export default function StepObjectives({ defaultValues, onNext, onBack }: StepOb
                 className="sr-only"
               />
               <div className="absolute top-4 right-4 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all"
-                style={{ borderColor: isSelected ? "var(--primary)" : "rgba(255,255,255,0.15)" }}
+                style={{ borderColor: isSelected ? "var(--primary)" : "rgba(100,116,139,0.35)" }}
               >
                 {isSelected && <div className="w-3 h-3 rounded-full bg-primary" />}
               </div>
-              <div className="w-12 h-12 rounded-lg bg-[#0f2b5b] flex items-center justify-center">
-                <Icon className="w-6 h-6 text-[#7c94ca]" />
+              <div className={`w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center ${isSelected ? "bg-primary/20" : ""}`}>
+                <Icon className={`w-6 h-6 ${isSelected ? "text-primary" : "text-primary/60"}`} />
               </div>
               <div>
-                <p className="font-heading text-lg text-primary">{obj.title}</p>
+                <p className={`font-heading text-lg ${isSelected ? "text-primary" : "text-foreground"}`}>{obj.title}</p>
                 <p className="text-muted-foreground text-sm">{obj.desc}</p>
               </div>
             </label>
@@ -128,7 +128,7 @@ export default function StepObjectives({ defaultValues, onNext, onBack }: StepOb
         <span className="text-destructive text-xs">{errors.objectivo_financeiro.message}</span>
       )}
 
-      <div className="flex justify-between items-center pt-8 border-t border-[#c4c6d0] w-full">
+      <div className="flex justify-between items-center pt-8 border-t border-border w-full">
         <button
           type="button"
           onClick={onBack}

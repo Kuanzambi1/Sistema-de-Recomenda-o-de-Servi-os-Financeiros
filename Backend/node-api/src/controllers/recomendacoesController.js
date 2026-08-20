@@ -81,17 +81,29 @@ const gerar = async (req, res, next) => {
     const maxRecs = regras.max_recomendacoes || 10;
     const limiar = (regras.limiar_minimo_probabilidade_pct || 0) / 100;
 
-    const ranked = servicos
-      .map(s => ({ ...s, probabilidade: probabilidades[s.id] || 0 }))
-      .filter(s => s.probabilidade >= limiar)
-      .sort((a, b) => b.probabilidade - a.probabilidade)
-      .slice(0, maxRecs); // máx recomendações por sessão (RN09 / config)
+    const objetivo = perfil.objetivo_financeiro || 'todos';
+    const prioridade = objetivoTipos(objetivo);
+
+    const ranked = diversificar(
+      servicos
+        .map(s => ({
+          ...s,
+          probabilidade: aplicarPrioridade(
+            probabilidades[s.id] || 0,
+            s.tipo,
+            objetivo
+          )
+        }))
+        .filter(s => s.probabilidade >= limiar)
+        .sort((a, b) => b.probabilidade - a.probabilidade),
+      maxRecs,
+      prioridade
+    ); // máx recomendações por sessão (RN09 / config)
 
     const recomendacoesGuardadas = await withTransaction(async (client) => {
-      // Apagar recomendações anteriores não vistas
+      // Apagar recomendações anteriores para evitar dados obsoletos
       await client.query(
-        `DELETE FROM recomendacoes
-         WHERE utilizador_id = $1 AND visualizada = FALSE`,
+        `DELETE FROM recomendacoes WHERE utilizador_id = $1`,
         [req.utilizador.id]
       );
 
@@ -195,6 +207,69 @@ const registarDecisao = async (req, res, next) => {
 };
 
 // -----------------------------------------------
+// Mapa de objectivos financeiros → tipos de serviço
+// -----------------------------------------------
+function objetivoTipos(objetivo) {
+  switch (objetivo) {
+    case 'credito':
+      return new Set(['credito_pessoal', 'credito_habitacao', 'microcredito']);
+    case 'poupanca':
+      return new Set(['conta_poupanca']);
+    case 'investimento':
+      return new Set(['investimento']);
+    case 'seguro':
+      return new Set(['seguro_vida', 'seguro_saude', 'seguro_automovel']);
+    default:
+      return new Set();
+  }
+}
+
+// -----------------------------------------------
+// Aplica bónus de probabilidade para tipos alinhados
+// com o objectivo financeiro do utilizador (ex: crédito)
+// -----------------------------------------------
+function aplicarPrioridade(prob, tipo, objetivo) {
+  const tipos = objetivoTipos(objetivo);
+  if (tipos.has(tipo)) {
+    return Math.min(prob + 0.15, 0.99);
+  }
+  if (objetivo !== 'todos') {
+    return Math.max(prob - 0.08, 0.05);
+  }
+  return prob;
+}
+
+// -----------------------------------------------
+// Diversificação de recomendações — evita redundância
+// Limita produtos do mesmo tipo e do mesmo provedor.
+// Os tipos alinhados com o objectivo têm mais slots.
+// -----------------------------------------------
+function diversificar(lista, maxRecs, prioridade = new Set()) {
+  const porTipo = new Map();       // tipo -> contagem
+  const porProvedorTipo = new Set(); // "provedor_id|tipo" já escolhidos
+
+  const maxPorTipo = (tipo) => (prioridade.has(tipo) ? 4 : 2);
+
+  const resultado = [];
+  for (const s of lista) {
+    if (resultado.length >= maxRecs) break;
+
+    const tipo = s.tipo;
+    const chaveProvedorTipo = `${s.provedor_id}|${tipo}`;
+    const jaTipo = porTipo.get(tipo) || 0;
+
+    // Máximo de 4 por tipo prioritário e 2 por tipo não prioritário;
+    // máximo de 1 por combinação provedor+tipo
+    if (jaTipo >= maxPorTipo(tipo) || porProvedorTipo.has(chaveProvedorTipo)) continue;
+
+    porTipo.set(tipo, jaTipo + 1);
+    porProvedorTipo.add(chaveProvedorTipo);
+    resultado.push(s);
+  }
+  return resultado;
+}
+
+// -----------------------------------------------
 // Heurística de fallback quando ML está offline
 // -----------------------------------------------
 function calcularHeuristica(perfil, servicos) {
@@ -229,6 +304,9 @@ function calcularHeuristica(perfil, servicos) {
     // Adequação ao tipo
     if (s.tipo.startsWith('seguro') && !temHist) p += pct(w.seguro);
     if (s.tipo === 'microcredito' && rendimento < 100000) p += pct(w.microcredito);
+
+    // Ênfase no objectivo financeiro (ex: crédito) mesmo no fallback
+    p = aplicarPrioridade(p, s.tipo, perfil.objetivo_financeiro);
 
     prob[s.id] = Math.max(0.05, Math.min(p, 0.99));
   }

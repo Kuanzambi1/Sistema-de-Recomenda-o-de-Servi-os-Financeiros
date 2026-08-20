@@ -39,13 +39,18 @@ export default function RegisterPage() {
       const redirectTo = res.user.tipo === "utilizador" ? "/onboarding" : undefined;
       login(res.token, res.user, redirectTo);
     } catch (err: any) {
-      setError(err?.message ?? "Erro ao criar conta.");
+      const campos = err?.errors ?? err?.campos;
+      if (Array.isArray(campos) && campos.length) {
+        setError(campos.map((c: any) => c.mensagem ?? c.message).join(" "));
+      } else {
+        setError(err?.message ?? "Erro ao criar conta.");
+      }
       setLoading(false);
     }
   }
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen overflow-hidden bg-[#0A0D14] selection:bg-primary/30">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden bg-accent selection:bg-primary/30">
       {/* Background Effects */}
       <div className="absolute inset-0 ai-grid-bg opacity-40 pointer-events-none" />
       <div className="absolute top-0 right-1/4 w-[600px] h-[400px] bg-violet-600/15 blur-[120px] rounded-full pointer-events-none" />
@@ -63,7 +68,7 @@ export default function RegisterPage() {
               <Link href="/" className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-600 to-blue-600 shadow-[0_0_25px_rgba(139,92,246,0.3)] mb-6 hover:scale-105 transition-transform animate-pulse-glow-sm">
                 <span className="text-white font-bold text-2xl font-heading tracking-tighter">S</span>
               </Link>
-              <h1 className="text-3xl font-bold leading-tight tracking-tight text-white font-heading">
+              <h1 className="text-3xl font-bold leading-tight tracking-tight text-foreground font-heading">
                 Criar Conta
               </h1>
               <p className="text-sm text-muted-foreground mt-2">
@@ -74,7 +79,7 @@ export default function RegisterPage() {
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-5 relative z-10">
               {error && (
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-left flex items-center gap-2 font-medium animate-in slide-in-from-top-2 fade-in">
+                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm text-left flex items-center gap-2 font-medium animate-in slide-in-from-top-2 fade-in">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   {error}
                 </div>
@@ -89,13 +94,13 @@ export default function RegisterPage() {
                     id="nome"
                     type="text"
                     placeholder="Ex: João da Silva"
-                    className="w-full h-12 pl-11 rounded-xl border border-white/10 bg-[#0A0D14]/50 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-white transition-all group-hover:border-white/20"
+                    className="w-full h-12 pl-11 rounded-xl border border-border bg-card focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-foreground transition-all group-hover:border-violet-400/40"
                     {...register("nome")}
                   />
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4.5 h-4.5 group-focus-within:text-violet-400 transition-colors" />
                 </div>
                 {errors?.nome && (
-                  <span className="text-red-400 text-xs font-medium">{errors.nome.message}</span>
+                  <span className="text-destructive text-xs font-medium">{errors.nome.message}</span>
                 )}
               </div>
 
@@ -108,13 +113,13 @@ export default function RegisterPage() {
                     id="email"
                     type="email"
                     placeholder="nome@exemplo.com"
-                    className="w-full h-12 pl-11 rounded-xl border border-white/10 bg-[#0A0D14]/50 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-white transition-all group-hover:border-white/20"
+                    className="w-full h-12 pl-11 rounded-xl border border-border bg-card focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-foreground transition-all group-hover:border-violet-400/40"
                     {...register("email")}
                   />
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4.5 h-4.5 group-focus-within:text-violet-400 transition-colors" />
                 </div>
                 {errors?.email && (
-                  <span className="text-red-400 text-xs font-medium">{errors.email.message}</span>
+                  <span className="text-destructive text-xs font-medium">{errors.email.message}</span>
                 )}
               </div>
 
@@ -127,13 +132,32 @@ export default function RegisterPage() {
                     id="password"
                     type="password"
                     placeholder="••••••••"
-                    className="w-full h-12 pl-11 rounded-xl border border-white/10 bg-[#0A0D14]/50 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-white transition-all group-hover:border-white/20"
+                    className="w-full h-12 pl-11 rounded-xl border border-border bg-card focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-foreground transition-all group-hover:border-violet-400/40"
                     {...register("password")}
                   />
                   <LockKeyhole className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4.5 h-4.5 group-focus-within:text-violet-400 transition-colors" />
                 </div>
                 {errors?.password && (
-                  <span className="text-red-400 text-xs font-medium">{errors.password.message}</span>
+                  <span className="text-destructive text-xs font-medium">{errors.password.message}</span>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="confirmPassword" className="text-muted-foreground font-medium text-xs uppercase tracking-wider">
+                  Confirmar Palavra-passe
+                </Label>
+                <div className="relative group">
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="••••••••"
+                    className="w-full h-12 pl-11 rounded-xl border border-border bg-card focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 text-foreground transition-all group-hover:border-violet-400/40"
+                    {...register("confirmPassword")}
+                  />
+                  <LockKeyhole className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4.5 h-4.5 group-focus-within:text-violet-400 transition-colors" />
+                </div>
+                {errors?.confirmPassword && (
+                  <span className="text-destructive text-xs font-medium">{errors.confirmPassword.message}</span>
                 )}
               </div>
 
@@ -154,7 +178,7 @@ export default function RegisterPage() {
 
               <div className="text-center mt-4">
                 <span className="text-sm text-muted-foreground">Já tem uma conta? </span>
-                <Link href="/login" className="text-sm font-bold text-white hover:text-violet-400 transition-colors border-b border-transparent hover:border-violet-400 pb-0.5">
+                <Link href="/login" className="text-sm font-bold text-primary hover:text-violet-500 transition-colors border-b border-transparent hover:border-violet-400 pb-0.5">
                   Iniciar Sessão
                 </Link>
               </div>
@@ -185,7 +209,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <h2 className="text-2xl font-bold font-heading text-white mb-3">
+            <h2 className="text-2xl font-bold font-heading text-foreground mb-3">
               O primeiro passo para a sua <span className="gradient-text">liberdade financeira.</span>
             </h2>
             <p className="text-sm text-muted-foreground max-w-xs leading-relaxed mb-8">
@@ -199,11 +223,11 @@ export default function RegisterPage() {
                 { icon: Zap, text: "Matches com alta probabilidade", color: "text-amber-400" },
                 { icon: ShieldCheck, text: "Privacidade total dos seus dados", color: "text-emerald-400" },
               ].map((f, i) => (
-                <div key={i} className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/5 text-sm">
-                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] flex items-center justify-center shrink-0 border border-white/5">
+                <div key={i} className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-muted border border-border text-sm">
+                  <div className="w-7 h-7 rounded-lg bg-card flex items-center justify-center shrink-0 border border-border">
                     <f.icon className={`w-3.5 h-3.5 ${f.color}`} />
                   </div>
-                  <span className="text-white/80 font-medium">{f.text}</span>
+                  <span className="text-foreground/80 font-medium">{f.text}</span>
                 </div>
               ))}
             </div>

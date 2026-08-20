@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import Text from "@/components/ui/text";
 import Footer from "@/components/layout/Footer";
+import ThemeToggle from "@/components/layout/ThemeToggle";
 
 
 
@@ -22,10 +23,12 @@ export default function LoginLayout({
 }) {
 	return (
 		<div className={`bg-accent flex flex-col justify-between gap-10 w-full min-h-screen overflow-x-hidden font-sans antialiased`}>
+			<div className="fixed top-4 right-4 z-50">
+				<ThemeToggle />
+			</div>
 			{children}
 			<Footer />
 		</div>
 		
-
 	);
 }

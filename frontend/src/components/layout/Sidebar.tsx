@@ -58,18 +58,18 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 h-full w-64 flex flex-col bg-[#0A0D14]/70 backdrop-blur-2xl border-r border-white/5 z-40",
+        "fixed left-0 top-0 h-full w-64 flex flex-col bg-sidebar/70 backdrop-blur-2xl border-r border-border z-40",
         className
       )}
     >
       {/* Brand */}
-      <div className="flex items-center gap-3 px-6 h-16 border-b border-white/5 shrink-0 group cursor-pointer hover:bg-white/[0.02] transition-colors">
+      <div className="flex items-center gap-3 px-6 h-16 border-b border-border shrink-0 group cursor-pointer hover:bg-muted/50 transition-colors">
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shrink-0 animate-pulse-glow-sm">
           <span className="text-white font-bold text-sm font-heading tracking-tighter">S</span>
         </div>
         <div className="flex flex-col leading-none">
-          <span className="font-heading text-base font-bold text-white tracking-tight">{brand}</span>
-          <span className="text-[10px] text-blue-400 font-mono mt-0.5 tracking-wider">v1.0 — Beta</span>
+          <span className="font-heading text-base font-bold text-foreground tracking-tight">{brand}</span>
+          <span className="text-[10px] text-primary font-mono mt-0.5 tracking-wider">v1.0 — Beta</span>
         </div>
       </div>
 
@@ -88,8 +88,8 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
               className={cn(
                 "group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 relative overflow-hidden",
                 isActive
-                  ? "text-white bg-blue-500/10 border border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.05)]"
-                  : "text-muted-foreground hover:text-white hover:bg-white/5 border border-transparent"
+                  ? "text-primary bg-blue-500/10 border border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.05)]"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent"
               )}
             >
               {/* Active Background Glow */}
@@ -101,7 +101,7 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
                 "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300 relative z-10",
                 isActive
                   ? "bg-gradient-to-br from-blue-500 to-violet-600 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]"
-                  : "bg-[#161B22] text-muted-foreground border border-white/5 group-hover:bg-[#1C2128] group-hover:border-white/10 group-hover:text-white"
+                  : "bg-card text-muted-foreground border border-border group-hover:bg-muted group-hover:border-border group-hover:text-foreground"
               )}>
                 <Icon className={cn("w-4 h-4", isActive && "animate-in zoom-in-90 duration-300")} />
               </div>
@@ -116,13 +116,13 @@ export default function Sidebar({ brand = "SRF", items, className }: SidebarProp
       </nav>
 
       {/* User footer */}
-      <div className="p-4 border-t border-white/5 shrink-0">
-        <div onClick={handleLogout} className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/5 cursor-pointer transition-all duration-300 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shrink-0 border border-white/10 shadow-[0_0_15px_rgba(37,99,235,0.15)] group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-shadow">
+      <div className="p-4 border-t border-border shrink-0">
+        <div onClick={handleLogout} className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted border border-transparent hover:border-border cursor-pointer transition-all duration-300 group">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shrink-0 border border-border shadow-[0_0_15px_rgba(37,99,235,0.15)] group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-shadow">
             <span className="text-white text-sm font-bold">{initials}</span>
           </div>
           <div className="flex flex-col leading-none flex-1 min-w-0 justify-center">
-            <span className="text-sm font-bold text-white truncate mb-1">{user?.nome || "Utilizador"}</span>
+            <span className="text-sm font-bold text-foreground truncate mb-1">{user?.nome || "Utilizador"}</span>
             <span className="text-[11px] text-muted-foreground truncate">{user?.email || "utilizador@srf.ao"}</span>
           </div>
           <LogOut className="w-4 h-4 text-muted-foreground/50 group-hover:text-red-400 transition-colors shrink-0" />

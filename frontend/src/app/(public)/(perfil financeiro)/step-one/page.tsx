@@ -88,24 +88,24 @@ export default function StepOne()
 						>
 							<ToggleGroupItem
 								value="E-M" 
-								className={`py-4 px-2 rounded-full border border-[#C4C6D0] transition-colors hover:border-[#F0F3FF] 
-											hover:bg-[#F0F3FF] data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-white`} 
+								className={`py-4 px-2 rounded-full border border-border transition-colors hover:border-primary/40 
+											hover:bg-primary/5 data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground`} 
 								>
 									Ensino Medio
 							</ToggleGroupItem>
 
 							<ToggleGroupItem
 								value="L"
-								className={`py-4 px-2 rounded-full border border-[#C4C6D0] transition-colors hover:border-[#F0F3FF] 
-											hover:bg-[#F0F3FF] data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-white`}
+								className={`py-4 px-2 rounded-full border border-border transition-colors hover:border-primary/40 
+											hover:bg-primary/5 data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground`}
 								>
 									Licenciatura
 							</ToggleGroupItem>
 
 							<ToggleGroupItem
 								value="M-D"
-								className={`py-4 px-2 rounded-full border border-[#C4C6D0] transition-colors hover:border-[#F0F3FF] 
-											hover:bg-[#F0F3FF] data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-white`}
+								className={`py-4 px-2 rounded-full border border-border transition-colors hover:border-primary/40 
+											hover:bg-primary/5 data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground`}
 								>
 									Mestrado/Doutoramento
 							</ToggleGroupItem>
@@ -115,9 +115,9 @@ export default function StepOne()
 					<section className="flex justify-between">
 						<div className="flex flex-col gap-2">
 							<Text as="span" variant="span" className="font-medium text-[14px] text-primary" >Numero de dependentes</Text>
-							<div className="flex justify-between items-center gap-4 max-w-50 h-auto p-1 rounded-2xl bg-[#f0f3ff] border-[#c4c6c0]">
+							<div className="flex justify-between items-center gap-4 max-w-50 h-auto p-1 rounded-2xl bg-muted border-border">
 								<Button
-									className="cursor-pointer w-10 h-10 bg-[#f9f9ff] text-[#00163c] text-[18px] font-bold"
+									className="cursor-pointer w-10 h-10 bg-card text-foreground text-[18px] font-bold"
 									onClick={()=> setDependentValue((prevalue)=> prevalue + 1 )}
 								>
 									+
@@ -131,7 +131,7 @@ export default function StepOne()
 								/>
 								<Button
 								onClick={()=> setDependentValue((prevalue)=> prevalue - 1 <= 0? 0 : prevalue - 1)}
-									className="cursor-pointer w-10 h-10 bg-[#f9f9ff] text-[#00163c] text-[18px] font-bold"
+									className="cursor-pointer w-10 h-10 bg-card text-foreground text-[18px] font-bold"
 								>
 									-
 								</Button>
@@ -158,7 +158,7 @@ export default function StepOne()
 					</section>
 
 
-					<section className="w-full not-[]:flex border-t border-[#4445]">
+					<section className="w-full not-[]:flex border-t border-border">
 						<div className="flex justify-between mt-8 ">
 								<Button variant={"link"}
 										type="submit"

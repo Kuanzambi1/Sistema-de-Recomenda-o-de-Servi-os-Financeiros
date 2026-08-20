@@ -102,7 +102,7 @@ export default function DefinicoesPage() {
             const isActive = activeTab === tab.id;
             return (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-left transition-all ${isActive ? "bg-primary/15 text-primary border border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}>
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-left transition-all ${isActive ? "bg-primary/15 text-primary border border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}>
                 <Icon className="w-4 h-4 shrink-0" />
                 {tab.label}
                 {isActive && <ChevronRight className="ml-auto w-3.5 h-3.5" />}
@@ -119,7 +119,7 @@ export default function DefinicoesPage() {
                   <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center">
                     <span className="text-white text-3xl font-bold">{initials}</span>
                   </div>
-                  <button className="absolute -bottom-2 -right-2 w-7 h-7 rounded-lg bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/10 transition-all">
+                  <button className="absolute -bottom-2 -right-2 w-7 h-7 rounded-lg bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all">
                     <Camera className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -203,7 +203,7 @@ export default function DefinicoesPage() {
                   )}
 
                   {error && (
-                    <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+<div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
                       <AlertCircle className="w-4 h-4 shrink-0" />
                       {error}
                     </div>
@@ -282,7 +282,7 @@ function SegurancaTab() {
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+          <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
             <AlertCircle className="w-4 h-4 shrink-0" />
             {error}
           </div>

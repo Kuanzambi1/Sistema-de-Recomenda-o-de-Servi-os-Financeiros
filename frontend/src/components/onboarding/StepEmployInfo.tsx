@@ -86,26 +86,26 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
                 key={opt.value}
                 className={`flex items-start gap-4 p-4 rounded-lg border cursor-pointer transition-all ${
                   isSelected
-                    ? "bg-primary border-primary shadow-md"
-                    : "bg-card border-[#c4c6d0] hover:shadow-sm"
+                    ? "bg-primary border-primary shadow-md shadow-primary/20"
+                    : "bg-card border-border hover:shadow-sm"
                 }`}
                 style={{ height: 82 }}
               >
                 <input type="radio" className="hidden" {...register("situacao_emprego")} value={opt.value} />
                 <div
                   className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 ${
-                    isSelected ? "bg-white/20" : "bg-primary"
+                    isSelected ? "bg-white/25" : "bg-muted"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isSelected ? "text-white" : "text-[#7c94ca]"}`} />
+                  <Icon className={`w-5 h-5 ${isSelected ? "text-primary-foreground" : "text-primary"}`} />
                 </div>
                 <div>
                   <p
-                    className={`font-bold text-base ${isSelected ? "text-white" : "text-foreground"}`}
+                    className={`font-bold text-base ${isSelected ? "text-primary-foreground" : "text-foreground"}`}
                   >
                     {opt.title}
                   </p>
-                  <p className={`text-base ${isSelected ? "text-white/90" : "text-muted-foreground"}`}>
+                  <p className={`text-base ${isSelected ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
                     {opt.desc}
                   </p>
                 </div>
@@ -127,7 +127,7 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
               className={`px-4 py-2 rounded-full border cursor-pointer transition-all text-sm font-medium ${
                 educacao === opt.value
                   ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-transparent text-white border-[#c4c6d0] hover:border-primary/50"
+                  : "bg-transparent text-foreground border-border hover:border-primary/50"
               }`}
             >
               <input type="radio" className="hidden" {...register("nivel_educacao")} value={opt.value} />
@@ -152,7 +152,7 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
                 className={`w-12 h-12 rounded-full border cursor-pointer transition-all text-base font-bold ${
                   dependentes === n
                     ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-transparent text-white border-[#c4c6d0] hover:border-primary/50"
+                    : "bg-transparent text-foreground border-border hover:border-primary/50"
                 }`}
               >
                 {n}
@@ -172,12 +172,12 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
             </div>
             <button
               type="button"
-              className={`relative w-11 h-6 rounded-full transition-colors ${conta ? "bg-[#835500]" : "bg-[#c4c6d0]"}`}
+              className={`relative w-11 h-6 rounded-full transition-colors ${conta ? "bg-primary" : "bg-muted-foreground/30"}`}
               onClick={() => setValue("tem_conta_bancaria", !conta, { shouldValidate: true })}
             >
               <div
                 className={`absolute top-0.5 w-5 h-5 rounded-full bg-white border transition-all ${
-                  conta ? "right-0.5 border-white" : "left-0.5 border-[#d1d5db]"
+                  conta ? "right-0.5 border-white" : "left-0.5 border-border"
                 }`}
               />
             </button>
@@ -190,12 +190,12 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
             </div>
             <button
               type="button"
-              className={`relative w-11 h-6 rounded-full transition-colors ${credito ? "bg-[#835500]" : "bg-[#c4c6d0]"}`}
+              className={`relative w-11 h-6 rounded-full transition-colors ${credito ? "bg-primary" : "bg-muted-foreground/30"}`}
               onClick={() => setValue("tem_historico_credito", !credito, { shouldValidate: true })}
             >
               <div
                 className={`absolute top-0.5 w-5 h-5 rounded-full bg-white border transition-all ${
-                  credito ? "right-0.5 border-white" : "left-0.5 border-[#d1d5db]"
+                  credito ? "right-0.5 border-white" : "left-0.5 border-border"
                 }`}
               />
             </button>
@@ -203,7 +203,7 @@ export default function StepEmployInfo({ defaultValues, onNext }: StepEmployInfo
         </div>
       </div>
 
-      <div className="flex justify-between items-center pt-8 border-t border-[#c4c6d0]">
+      <div className="flex justify-between items-center pt-8 border-t border-border">
         <div />
         <button
           type="submit"

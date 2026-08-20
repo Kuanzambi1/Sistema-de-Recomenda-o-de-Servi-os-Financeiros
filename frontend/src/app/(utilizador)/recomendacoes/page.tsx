@@ -97,7 +97,7 @@ export default function RecomendacoesPage() {
           <div className="hidden md:block relative w-28 h-28 shrink-0">
             <div className="absolute inset-0 rounded-full bg-blue-500/10 blur-[25px]" />
             <div className="absolute inset-0 rounded-full border border-blue-500/10 animate-[spin_20s_linear_infinite]" />
-            <div className="absolute inset-3 rounded-full bg-gradient-to-br from-blue-600/15 to-violet-600/15 flex items-center justify-center border border-white/10 animate-pulse-glow-sm">
+            <div className="absolute inset-3 rounded-full bg-gradient-to-br from-blue-600/15 to-violet-600/15 flex items-center justify-center border border-border animate-pulse-glow-sm">
               <Bot className="w-8 h-8 text-blue-400/70" />
             </div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit" style={{"--orbit-radius": "52px"} as React.CSSProperties}>
@@ -132,8 +132,8 @@ export default function RecomendacoesPage() {
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <div className="relative w-20 h-20 mb-6">
             <div className="absolute inset-0 rounded-full bg-muted-foreground/5 blur-[20px]" />
-            <div className="absolute inset-0 rounded-full border border-white/5 border-dashed" />
-            <div className="absolute inset-3 rounded-full bg-white/[0.02] flex items-center justify-center border border-white/5">
+            <div className="absolute inset-0 rounded-full border border-border border-dashed" />
+            <div className="absolute inset-3 rounded-full bg-muted/30 flex items-center justify-center border border-border">
               <Brain className="w-8 h-8 text-muted-foreground/30" />
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function RecomendacoesPage() {
               return (
                 <div
                   key={rec.id}
-                  className={`group relative flex flex-col rounded-2xl glass-card overflow-hidden transition-all duration-300 ${style.glow} hover:border-white/15 hover:-translate-y-1 scan-line-effect`}
+                  className={`group relative flex flex-col rounded-2xl glass-card overflow-hidden transition-all duration-300 ${style.glow} hover:border-primary/20 hover:-translate-y-1 scan-line-effect`}
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* Top gradient line */}
@@ -202,7 +202,7 @@ export default function RecomendacoesPage() {
 
                     {/* Compatibility bar */}
                     <div className="mb-5">
-                      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
                         <div 
                           className="h-full rounded-full animate-fill-bar" 
                           style={{ 
@@ -214,11 +214,11 @@ export default function RecomendacoesPage() {
                     </div>
 
                     <div className="flex flex-wrap gap-1.5 mb-5">
-                      <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-muted-foreground">
+                      <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-muted border border-border text-muted-foreground">
                         {rec.tipo_servico?.replace('_', ' ')}
                       </span>
                       {rec.taxa_juro_anual > 0 && (
-                        <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-muted-foreground">
+                        <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-muted border border-border text-muted-foreground">
                           {rec.taxa_juro_anual}% taxa
                         </span>
                       )}

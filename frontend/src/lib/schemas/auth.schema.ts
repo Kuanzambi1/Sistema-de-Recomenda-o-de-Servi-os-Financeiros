@@ -14,7 +14,7 @@ export const registerSchema = z
   .object({
     nome: z
       .string()
-      .min(2, "O nome deve ter pelo menos 2 caracteres.")
+      .min(3, "O nome deve ter pelo menos 3 caracteres.")
       .max(150, "O nome não pode exceder 150 caracteres."),
     email: z
       .string()
@@ -22,8 +22,10 @@ export const registerSchema = z
       .pipe(z.email("Introduza um email válido.")),
     password: z
       .string()
-      .min(6, "A password deve ter pelo menos 6 caracteres.")
-      .max(100, "A password não pode exceder 100 caracteres."),
+      .min(8, "A password deve ter pelo menos 8 caracteres.")
+      .max(100, "A password não pode exceder 100 caracteres.")
+      .regex(/[A-Z]/, "A password deve conter pelo menos uma maiúscula.")
+      .regex(/[0-9]/, "A password deve conter pelo menos um número."),
     confirmPassword: z.string().min(1, "Confirme a sua password."),
   })
   .refine((data) => data.password === data.confirmPassword, {

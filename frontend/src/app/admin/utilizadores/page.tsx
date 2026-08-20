@@ -98,7 +98,7 @@ export default function GestaoUtilizadoresPage() {
           <div className="flex gap-2">
             {[undefined, "utilizador", "provedor", "administrador"].map((t) => (
               <button key={t ?? "all"} onClick={() => { setTipoFilter(t); setLoading(true); }}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${tipoFilter === t ? "bg-primary/15 border-primary/30 text-primary" : "bg-white/5 border-border text-muted-foreground hover:text-foreground"}`}>
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${tipoFilter === t ? "bg-primary/15 border-primary/30 text-primary" : "bg-muted border-border text-muted-foreground hover:text-foreground"}`}>
                 {t === undefined ? "Todos" : t === "utilizador" ? "Utilizadores" : t === "provedor" ? "Provedores" : "Admins"}
               </button>
             ))}
@@ -128,7 +128,7 @@ export default function GestaoUtilizadoresPage() {
                   const grad = gradients[i % gradients.length];
                   const isActive = user.ativo !== false;
                   return (
-                    <tr key={user.id} className={`group transition-colors hover:bg-white/3 ${i !== filtered.length - 1 ? "border-b border-border" : ""}`}>
+                    <tr key={user.id} className={`group transition-colors hover:bg-muted/60 ${i !== filtered.length - 1 ? "border-b border-border" : ""}`}>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${grad} flex items-center justify-center shrink-0`}>

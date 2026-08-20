@@ -21,8 +21,8 @@ export function Stepper({ steps, currentStep, className }: StepperProps) {
               className={cn(
                 "w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-colors",
                 step.number <= currentStep
-                  ? "bg-[#00163c] text-white"
-                  : "bg-[#e7eefe] text-[#44474f]"
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                  : "bg-muted text-muted-foreground border border-border"
               )}
             >
               {step.number}
@@ -31,8 +31,8 @@ export function Stepper({ steps, currentStep, className }: StepperProps) {
               className={cn(
                 "text-xs font-medium text-center transition-colors",
                 step.number <= currentStep
-                  ? "text-[#00163c]"
-                  : "text-[#44474f]"
+                  ? "text-foreground"
+                  : "text-muted-foreground"
               )}
               style={{ fontFamily: "DM Sans", fontSize: 14, fontWeight: 500, lineHeight: "16px" }}
             >
@@ -43,7 +43,7 @@ export function Stepper({ steps, currentStep, className }: StepperProps) {
             <div
               className={cn(
                 "w-16 h-px mx-2 mb-5 transition-colors",
-                step.number < currentStep ? "bg-[#00163c]" : "bg-[#e7eefe]"
+                step.number < currentStep ? "bg-primary" : "bg-border"
               )}
             />
           )}

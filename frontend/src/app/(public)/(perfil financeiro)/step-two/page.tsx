@@ -13,13 +13,13 @@ export default function StepTwo()
 	return (
 		<main className="flex flex-col items-center justify-center gap-8">
 			<Card className="w-200 h-auto p-8 gap-2">
-				<CardHeader className="w-full flex gap-4 p-4 items-start justify-between rounded-[8px]  bg-[#ffddb4]/30 border border-[#feae2c]">
-					<LockKeyhole className={`text-[#6B4500] w-4 h-5.25`}/>
+				<CardHeader className="w-full flex gap-4 p-4 items-start justify-between rounded-[8px]  bg-warning/10 border border-warning/30">
+					<LockKeyhole className={`text-warning w-4 h-5.25`}/>
 					<div>
-						<Text as="h6" variant="h6" className="text-[#291800] text-[16px]">
+						<Text as="h6" variant="h6" className="text-foreground text-[16px]">
 							Confidencialidade de Dados
 						</Text>
-						<Text as="p" variant="p" className="text-[#633f00] text-[14px]">
+						<Text as="p" variant="p" className="text-muted-foreground text-[14px]">
 							Suas informações financeiras são criptografadas e utilizadas exclusivamente para
 							gerar recomendações personalizadas em conformidade com as leis de proteção
 							de dados de Angola.
@@ -34,7 +34,7 @@ export default function StepTwo()
 						<div className="w-full flex flex-col gap-2">
 							<Label
 							htmlFor="email"
-							className="block font-medium text-[#44474f]"
+							className="block font-medium text-muted-foreground"
 							>
 								Rendimento Mensal (kz)
 							</Label>
@@ -42,8 +42,8 @@ export default function StepTwo()
 								<Input
 								type="number"
 								placeholder="0,00"
-								className={`w-full h-13 py-3.5 pl-11 rounded-lg border border-[#c4c6d0]
-											bg-[#f9f9ff] focus:outline-none focus:ring-primary
+								className={`w-full h-13 py-3.5 pl-11 rounded-lg border border-border
+											bg-card focus:outline-none focus:ring-primary
 											focus:border-primary font-medium transition-all`}
 							/>
 							<span className={`absolute right-md left-4 top-1/2 -translate-y-1/2 
@@ -53,7 +53,7 @@ export default function StepTwo()
 						<div className="w-full flex flex-col gap-2">
 							<Label
 							htmlFor="email"
-							className="block font-medium text-[#44474f]"
+							className="block font-medium text-muted-foreground"
 							>
 								Despesas Mensais (kz)
 							</Label>
@@ -61,8 +61,8 @@ export default function StepTwo()
 								<Input
 								type="number"
 								placeholder="0,00"
-								className={`w-full h-13 py-3.5 pl-11 rounded-lg border border-[#c4c6d0]
-											bg-[#f9f9ff] focus:outline-none focus:ring-primary
+								className={`w-full h-13 py-3.5 pl-11 rounded-lg border border-border
+											bg-card focus:outline-none focus:ring-primary
 											focus:border-primary font-medium transition-all`}
 							/>
 							<span className={`absolute right-md left-4 top-1/2 -translate-y-1/2 
@@ -71,20 +71,20 @@ export default function StepTwo()
 						</div>
 					</section>
 							
-					<section className="flex p-6 rounded-[12px] bg-[#0f2b5b] justify-between items-center ">
+					<section className="flex p-6 rounded-[12px] bg-primary/10 border border-primary/20 justify-between items-center ">
 						<div className="flex gap-4 items-center">
-							<span className=" w-12 h-12 flex items-center justify-center rounded-full bg-[#7c94ca]/20">
-								<LucidePiggyBank size="20px" className="text-[#7c94ca]"/>
+							<span className=" w-12 h-12 flex items-center justify-center rounded-full bg-primary/15">
+								<LucidePiggyBank size="20px" className="text-primary"/>
 							</span>
 							<div className="block">
-								<Text as="span" className="text-[#7c94ca]/80">Capacidade de endividamento estimada</Text>
-								<Text as="h3" className="text-white ">--- Kz</Text>
+								<Text as="span" className="text-muted-foreground">Capacidade de endividamento estimada</Text>
+								<Text as="h3" className="text-foreground ">--- Kz</Text>
 							</div>
 							
 							
 						</div>
 
-						<AlertCircle size="20px" className="text-[#7c94ca]"/>
+						<AlertCircle size="20px" className="text-primary"/>
 
 					</section>
 
@@ -92,24 +92,24 @@ export default function StepTwo()
 						<div className="w-full flex flex-col gap-2">
 							<Label
 							htmlFor="email"
-							className="flex font-medium text-[#44474f]"
+							className="flex font-medium text-muted-foreground"
 							>
 								Score de Credito (opcional)
-								<AlertCircle size="15px" className="text-[#44474f]/60" />
+								<AlertCircle size="15px" className="text-muted-foreground/60" />
 							</Label>
 							<div className="max-w-60 relative h-auto">
 								<Input
 								type="number"
 								placeholder="Ex: 650"
-								className={`w-full h-13 py-3.5 pl-6 rounded-lg border border-[#c4c6d0]
-											bg-[#f9f9ff] focus:outline-none focus:ring-primary
+								className={`w-full h-13 py-3.5 pl-6 rounded-lg border border-border
+											bg-card focus:outline-none focus:ring-primary
 											focus:border-primary font-medium transition-all`}
 							/>
 							</div>
 						</div>
 					</section>
 
-					<section className="w-full not-[]:flex border-t border-[#4445]">
+					<section className="w-full not-[]:flex border-t border-border">
 						<div className="flex justify-between mt-8 ">
 								<Button variant={"link"}
 										type="submit"

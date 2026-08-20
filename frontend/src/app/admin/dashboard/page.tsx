@@ -72,7 +72,7 @@ export default function AdminDashboardPage() {
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (
-            <div key={kpi.label} className={`rounded-xl glass-card p-5 transition-all hover:-translate-y-0.5 hover:border-white/15 ${kpi.glow} scan-line-effect`}>
+            <div key={kpi.label} className={`rounded-xl glass-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/20 ${kpi.glow} scan-line-effect`}>
               <div className="flex items-start justify-between mb-4">
                 <div className={`w-10 h-10 rounded-xl ${kpi.bg} flex items-center justify-center border ${kpi.border} transition-transform hover:scale-110 duration-300`}>
                   <Icon className={`w-5 h-5 ${kpi.color}`} />
@@ -90,24 +90,24 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
         {/* Recommendation stats */}
         <div className="lg:col-span-3 rounded-xl glass-card overflow-hidden">
-          <div className="px-5 py-4 border-b border-white/5 flex items-center gap-2">
+          <div className="px-5 py-4 border-b border-border flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-blue-400" />
             <h2 className="text-sm font-semibold text-foreground">Estatísticas de Recomendações</h2>
           </div>
           <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 scan-line-effect">
+            <div className="p-3.5 rounded-xl bg-muted/40 border border-border scan-line-effect">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Aceites</p>
-              <p className="text-xl font-bold text-emerald-400 mt-1">{recStats.aceites}</p>
+              <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{recStats.aceites}</p>
             </div>
-            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 scan-line-effect">
+            <div className="p-3.5 rounded-xl bg-muted/40 border border-border scan-line-effect">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Rejeitadas</p>
-              <p className="text-xl font-bold text-red-400 mt-1">{recStats.rejeitadas}</p>
+              <p className="text-xl font-bold text-red-600 dark:text-red-400 mt-1">{recStats.rejeitadas}</p>
             </div>
-            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 scan-line-effect">
+            <div className="p-3.5 rounded-xl bg-muted/40 border border-border scan-line-effect">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Média Adequação</p>
               <p className="text-xl font-bold text-foreground mt-1">{recStats.media_adequacao_pct}%</p>
             </div>
-            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 scan-line-effect">
+            <div className="p-3.5 rounded-xl bg-muted/40 border border-border scan-line-effect">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Feedbacks</p>
               <p className="text-xl font-bold text-foreground mt-1">{fbStats.total} <span className="text-xs font-normal text-muted-foreground">(⭐ {fbStats.media_nota})</span></p>
             </div>
@@ -116,7 +116,7 @@ export default function AdminDashboardPage() {
 
         {/* Model status — Futuristic AI Command Panel */}
         <div className="lg:col-span-2 rounded-xl glass-card overflow-hidden neon-border">
-          <div className="px-5 py-4 border-b border-white/5 flex items-center gap-2">
+          <div className="px-5 py-4 border-b border-border flex items-center gap-2">
             <Brain className="w-4 h-4 text-primary" />
             <h2 className="text-sm font-semibold text-foreground">Motor de IA</h2>
             {modelo && (
@@ -139,7 +139,7 @@ export default function AdminDashboardPage() {
                     <div className="relative w-16 h-16">
                       <div className="absolute inset-0 rounded-full bg-blue-500/10 blur-[15px]" />
                       <div className="absolute inset-0 rounded-full border border-blue-500/15 animate-[spin_10s_linear_infinite]" />
-                      <div className="absolute inset-2 rounded-full bg-gradient-to-br from-blue-600/15 to-violet-600/15 flex items-center justify-center border border-white/10 animate-pulse-glow-sm">
+                      <div className="absolute inset-2 rounded-full bg-gradient-to-br from-blue-600/15 to-violet-600/15 flex items-center justify-center border border-border animate-pulse-glow-sm">
                         <Bot className="w-6 h-6 text-blue-400" />
                       </div>
                     </div>
@@ -153,7 +153,7 @@ export default function AdminDashboardPage() {
                       </span>
                       <span className="font-bold text-emerald-400">{(modelo.acuracia * 100).toFixed(1)}%</span>
                     </div>
-                    <div className="w-full h-2.5 rounded-full bg-white/5 overflow-hidden">
+                    <div className="w-full h-2.5 rounded-full bg-muted overflow-hidden">
                       <div 
                         className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full animate-fill-bar" 
                         style={{ "--fill-width": `${modelo.acuracia * 100}%` } as React.CSSProperties} 
@@ -163,27 +163,27 @@ export default function AdminDashboardPage() {
 
                   {/* All metrics grid */}
                   <div className="grid grid-cols-3 gap-3 mt-4">
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Precisão</p>
                       <p className="text-xl font-bold text-foreground mt-1">{(modelo.precisao * 100).toFixed(1)}%</p>
                     </div>
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Recall</p>
                       <p className="text-xl font-bold text-foreground mt-1">{(modelo.recall * 100).toFixed(1)}%</p>
                     </div>
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">F1 Score</p>
                       <p className="text-xl font-bold text-foreground mt-1">{(modelo.f1_score * 100).toFixed(1)}%</p>
                     </div>
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">AUC-ROC</p>
                       <p className="text-xl font-bold text-foreground mt-1">{(modelo.auc_roc * 100).toFixed(1)}%</p>
                     </div>
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Amostras</p>
                       <p className="text-xl font-bold text-foreground mt-1">{modelo.amostras_treino}</p>
                     </div>
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Algoritmo</p>
                       <p className="text-sm font-bold text-foreground mt-1 capitalize">{modelo.algoritmo?.replace(/_/g, ' ')}</p>
                     </div>
@@ -191,7 +191,7 @@ export default function AdminDashboardPage() {
                 </>
               ) : (
                 <div className="flex flex-col items-center py-4 gap-3">
-                  <div className="w-12 h-12 rounded-full bg-white/[0.02] border border-white/5 border-dashed flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-muted border border-border border-dashed flex items-center justify-center">
                     <Brain className="w-5 h-5 text-muted-foreground/30" />
                   </div>
                   <p className="text-sm text-muted-foreground text-center">Nenhum modelo ativo.</p>

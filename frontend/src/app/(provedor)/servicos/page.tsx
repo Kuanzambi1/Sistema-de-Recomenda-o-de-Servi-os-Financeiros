@@ -88,7 +88,7 @@ export default function MeusServicosPage() {
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (
-            <div key={kpi.label} className="rounded-xl bg-card border border-border p-5 flex items-center gap-4 hover:border-white/15 transition-all">
+            <div key={kpi.label} className="rounded-xl bg-card border border-border p-5 flex items-center gap-4 hover:border-primary/30 transition-all">
               <div className={`w-10 h-10 rounded-xl ${kpi.bg} flex items-center justify-center shrink-0`}>
                 <Icon className={`w-5 h-5 ${kpi.color}`} />
               </div>
@@ -127,7 +127,7 @@ export default function MeusServicosPage() {
                   <tr><td colSpan={6} className="px-5 py-8 text-center text-muted-foreground">Nenhum serviço encontrado.</td></tr>
                 )}
                 {servicos.map((svc, i) => (
-                  <tr key={svc.id} className={`group transition-colors hover:bg-white/3 ${i !== servicos.length - 1 ? "border-b border-border" : ""}`}>
+                  <tr key={svc.id} className={`group transition-colors hover:bg-muted/60 ${i !== servicos.length - 1 ? "border-b border-border" : ""}`}>
                     <td className="px-5 py-4">
                       <div className="font-semibold text-foreground">{svc.nome}</div>
                       <div className="text-xs text-muted-foreground font-mono mt-0.5">{svc.id?.slice(0, 8)}</div>

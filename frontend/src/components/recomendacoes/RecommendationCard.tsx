@@ -78,13 +78,13 @@ export default function RecommendationCard({ recomendacao, isBest, onVerDetalhes
     <Card
       className={`relative p-6 flex flex-col gap-4 w-full transition-all ${
         isBest
-          ? "border-2 border-secondary bg-secondary/[0.06] shadow-lg"
-          : "border border-border bg-muted"
+          ? "border-2 border-primary bg-primary/5 shadow-lg shadow-primary/10"
+          : "border border-border bg-card"
       }`}
     >
       {isBest && (
         <div className="absolute top-0 right-0">
-          <div className="flex items-center gap-1 bg-secondary text-secondary-foreground font-bold text-sm px-5 py-1 rounded-bl-xl rounded-tr-xl">
+          <div className="flex items-center gap-1 bg-primary text-primary-foreground font-bold text-sm px-5 py-1 rounded-bl-xl rounded-tr-xl">
             <Sparkles className="w-3 h-3" />
             Melhor Opção
           </div>
@@ -97,7 +97,7 @@ export default function RecommendationCard({ recomendacao, isBest, onVerDetalhes
             className={`inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-[0.625rem] font-bold tracking-[0.6px] uppercase ${
               isCredito
                 ? "bg-primary/10 text-primary"
-                : "bg-muted-foreground/10 text-muted-foreground"
+                : "bg-muted text-muted-foreground"
             }`}
           >
             <IconComponent className="w-3 h-3" />
@@ -116,7 +116,7 @@ export default function RecommendationCard({ recomendacao, isBest, onVerDetalhes
           <span className="text-foreground font-semibold">{formattedScore}%</span>
         </div>
         <div
-          className="relative w-full h-2 rounded-full bg-muted-foreground/20 overflow-hidden"
+          className="relative w-full h-2 rounded-full bg-muted overflow-hidden"
           role="progressbar"
           aria-valuenow={progressPercent}
           aria-valuemin={0}
@@ -129,7 +129,7 @@ export default function RecommendationCard({ recomendacao, isBest, onVerDetalhes
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 py-4 border-y border-border/30">
+      <div className="grid grid-cols-3 gap-4 py-4 border-y border-border">
         <div className="flex flex-col gap-1">
           <span className="text-xs text-muted-foreground">{stat1Label}</span>
           <span className="text-base font-bold text-foreground">{stat1Value}</span>
@@ -145,7 +145,7 @@ export default function RecommendationCard({ recomendacao, isBest, onVerDetalhes
       </div>
 
       {explicacao && (
-        <div className="flex items-start gap-3 p-4 rounded-lg bg-muted">
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
           <CircleCheck className="w-4 h-4 text-primary mt-0.5 shrink-0" />
           <p className="text-sm text-foreground leading-relaxed">{explicacao}</p>
         </div>

@@ -41,19 +41,19 @@ export default function RadioOption({
 		className={`
 		  w-full flex flex-row p-4 gap-2 transition-all duration-200 border-2
 		  ${checked
-			? "bg-[#f0f3ff] border-blue-500 shadow-md"
-			: "bg-white border-[#c4c6d0] hover:border-gray-300 hover:shadow-sm"
+			? "bg-primary/5 border-primary shadow-md shadow-primary/10"
+			: "bg-card border-border hover:border-primary/40 hover:shadow-sm"
 		  }
 		  ${className}
 		`}
 	  >
 		<div className={`w-12 h-12 flex justify-center items-center rounded-[8px]
 				${checked ? 
-					"bg-primary": "bg-[#E2E8F8]"}
+					"bg-primary": "bg-muted"}
 			 `}>
 			<Icon
 			className={`w-5 h-5 transition-colors ${
-				checked ? "text-white" : "text-[#44474F]"
+				checked ? "text-primary-foreground" : "text-muted-foreground"
 			}`}
 			/>
 		</div>
@@ -62,7 +62,7 @@ export default function RadioOption({
 			<Text
 				as="h6"
 				className={`transition-colors ${
-				checked ? "text-blue-900" : "text-gray-900"
+				checked ? "text-primary" : "text-foreground"
 		  		}`}
 			>
 		  		{title}
@@ -70,7 +70,7 @@ export default function RadioOption({
 		
 			<Text
 		  		className={`transition-colors ${
-				checked ? "text-blue-700" : "text-gray-600"
+				checked ? "text-primary/80" : "text-muted-foreground"
 		  		}`}
 			>
 				{description}

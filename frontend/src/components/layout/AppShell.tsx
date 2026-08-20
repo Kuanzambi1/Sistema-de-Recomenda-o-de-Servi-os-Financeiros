@@ -1,6 +1,7 @@
 "use client"
 
 import Sidebar from "./Sidebar"
+import ThemeToggle from "./ThemeToggle"
 import { cn } from "@/lib/utils"
 import { Bell, Search } from "lucide-react"
 import { usePathname } from "next/navigation"
@@ -30,7 +31,7 @@ export default function AppShell({ children, navItems, title, subtitle, classNam
   const pageTitle = title ?? activeItem?.label ?? "SRF"
 
   return (
-    <div className="flex min-h-screen bg-[#0A0D14] selection:bg-primary/30 relative overflow-hidden">
+    <div className="flex min-h-screen bg-background selection:bg-primary/30 relative overflow-hidden">
       {/* AI Circuit Grid Background */}
       <div className="fixed inset-0 ai-grid-bg opacity-30 pointer-events-none z-0" />
       <div className="fixed top-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-600/10 blur-[150px] rounded-full pointer-events-none z-0" />
@@ -41,27 +42,30 @@ export default function AppShell({ children, navItems, title, subtitle, classNam
       {/* Main content area */}
       <div className="flex flex-col flex-1 ml-64 min-h-screen relative z-10">
         {/* Header */}
-        <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 bg-[#0A0D14]/70 backdrop-blur-2xl border-b border-white/5">
+        <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 bg-background/70 backdrop-blur-2xl border-b border-border">
           {/* Left: Breadcrumb + AI Badge */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground text-sm font-medium">SRF</span>
               <span className="text-muted-foreground/40 text-sm">/</span>
-              <span className="text-sm font-bold text-white">{pageTitle}</span>
+              <span className="text-sm font-bold text-foreground">{pageTitle}</span>
             </div>
           </div>
 
           {/* Right: actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             {/* Search button */}
-            <button className="group flex items-center gap-3 px-3 h-9 rounded-xl bg-white/5 border border-white/5 text-muted-foreground text-xs hover:bg-white/10 hover:border-white/10 hover:text-white transition-all shadow-sm hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]">
-              <Search className="w-3.5 h-3.5 group-hover:text-blue-400 transition-colors" />
+            <button className="group flex items-center gap-3 px-3 h-9 rounded-xl bg-muted/50 border border-border text-muted-foreground text-xs hover:bg-muted hover:border-border hover:text-foreground transition-all shadow-sm">
+              <Search className="w-3.5 h-3.5 group-hover:text-primary transition-colors" />
               <span className="hidden md:inline font-medium">Pesquisar...</span>
-              <kbd className="hidden md:inline text-[10px] font-mono bg-black/40 text-muted-foreground px-1.5 py-0.5 rounded-md border border-white/10">⌘K</kbd>
+              <kbd className="hidden md:inline text-[10px] font-mono bg-foreground/10 text-muted-foreground px-1.5 py-0.5 rounded-md border border-border">⌘K</kbd>
             </button>
 
+            {/* Theme toggle */}
+            <ThemeToggle />
+
             {/* Notifications */}
-            <button className="relative w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 border border-white/5 text-muted-foreground hover:text-white hover:bg-white/10 hover:border-white/10 transition-all hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+            <button className="relative w-9 h-9 flex items-center justify-center rounded-xl bg-muted/50 border border-border text-muted-foreground hover:text-foreground hover:bg-muted hover:border-border transition-all">
               <Bell className="w-4.5 h-4.5" />
               <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-pulse" />
             </button>

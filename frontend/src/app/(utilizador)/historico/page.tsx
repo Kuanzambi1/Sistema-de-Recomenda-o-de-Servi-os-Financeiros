@@ -60,7 +60,7 @@ export default function HistoricoPage() {
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all ${
               filter === f
                 ? "bg-primary/15 border-primary/30 text-primary"
-                : "bg-white/5 border-border text-muted-foreground hover:bg-white/10 hover:text-foreground"
+                : "bg-muted border-border text-muted-foreground hover:bg-muted/80 hover:text-foreground"
             }`}
           >
             {f}
@@ -100,7 +100,7 @@ export default function HistoricoPage() {
                       <span className="absolute inset-0 rounded-full animate-ping opacity-30 bg-amber-400" />
                     )}
                   </div>
-                  <Link href={`/recomendacoes/${rec.id}`} className="flex-1 flex items-center justify-between p-5 rounded-xl bg-card border border-border hover:border-white/15 hover:bg-card/80 transition-all cursor-pointer group-hover:shadow-lg group-hover:shadow-black/20">
+                  <Link href={`/recomendacoes/${rec.id}`} className="flex-1 flex items-center justify-between p-5 rounded-xl bg-card border border-border hover:border-primary/30 hover:bg-card/80 transition-all cursor-pointer group-hover:shadow-lg group-hover:shadow-black/10">
                     <div>
                       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">
                         {rec.nome_provedor}

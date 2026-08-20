@@ -46,10 +46,10 @@ export default function StepFinancialInfo({ defaultValues, onNext, onBack }: Ste
 
   return (
     <form onSubmit={handleSubmit((data) => onNext(data as unknown as Record<string, unknown>))} className="flex flex-col gap-8">
-      <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
-        <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+      <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30">
+        <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
         <div className="flex flex-col gap-0.5">
-          <p className="text-amber-400 font-bold text-sm">Confidencialidade de Dados</p>
+          <p className="text-amber-700 dark:text-amber-400 font-bold text-sm">Confidencialidade de Dados</p>
           <p className="text-muted-foreground text-sm">
             Suas informações financeiras são criptografadas e utilizadas exclusivamente para
             gerar recomendações personalizadas em conformidade com as leis de proteção
@@ -64,7 +64,7 @@ export default function StepFinancialInfo({ defaultValues, onNext, onBack }: Ste
           <div className="relative">
             <Input
               type="number"
-              className="bg-white/5 border-white/10 text-white rounded-lg pt-[18px] pb-[17px] pl-8 placeholder:text-muted-foreground/30 focus-visible:border-primary"
+              className="bg-card border-border text-foreground rounded-lg pt-[18px] pb-[17px] pl-8 placeholder:text-muted-foreground/50 focus-visible:border-primary"
               {...register("rendimento", { valueAsNumber: true })}
               placeholder="0"
             />
@@ -82,7 +82,7 @@ export default function StepFinancialInfo({ defaultValues, onNext, onBack }: Ste
           <div className="relative">
             <Input
               type="number"
-              className="bg-white/5 border-white/10 text-white rounded-lg pt-[18px] pb-[17px] pl-8 placeholder:text-muted-foreground/30 focus-visible:border-primary"
+              className="bg-card border-border text-foreground rounded-lg pt-[18px] pb-[17px] pl-8 placeholder:text-muted-foreground/50 focus-visible:border-primary"
               {...register("despesas", { valueAsNumber: true })}
               placeholder="0"
             />
@@ -96,30 +96,30 @@ export default function StepFinancialInfo({ defaultValues, onNext, onBack }: Ste
         </div>
       </div>
 
-      <div className="flex items-center gap-6 p-6 rounded-xl bg-[#0f2b5b] border border-[#afc6ff33] w-full">
-        <div className="w-12 h-12 rounded-full bg-[#7c94ca33] flex items-center justify-center shrink-0">
-          <Info className="w-6 h-6 text-[#7c94ca]" />
+      <div className="flex items-center gap-6 p-6 rounded-xl bg-primary/10 border border-primary/20 w-full">
+        <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+          <Info className="w-6 h-6 text-primary" />
         </div>
         <div className="flex flex-col gap-0.5 flex-1">
-          <p className="text-[#7c94cacc] text-sm">Capacidade de endividamento estimada</p>
-          <p className="text-white font-semibold text-2xl font-heading">
+          <p className="text-muted-foreground text-sm">Capacidade de endividamento estimada</p>
+          <p className="text-foreground font-semibold text-2xl font-heading">
             {capacidade > 0 ? `${capacidade.toLocaleString()} Kz` : "--- Kz"}
           </p>
         </div>
-        <ChevronRight className="w-6 h-6 text-[#7c94ca]" />
+        <ChevronRight className="w-6 h-6 text-primary" />
       </div>
 
       <div className="flex flex-col gap-2">
         <label className="text-muted-foreground text-sm">Score de Crédito (opcional)</label>
         <Input
           type="number"
-          className="bg-white/5 border-white/10 text-white rounded-lg w-[240px] placeholder:text-muted-foreground/30 focus-visible:border-primary"
+          className="bg-card border-border text-foreground rounded-lg w-[240px] placeholder:text-muted-foreground/50 focus-visible:border-primary"
           {...register("score_credito")}
           placeholder="Ex: 650"
         />
       </div>
 
-      <div className="flex justify-between items-center pt-8 border-t border-[#c4c6d0]">
+      <div className="flex justify-between items-center pt-8 border-t border-border">
         <button
           type="button"
           onClick={onBack}

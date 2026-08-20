@@ -99,37 +99,61 @@
   --sidebar-active-border: #3B82F6;
 }
 
-/* ─── Light mode override (optional) ─────────────────────── */
+/* ─── Light mode override ─────────────────────────────────── */
 .light {
-  --background: #F6F8FA;
-  --foreground: #1C2128;
+  /* ── Core surfaces */
+  --background: #F0F4F8;
+  --foreground: #0F172A;
   --card: #FFFFFF;
-  --card-foreground: #1C2128;
+  --card-foreground: #0F172A;
   --popover: #FFFFFF;
-  --popover-foreground: #1C2128;
-  --primary: #1D4ED8;
+  --popover-foreground: #0F172A;
+
+  /* ── Brand */
+  --primary: #2563EB;
   --primary-foreground: #FFFFFF;
-  --secondary: #F59E0B;
+  --secondary: #D97706;
   --secondary-800: #92400E;
-  --secondary-foreground: #1C1917;
-  --muted: #F0F2F5;
-  --muted-foreground: #6B7280;
-  --accent: #EFF6FF;
-  --accent-foreground: #1D4ED8;
-  --destructive: #EF4444;
-  --border: #E2E8F0;
+  --secondary-foreground: #FFFFFF;
+
+  /* ── Neutral surfaces */
+  --muted: #E2E8F0;
+  --muted-foreground: #475569;
+  --accent: #DBEAFE;
+  --accent-foreground: #1E40AF;
+
+  /* ── Feedback */
+  --destructive: #DC2626;
+  --success: #059669;
+  --warning: #D97706;
+  --info: #2563EB;
+
+  /* ── Borders & inputs */
+  --border: #CBD5E1;
   --input: #E2E8F0;
-  --ring: #1D4ED8;
+  --ring: #2563EB;
+
+  /* ── Chart palette (keep vibrant in light) */
+  --chart-1: #2563EB;
+  --chart-2: #D97706;
+  --chart-3: #059669;
+  --chart-4: #7C3AED;
+  --chart-5: #DB2777;
+
+  /* ── Footer */
+  --footer-bg: #F8FAFC;
+
+  /* ── Sidebar */
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #4B5563;
-  --sidebar-primary: #1D4ED8;
+  --sidebar-foreground: #334155;
+  --sidebar-primary: #2563EB;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #EFF6FF;
-  --sidebar-accent-foreground: #1D4ED8;
+  --sidebar-accent: #DBEAFE;
+  --sidebar-accent-foreground: #1E40AF;
   --sidebar-border: #E2E8F0;
-  --sidebar-ring: #1D4ED8;
-  --sidebar-active-bg: #EFF6FF;
-  --sidebar-active-border: #1D4ED8;
+  --sidebar-ring: #2563EB;
+  --sidebar-active-bg: #DBEAFE;
+  --sidebar-active-border: #2563EB;
 }
 
 @layer base {
@@ -143,9 +167,12 @@
     @apply font-sans;
     color-scheme: dark;
   }
+  html.light {
+    color-scheme: light;
+  }
 }
 
-/* ─── Global scrollbar (dark mode) ─────────────────────────── */
+/* ─── Global scrollbar ─────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -159,6 +186,12 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.22);
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /* ═══════════════════════════════════════════════════════════ */
@@ -178,6 +211,19 @@
 .glow-destructive {
   box-shadow: 0 0 20px rgba(248, 81, 73, 0.25), 0 0 40px rgba(248, 81, 73, 0.10);
 }
+/* Light mode: tighter, more subtle glows */
+html.light .glow-blue {
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.20), 0 4px 20px rgba(37, 99, 235, 0.10);
+}
+html.light .glow-amber {
+  box-shadow: 0 0 12px rgba(217, 119, 6, 0.20), 0 4px 20px rgba(217, 119, 6, 0.10);
+}
+html.light .glow-emerald {
+  box-shadow: 0 0 12px rgba(5, 150, 105, 0.20), 0 4px 20px rgba(5, 150, 105, 0.10);
+}
+html.light .glow-destructive {
+  box-shadow: 0 0 12px rgba(220, 38, 38, 0.20), 0 4px 20px rgba(220, 38, 38, 0.10);
+}
 
 /* ─── Card gradient border on hover ─────────────────────── */
 .card-glow {
@@ -186,6 +232,9 @@
 }
 .card-glow:hover {
   box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.3), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+html.light .card-glow:hover {
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3), 0 8px 24px rgba(15, 23, 42, 0.1);
 }
 
 /* ─── Animated gradient text ─────────────────────────────── */
@@ -390,6 +439,23 @@
     0 0 30px rgba(59, 130, 246, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
+/* Light mode override */
+html.light .glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  box-shadow:
+    0 0 0 1px rgba(37, 99, 235, 0.06),
+    0 8px 32px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+html.light .glass-card:hover {
+  border-color: rgba(37, 99, 235, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(37, 99, 235, 0.15),
+    0 8px 40px rgba(15, 23, 42, 0.12),
+    0 0 20px rgba(37, 99, 235, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
 
 /* ─── Neon Border (animated gradient) ───────────────────── */
 .neon-border {
@@ -424,6 +490,10 @@
   background-image:
     radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.08) 1px, transparent 0);
   background-size: 32px 32px;
+}
+html.light .ai-grid-bg {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(37, 99, 235, 0.18) 1px, transparent 0);
 }
 
 /* ─── Circuit Line: decorative connection ───────────────── */
@@ -469,6 +539,9 @@
   right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5), transparent);
+}
+html.light .gradient-line-top::before {
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.6), rgba(109, 40, 217, 0.5), transparent);
 }
 
 /* ─── Status indicator ──────────────────────────────────── */

@@ -14,6 +14,10 @@ export const adminService = {
     const { data } = await api.get("/admin/modelo/historico");
     return data;
   },
+  retreinar: async (): Promise<any> => {
+    const { data } = await api.post("/admin/modelo/retreinar");
+    return data;
+  },
   criarUtilizador: async (payload: any): Promise<any> => {
     const { data } = await api.post("/admin/utilizadores", payload);
     return data;

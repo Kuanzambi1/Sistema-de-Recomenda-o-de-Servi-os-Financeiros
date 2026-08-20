@@ -8,6 +8,7 @@ import StepFinancialInfo from "@/components/onboarding/StepFinancialInfo";
 import StepObjectives from "@/components/onboarding/StepObjectives";
 import { useFormStorage } from "@/hooks/useFormStorage";
 import { perfilService } from "@/services/perfil.service";
+import { recomendacoesService } from "@/services/recomendacoes.service";
 import { PerfilFinanceiroPayload } from "@/types";
 import { Brain, Cpu, Sparkles } from "lucide-react";
 
@@ -93,6 +94,8 @@ export default function OnboardingPage() {
           throw err;
         }
       }
+
+      await recomendacoesService.gerar();
       
       clearData();
       router.replace("/recomendacoes");
@@ -144,7 +147,7 @@ export default function OnboardingPage() {
             {currentStep === 1 && (
               <>
                 <div className="flex flex-col gap-1 mb-8">
-                  <h1 className="font-heading text-[32px] font-bold text-white tracking-tight flex items-center gap-3">
+                  <h1 className="font-heading text-[32px] font-bold text-foreground tracking-tight flex items-center gap-3">
                     Conte-nos sobre si
                     <Cpu className="w-6 h-6 text-blue-400/50" />
                   </h1>
@@ -180,7 +183,7 @@ export default function OnboardingPage() {
 
       {/* AI Processing Loading Overlay */}
       {loading && (
-        <div className="fixed inset-0 bg-[#0A0D14]/80 backdrop-blur-md flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-md flex items-center justify-center z-50">
           <div className="glass-card neon-border p-10 rounded-3xl flex flex-col items-center gap-6 max-w-sm w-full mx-4">
             {/* Brain animation */}
             <div className="relative w-24 h-24">
@@ -201,15 +204,15 @@ export default function OnboardingPage() {
 
             {/* Progress bar */}
             <div className="w-full">
-              <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+              <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-blue-500 via-violet-500 to-blue-500 rounded-full animate-[shimmer_2s_linear_infinite] bg-[length:200%_100%]" style={{width: "85%"}} />
               </div>
             </div>
 
             {/* Cycling messages */}
             <div className="text-center">
-              <p className="text-sm text-white font-semibold mb-1">
-                <Sparkles className="w-3.5 h-3.5 inline mr-1.5 text-blue-400" />
+              <p className="text-sm text-foreground font-semibold mb-1">
+                <Sparkles className="w-3.5 h-3.5 inline mr-1.5 text-blue-500" />
                 Motor de IA a processar
               </p>
               <p className="text-xs text-muted-foreground animate-in fade-in duration-500" key={loadingMsg}>
